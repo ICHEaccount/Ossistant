@@ -3,10 +3,12 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { useLocation} from 'react-router-dom';
+import { Form, useLocation} from 'react-router-dom';
 import logo from '../images/logo.png';
-import { List ,QuestionCircle} from 'react-bootstrap-icons';
+import { FileText, Fingerprint, Icon123, List, PersonVcard} from 'react-bootstrap-icons';
 import Axios from "axios";
+import Help from './help';
+
 
 const Toolbar = () => {
     const location = useLocation();
@@ -14,6 +16,7 @@ const Toolbar = () => {
     const [case_name, setcase_name] = useState("")
     const [case_number, setcase_number] = useState("")
     const [investigator, setinvestigator] = useState("")
+    const [description, setdescription] = useState("")
     const [cases, setcases] = useState([])
     const [isload, setisload] = useState(false)
 
@@ -30,6 +33,7 @@ const Toolbar = () => {
                 setcase_number(res.data.case_number)
                 setcase_name(res.data.case_number)
                 setinvestigator(res.data.investigator)
+                setdescription(res.data.description)
                 console.log(res.data);
             }else{
                 alert('Backend Connection Failed')
@@ -54,7 +58,7 @@ const Toolbar = () => {
     const caseList = cases.map((caseData,idx)=>{
         return (<NavDropdown.Item href={`/case/${caseData.case_id}`}>{caseData.case_name}</NavDropdown.Item>)
     })
-    
+
 
     return (
     <Navbar expand="lg" className="tw-bg-white">
@@ -68,12 +72,12 @@ const Toolbar = () => {
             OSSISTANT
         </Navbar.Brand>
         <Navbar.Toggle/>
-        <Navbar.Text>{`${case_number} ${case_name} ${investigator}`}</Navbar.Text>
+        <Navbar.Text>{`${case_number} ${case_name} ${investigator} ${description}`}</Navbar.Text>
         <Navbar.Collapse className="justify-content-end">
-            <QuestionCircle className='tw-inline-block tw-text-3xl tw-rounded-full m-2 tw-bg-black tw-text-white'/>
+            <Help location = {location.pathname}/>
             <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white'/>}>
 
-                {case_id?(<Dropdown.Item href="#action/3.1">Edit Case</Dropdown.Item>):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
+                {case_id?(<Dropdown.Item href="#editCase">Edit Case</Dropdown.Item>):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
                 <NavDropdown.Divider />
                 {isload?(caseList):<NavDropdown.ItemText>No Case</NavDropdown.ItemText>}
                 <NavDropdown.Divider />
