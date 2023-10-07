@@ -51,7 +51,7 @@ const Help = (props) => {
         delay={{ show: 250, hide: 400 }}
         overlay={renderTooltip}
         >   
-        <QuestionCircle className='tw-inline-block tw-text-3xl tw-rounded-full m-2 tw-bg-black tw-text-white'/>
+        <QuestionCircle className='tw-inline-block tw-text-3xl tw-rounded-full tw-bg-black tw-text-white'/>
         </OverlayTrigger>
     </div>
     )

@@ -71,12 +71,10 @@ const Toolbar = () => {
             />{' '}
             OSSISTANT
         </Navbar.Brand>
-        <Navbar.Toggle/>
-        <Navbar.Text>{`${case_number} ${case_name} ${investigator} ${description}`}</Navbar.Text>
-        <Navbar.Collapse className="justify-content-end">
+        <Navbar.Text className=''>{`${case_number} ${case_name} ${investigator} ${description}`}</Navbar.Text>
+        <div className="ml-auto d-flex" >
             <Help location = {location.pathname}/>
-            <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white'/>}>
-
+            <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
                 {case_id?(<Dropdown.Item href="#editCase">Edit Case</Dropdown.Item>):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
                 <NavDropdown.Divider />
                 {isload?(caseList):<NavDropdown.ItemText>No Case</NavDropdown.ItemText>}
@@ -86,7 +84,7 @@ const Toolbar = () => {
                 </NavDropdown.Item>
             </NavDropdown>
             
-        </Navbar.Collapse>
+        </div>
 
         </Container>
     </Navbar>
