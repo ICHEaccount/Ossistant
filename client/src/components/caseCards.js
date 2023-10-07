@@ -1,23 +1,11 @@
-import { Axios } from 'axios';
 import { ArrowRightSquare, Calendar, PersonVcard, Trash, PencilSquare } from 'react-bootstrap-icons';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/esm/Button';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Stack from 'react-bootstrap/esm/Stack';
 
 function CaseCard(props) {
     const data = props.caseData
-    const onDelete = async (e) =>{
-        e.preventDefault();
-
-        try {
-            const res= await Axios.get(`/case/deleteCase/${data.case_id}`)
-            console.log('res',res);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     const onMove = () =>{
 
