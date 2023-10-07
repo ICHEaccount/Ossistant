@@ -1,0 +1,12 @@
+# neo4j
+database/neo4j/data
+database/neo4j/plugins/
+
+# mongodb
+database/mongodb/data
+
+# etc
+.DS_Store
+__pycache__/
+*.py[cod]
+*$py.class
