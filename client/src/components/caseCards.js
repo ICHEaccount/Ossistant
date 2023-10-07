@@ -57,7 +57,7 @@ function CaseCard(props) {
             
         <Col md="1" className="d-flex align-items-center">
             <Stack className='flex-column justify-content-center align-items-center'>
-                <Trash onClick={props.onDelete} className='m-1'/>
+                <Trash onClick={props.onDelete} href="#delete" className='m-1'/>
                 <PencilSquare onClick={onEdit} className='m-1'/>
                 <ArrowRightSquare onClick={onMove} className='m-1'/>
             </Stack>
