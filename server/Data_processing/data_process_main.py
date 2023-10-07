@@ -1,6 +1,6 @@
 import json
 
-with open('../venv/json_example/example.json', 'r', encoding='utf-8') as json_file:
+with open('../../../venv/json_example/example.json', 'r', encoding='utf-8') as json_file:
     data = json.load(json_file)
 
 # 중복된 객체를 삭제하기 위한 함수
@@ -31,6 +31,6 @@ def remove_all_null(data):
 remove_duplicates(data)
 remove_all_null(data)
 print(data)
-with open('../venv/output_data.json', 'w', encoding='utf-8') as json_file:
+with open('../../../venv/output_data.json', 'w', encoding='utf-8') as json_file:
     json.dump(data, json_file, ensure_ascii=False, indent=4)
 print("JSON 파일 생성")
