@@ -3,9 +3,9 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { Form, useLocation} from 'react-router-dom';
+import { Form, Link, useLocation} from 'react-router-dom';
 import logo from '../images/logo.png';
-import { FileText, Fingerprint, Icon123, List, PersonVcard} from 'react-bootstrap-icons';
+import {List, House} from 'react-bootstrap-icons';
 import Axios from "axios";
 import Help from './help';
 
@@ -19,26 +19,36 @@ const Toolbar = () => {
     const [description, setdescription] = useState("")
     const [cases, setcases] = useState([])
     const [isload, setisload] = useState(false)
+    const [isCasePage, setisCasePage] = useState(false)
 
     useEffect(() => {
+        //check if the current location is case page
         const { pathname } = location;
         if (pathname.startsWith('/case/')) {
             const newCaseId = pathname.replace('/case/', '');
             setcase_id(newCaseId)
+            setisCasePage(true)
+        } else {
+            setisCasePage(false)
         }
-        if(case_id){
-            Axios.get(`/case/getCaseInfo/${case_id}`)
-            .then((res)=>{
-            if(res.data){
-                setcase_number(res.data.case_number)
-                setcase_name(res.data.case_number)
-                setinvestigator(res.data.investigator)
-                setdescription(res.data.description)
-                console.log(res.data);
-            }else{
-                alert('Backend Connection Failed')
+        //for the case page:
+        if(isCasePage){
+            if(case_id){ //load case info
+                Axios.get(`/case/getCaseInfo/${case_id}`)
+                .then((res)=>{
+                if(res.data){
+                    setcase_number(res.data.case_number)
+                    setcase_name(res.data.case_number)
+                    setinvestigator(res.data.investigator)
+                    setdescription(res.data.description)
+                    console.log(res.data);
+                }else{
+                    alert('Backend Connection Failed')
+                }
+                })
             }
-            })
+            
+            //load recent case
             Axios.get("/case/getCaseList")
             .then((res)=>{
             if(res.data){
@@ -53,9 +63,10 @@ const Toolbar = () => {
 
         
         
-    }, [location,case_id])
+    }, [location,case_id,isCasePage])
     
-    const caseList = cases.map((caseData,idx)=>{
+    //add only 3 recent case to the list
+    const caseList = cases.slice(0, 3).map((caseData,idx)=>{
         return (<NavDropdown.Item href={`/case/${caseData.case_id}`}>{caseData.case_name}</NavDropdown.Item>)
     })
 
@@ -73,6 +84,10 @@ const Toolbar = () => {
         </Navbar.Brand>
         <Navbar.Text className=''>{`${case_number} ${case_name} ${investigator} ${description}`}</Navbar.Text>
         <div className="ml-auto d-flex" >
+            {isCasePage &&
+            (<Link to="/">
+                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
+            </Link>)}
             <Help location = {location.pathname}/>
             <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
                 {case_id?(<Dropdown.Item href="#editCase">Edit Case</Dropdown.Item>):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
