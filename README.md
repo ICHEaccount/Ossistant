@@ -33,7 +33,7 @@ docker-compose -f client.docker-compose.yml down
 |------|---|---|
 |mongodb|172.25.0.2|27017|
 |osint|172.25.0.3|5005|
-|neo4j|172.25.0.4|7474(Dashboar), 7687|
+|neo4j|172.25.0.4|7474(Dashboard), 7687|
 |client|172.25.0.5|3000|
 |case|172.25.0.6|5000| 
 
