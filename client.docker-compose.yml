@@ -1,23 +1,4 @@
 services:
-  neo4j:
-    container_name: neo4j
-    image: neo4j:latest
-    networks:
-      icheTest:
-        ipv4_address: 172.25.0.4
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-    environment:
-      - NEO4JLABS_PLUGINS=["graph-data-science", "apoc"]
-      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
-      - NEO4J_AUTH=neo4j/icheneo4j 
-    volumes:
-      - ./server/database/neo4j/plugins:/plugins
-      - ./server/database/neo4j/data:/data 
-      - ./server/database/neo4j/import:/import
-      - ./server/database/neo4j/conf:/var/lib/neo4j/conf
-
   mongodb:
     image: mongo
     container_name: mongodb
@@ -54,19 +35,6 @@ services:
     depends_on:
       - mongodb
       - case
-
-  osint:
-    container_name: osint
-    build:
-      context: ./server
-      dockerfile: ./osint/domain/domain.Dockerfile
-    volumes:
-      - ./server/osint/domain/app:/app
-    networks:
-      icheTest:
-        ipv4_address: 172.25.0.3
-    ports:
-      - 5005:5000
   
   case:
     container_name: case
