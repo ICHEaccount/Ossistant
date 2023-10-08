@@ -5,7 +5,7 @@ class CaseModel(db.DynamicDocument):
     col_name = 'Case'
     meta = {'collection':col_name}
     
-    case_id = db.SequenceField(primary_key=True, required=True, unique=True, initial_value=0)
+    case_id = db.SequenceField(unique=True, initial_value=1)
     case_name = db.StringField(required=True)
     case_num = db.StringField(required=True)
     investigator = db.StringField(required=True)
