@@ -31,11 +31,7 @@ const CreateCase = () => {
         e.preventDefault();
 
         try {
-            const res = await Axios.post('/case/createCase', formContent, {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
+            const res= await Axios.post('/case/createCase',formContent)
             console.log('res',res);
             navigate(`/case/${res.data.case_id}`)
         } catch (error) {
