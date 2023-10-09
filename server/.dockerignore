@@ -1,0 +1,11 @@
+.dockerignore
+.git
+.gitignore
+__pycache__/
+
+# Folder
+database/
+
+# Dockerfile
+case/case.Dockerfile
+osint/domain/domain.Dockerfile
