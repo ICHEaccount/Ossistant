@@ -14,13 +14,16 @@
         "default_popup": "popup_create.html"
     },
     "background": {
-        "service_worker": "background.js"
+        "service_worker": ["background.js", "popup.js"]
     },
-    "permissions": ["activeTab", "contextMenus", "storage", "http://127.0.0.1:5000/"],
+    "permissions": ["activeTab", "contextMenus", "storage", "http://127.0.0.1:*"],
     "host_permissions": ["*://*/*"],
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "js": ["content_script.js"]
-      }]
+      }],
 
+    "content_security_policy": "script-src 'self' https://code.jquery.com; object-src 'self';"
+
+      
 }

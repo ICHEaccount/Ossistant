@@ -13,6 +13,7 @@ from db_conn.mongo.init import init_mongo
 app = Flask(__name__)
 CORS(app)
 
+
 # Flask Config
 load_dotenv()
 app.config['MONGODB_DB'] = os.environ.get("MONGODB_DB")

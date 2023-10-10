@@ -1,30 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let button = document.querySelector('input[type="button"]');
-    let input = document.querySelector('input[type="text"]');
-    
+    let createButton = document.getElementById('createCaseBtn');
 
-    button.addEventListener('click', function() {
-        let inputValue = input.value;
-        console.log("Button Clicked!", inputValue);
-        
-        const requestData = {
-            url: inputValue
+    createButton.addEventListener('click', function() {
+        let caseData = {
+            case_name: document.getElementById('caseName').value,
+            case_number: document.getElementById('caseNumber').value,
+            investigator: document.getElementById('investigator').value,
+            description: document.getElementById('description').value
         };
 
-        // Flask 백엔드로 AJAX 요청 보낼 수 있음.
-        fetch('http://127.0.0.1:5005/test', {
+        fetch('http://127.0.0.1:5000/case/createCase', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(requestData),
+            body: JSON.stringify(caseData),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
+        .then(response => {
+            console.error('response', response)
+            if(response.data) { 
+                console.info("success")
+            } else {
+                console.error('Failed to send data to server');
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
         });
+
+        window.open('http://127.0.0.1:3000', '_blank');
     });
 });
