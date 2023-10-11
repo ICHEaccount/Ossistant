@@ -49,8 +49,6 @@ const CreateData = (props) => {
                 </InputGroup>
     ))
     return (
-        <Card>
-            <Card.Header>New {label}</Card.Header>
             <Form className='m-1' onSubmit={submitData}>
             {formList}
             <InputGroup className='mb-2'>
@@ -65,8 +63,6 @@ const CreateData = (props) => {
             </Button>
             </Col>
             </Form>
-
-        </Card>
         
 
     )
