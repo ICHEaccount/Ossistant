@@ -83,8 +83,8 @@ const DataCard = (props) => {
         <Container>
             {selectedEventKey!=="list" ? selectedNode : nodeList}
             {selectedEventKey==="create"?<CreateData label ={label}/>:
-            <Card className='align-items-center mt-1 cursor-pointer' onClick={() => { setSelectedEventKey('create') }}>
-            <Button variant="light" size='sm' className='tw-mr-2'><PlusCircle /></Button>
+            <Card className='align-items-center mt-1' onClick={() => { setSelectedEventKey('create') }}>
+            <Button variant="light" size='sm' className='tw-w-full d-flex justify-content-center align-items-center'><PlusCircle /></Button>
             </Card>
             }
 
