@@ -73,8 +73,13 @@ const DataCard = (props) => {
                 disabled={!onEdit}
                 />
                 </InputGroup>
-
                 ))}
+                <InputGroup className='mb-2'>
+                <InputGroup.Text id='note'>note</InputGroup.Text>
+                <Form.Control
+                disabled={!onEdit}
+                as="textarea" />
+            </InputGroup>
             </Form>
             </Card>): null
     )
