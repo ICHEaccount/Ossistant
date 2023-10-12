@@ -3,6 +3,7 @@ from flask import request, jsonify,Blueprint
 from db_conn.neo4j.models.main_node import SurfaceUser
 from db_conn.neo4j.models.sub_node import Post
 from db_conn.neo4j.models.relationship_manager import RelationshipManager
+from db_conn.neo4j import graphdb
 
 bp = Blueprint('test', __name__, url_prefix='/test')
 
@@ -13,6 +14,27 @@ def add_user():
     if not users:
         return jsonify({'Error':'error'}), 500
     return jsonify({'username':users}), 200
+
+
+# @bp.route("/node", methods=["GET"])
+# def get_neo4j_data():
+#     query = """
+#     MATCH (n)-[r]-(m)
+#     RETURN n, r, m
+#     """
+#     results = graphdb.run(query)
+
+#     data = []
+#     for record in results:
+#         data.append({
+#             "node": dict(record["n"]),
+#             "relationship": dict(record["r"]),
+#             "related_node": dict(record["m"])
+#         })
+
+#     print(data)
+
+#     return jsonify(data)
 
 
 
