@@ -4,13 +4,13 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Button from 'react-bootstrap/esm/Button';
-import labels from '../labels'
+import lbs from '../labels'
 import { Axios } from 'axios';
 
 const CreateData = (props) => {
     // const [label, setlabel] = useState("")
     const label = props.label
-    const properties = labels[label].properties
+    const properties = lbs[label].properties
     const initialFormData = {};
     properties.forEach(property => {
         initialFormData[property] = "";
