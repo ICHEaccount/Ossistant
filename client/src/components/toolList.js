@@ -7,7 +7,7 @@ import lbs from '../labels';
 
 
 
-const DataList = (props) => {
+const ToolList = (props) => {
     const case_id = props.case_id
     const labels = Object.keys(lbs)
     const caseData = props.caseData
@@ -37,4 +37,4 @@ const DataList = (props) => {
     )
 }
 
-export default DataList
+export default ToolList
