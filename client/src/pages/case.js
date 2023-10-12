@@ -43,6 +43,12 @@ const dummy = {
         "Username": "osint",
         "Fake": "true"
         }}
+    ],
+    "domain":[
+        {"id":"0000",
+        "property":{
+            "Domain":"puritipo.com"
+        }}
     ]}
     
 }
