@@ -31,19 +31,20 @@ def check_json_not_null(input):
 @bp.route('/createCase',methods=['POST'])
 def create_case():
     case = request.get_json()
+    # print(case)
     if check_json_not_null(case) is False:
         print('[-] Invaild Case data')
         return jsonify({'Message':'Invalid data'}),400
     
     data = {
-        "case_name": case['caseName'],
-        "case_num" : case['caseNumber'],
+        "case_name": case['case_name'],
+        "case_num" : case['case_number'],
         "investigator" : case['investigator'],
         "description":case['description'],
         "created_date": datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
     }
     if CaseModel.create(data) is False:
-        print('[-] DB Errorx')
+        print('[-] DB Error')
         return jsonify({'Message':'DB Insertion Error'}),500
     return jsonify({'Message':'Success'}),200
 
