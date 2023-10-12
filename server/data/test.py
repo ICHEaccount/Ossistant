@@ -16,26 +16,18 @@ def add_user():
     return jsonify({'username':users}), 200
 
 
-# @bp.route("/node", methods=["GET"])
-# def get_neo4j_data():
-#     query = """
-#     MATCH (n)-[r]-(m)
-#     RETURN n, r, m
-#     """
-#     results = graphdb.run(query)
-
-#     data = []
-#     for record in results:
-#         data.append({
-#             "node": dict(record["n"]),
-#             "relationship": dict(record["r"]),
-#             "related_node": dict(record["m"])
-#         })
-
-#     print(data)
-
-#     return jsonify(data)
-
+@bp.route("/node", methods=["GET"])
+def get_neo4j_data():
+    # Include the label as a property in the result
+    query = """
+    MATCH (n)
+    OPTIONAL MATCH (n)-[r]-(m)
+    RETURN n {.*, label: labels(n)}, r, m
+    """
+    result = graphdb.run(query)
+    data = result.data()
+    # print(data)
+    return jsonify(data)
 
 
 # def get_graph_data():
