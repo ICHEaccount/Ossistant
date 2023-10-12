@@ -84,9 +84,7 @@
             "Location": "서울특별시 영등포구 국제금융로 10 9층",
             "Email": "puritipo@gmail.com",
             "fake": true,
-            "etc": [
-                "Galaxy J4+"
-            ]
+            "etc": "Galaxy J4+"
         },
         {
             "Name": "(주)더블유에스세라믹",
@@ -254,3 +252,4 @@
         }
     ]
 }
+
