@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
 import DataPanel from '../components/dataPanel';
+import Loading from '../components/loading';
 
 
 ///DUMMY DATA///
@@ -62,18 +63,16 @@ const Case = () => {
 
 
     useEffect(() => {
-        // Axios.get(`/data/getData/${case_id}`)
-        //     .then((res)=>{
-        //     if(res.data){
-        //         setcaseData(res.data.data)
-        //         setisLoad(true)
-        //     }else{
-        //         console.error(res.error);
-        //         setisLoad(false)
-        //     }
-        //     })
-        setcase_data(dummy.data)
-        
+        Axios.get(`/data/getData/${case_id}`)
+            .then((res)=>{
+            if(res.data){
+                setcase_data(res.data.data)
+                setisLoad(true)
+            }else{
+                console.error(res.error);
+                setisLoad(false)
+            }
+            })        
         
         
     }, [case_data, case_id])
@@ -81,7 +80,7 @@ const Case = () => {
 
     return (
     <div>
-        <Container className='mt-3 mb-3' fluid>
+        {isLoad?<Container className='mt-3 mb-3' fluid>
         <Row>
             <Col lg={4}>
                 <DataPanel case_id={case_id} caseData={case_data}/>
@@ -92,7 +91,7 @@ const Case = () => {
 
             </Col>
         </Row>
-        </Container>
+        </Container>:<Loading/>}
         
         
     </div>
