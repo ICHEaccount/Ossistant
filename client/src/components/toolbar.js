@@ -74,7 +74,7 @@ const Toolbar = () => {
 
 
     return (
-    <Navbar expand="lg" className="tw-bg-white">
+    <Navbar expand="lg" className="tw-bg-white justify-content-between">
         <Container>
         <Navbar.Brand href="/" className='tw-font-bold'>
             <img
@@ -86,29 +86,25 @@ const Toolbar = () => {
         </Navbar.Brand>
         
         <div className="ml-auto d-flex" >
-            {isCasePage && <Navbar.Text className=''>
-            <Row className='mr-2 tw-justify-center'>
-                <Col md={2} className="d-flex align-items-center">{case_name}</Col>
-                <Col md={2} className="d-flex align-items-center">
-                    {case_number}
-                </Col>
-                <Col md={2} className="d-flex align-items-center">
-                    <PersonVcard className='tw-m-1' />
-                    {investigator}
-                </Col>
-                <Col md={6} className="d-flex align-items-center">
-                    <Calendar className='tw-m-1'/>
-                    {created_date}
-                </Col>
-            </Row>
-        </Navbar.Text>}
             {isCasePage &&
             (<Link to="/">
                 <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
             </Link>)}
             <Help location = {location.pathname}/>
             <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
-                {case_id?(<Dropdown.Item href="#editCase">Edit Case</Dropdown.Item>):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
+                {case_id?(
+                    <div>
+                    <NavDropdown.ItemText >{case_name}</NavDropdown.ItemText>
+                    <NavDropdown.ItemText >
+                        <PersonVcard className='tw-m-1 tw-inline' />
+                        {investigator}
+                    </NavDropdown.ItemText>
+                    <NavDropdown.ItemText>
+                        <Calendar className='tw-m-1 tw-inline'/>
+                        {created_date}
+                    </NavDropdown.ItemText>
+                    </div>
+                ):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
                 <NavDropdown.Divider />
                 {isload?(caseList):<NavDropdown.ItemText>No Case</NavDropdown.ItemText>}
                 <NavDropdown.Divider />
