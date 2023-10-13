@@ -53,7 +53,7 @@ services:
     tty: true
     depends_on:
       - mongodb
-      - case
+      - osint
 
   osint:
     container_name: osint
@@ -68,13 +68,13 @@ services:
     ports:
       - 5005:5000
   
-  case:
-    container_name: case
+  data:
+    container_name: data
     build:
-      context: ./server
-      dockerfile: ./case/case.Dockerfile
+      context: ./server/data
+      dockerfile: ./data.Dockerfile
     volumes:
-      - ./server/case:/app
+      - ./server/data:/app
       - ./server/db_conn/mongo:/db_conn/mongo
     networks:
       icheTest:
