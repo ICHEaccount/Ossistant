@@ -7,7 +7,7 @@ from db_conn.neo4j.models.post import Post
 from db_conn.neo4j.models.domain import Domain
 from db_conn.neo4j.models.relationship_manager import RelationshipManager
 
-bp = Blueprint('tool', __name__, url_prefix='/graph/ext')
+bp = Blueprint('extension', __name__, url_prefix='/graph/ext')
 
 
 @bp.route('/create',methods=["POST"])
