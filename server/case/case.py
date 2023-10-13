@@ -44,12 +44,19 @@ def create_case():
         "description": case['description'],
         "created_date": datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
     }
-
-    print("ddd", data)
+    
     if CaseModel.create(data) is False:
         print('[-] DB Error')
         return jsonify({'Message':'DB Insertion Error'}),500
     return jsonify({'Message':'Success'}),200
+
+
+@bp.route('/collectData', methods=['POST'])
+def process_data():
+    data = request.get_json()
+    print("Received data:", data)
+    return jsonify({'result': 'success', 'data': data})
+
 
 
 
