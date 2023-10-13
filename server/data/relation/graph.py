@@ -8,7 +8,6 @@ from db_conn.neo4j.models.relationship_manager import RelationshipManager
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
 @bp.route("/node", methods=["GET"])
-@bp.route("/node", methods=["GET"])
 def get_neo4j_data():
     query = """
     MATCH (n)

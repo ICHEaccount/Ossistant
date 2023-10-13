@@ -76,6 +76,7 @@ services:
     volumes:
       - ./server/data:/app
       - ./server/db_conn/mongo:/db_conn/mongo
+      - ./server/db_conn/neo4j:/db_conn/neo4j
     networks:
       icheTest:
         ipv4_address: 172.25.0.6
