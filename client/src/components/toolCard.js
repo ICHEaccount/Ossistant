@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Card, Container, Form } from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { Button, Card, Container, Form, Overlay, Tooltip } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
@@ -8,8 +8,11 @@ import Axios from 'axios';
 const ToolCard = (props) => {
     const tools = props.labelTools;
     const labelData = props.labelData;
+    const toolState = props.toolState;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [selectedItems, setSelectedItems] = useState({});
+    const [show, setshow] = useState(false)
+    const runButton = useRef(null)
 
     const toggleItemSelection = (idx, p) => {
         setSelectedItems((prevItems) => {
@@ -24,6 +27,15 @@ const ToolCard = (props) => {
 
     const runTool = (e) => {
         e.preventDefault();
+        if(toolState==="running"){
+            setshow(!show)
+            return
+        }
+
+        if (Object.keys(selectedItems).length === 0) {
+            setshow(!show)
+            return;
+        }
 
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
 
@@ -44,13 +56,14 @@ const ToolCard = (props) => {
 
         console.log(selectedNodes);
 
-        // Axios.post('/tools/runTools', selectedNodes)
-        //     .then((response) => {
-        //         console.log(response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
+        Axios.post('/tools/runTools', selectedNodes)
+            .then((response) => {
+                console.log(response.data);
+                props.toolrunner(response.data.run_id)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     const toolList = tools?.map((tool, idx) => {
@@ -114,11 +127,30 @@ const ToolCard = (props) => {
                                         })}
                                     </Form.Group>
                                 ))}
-                                <Col md={{ span: 3, offset: 9 }}>
-                                    <Button variant="outline-dark" type="submit">
+                                {toolState==="running"?(<Col md={{ span: 3, offset: 9 }}>
+                                    <Button variant="outline-dark" ref={runButton} type="submit">
                                         <Play />
                                     </Button>
-                                </Col>
+                                    <Overlay target={runButton.current} show={show} placement="right">
+                                    {(props) => (
+                                        <Tooltip id="overlay-example" {...props}>
+                                        Tool Is Already Running
+                                        </Tooltip>
+                                    )}
+                                    </Overlay>
+                                </Col>):(<Col md={{ span: 3, offset: 9 }}>
+                                    <Button variant="outline-dark" ref={runButton} type="submit" >
+                                        <Play />
+                                    </Button>
+                                    {Object.keys(selectedItems).length === 0?(<Overlay target={runButton.current} show={show} placement="right">
+                                    {(props) => (
+                                        <Tooltip id="overlay-example" {...props}>
+                                        No items selected
+                                        </Tooltip>
+                                    )}
+                                    </Overlay>):null}
+                                </Col>)}
+                                
                             </Form>
                         ) : "Unavailable"}
                     </Card.Body>

@@ -48,7 +48,7 @@ const ToolList = (props) => {
         const labelTools = tools[label]
         if (labelTools){
         return (<Tab eventKey={label} title={label}>
-            <ToolCard labelTools={labelTools} labelData={caseData[label]} label={label}/>
+            <ToolCard labelTools={labelTools} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
         </Tab>)}
         else{
         return (<Tab eventKey={label} title={label}>
