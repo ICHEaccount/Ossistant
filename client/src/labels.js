@@ -7,7 +7,7 @@ const labels = {
         "title":"username",
         "properties":["username","fake","note"]
     },
-    "domain":{
+    "Domain":{
         "title":"Domain",
         "properties":["domain","regdate","status","note"]
     }
