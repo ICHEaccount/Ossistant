@@ -1,3 +1,4 @@
+
 from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
@@ -148,4 +149,5 @@ def create_domain():
 def create_post():
     post = post_function()
     return jsonify({'post_dicts':post}), 200
+
 
