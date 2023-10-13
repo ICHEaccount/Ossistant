@@ -80,7 +80,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
         if (data.label) {
             // data to server
-            fetch('http://127.0.0.1:5000/case/collectData', {
+            fetch('http://127.0.0.1:5005/case/collectData', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
