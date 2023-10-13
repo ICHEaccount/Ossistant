@@ -3,16 +3,19 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Stack from 'react-bootstrap/esm/Stack';
+import { useNavigate } from 'react-router-dom';
 
 function CaseCard(props) {
+    const navigate = useNavigate();
+
     const data = props.caseData
 
     const onMove = () =>{
-
+        navigate(`/case/${data.case_id}`)
     }
 
     const onEdit = () =>{
-
+        // todo
     }
 
     return (

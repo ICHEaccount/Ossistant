@@ -43,7 +43,7 @@ const CreateData = (props) => {
     const formList = properties.map((property)=>(
         <InputGroup className='mb-1'>
                 <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-                <Form.Control
+                <Form.Control as={property==="note"?"textarea":null}
                 onChange={(e)=>{updateFormValue(property,e.target.value)}}
                 />
                 </InputGroup>
@@ -51,12 +51,6 @@ const CreateData = (props) => {
     return (
             <Form className='m-1' onSubmit={submitData}>
             {formList}
-            <InputGroup className='mb-2'>
-                <InputGroup.Text id='note'>note</InputGroup.Text>
-                <Form.Control
-                onChange={(e) => {updateFormValue("note",e.target.value);}}
-                as="textarea" />
-            </InputGroup>
             <Col md={{ span: 3, offset: 9 }}>
             <Button variant="outline-primary" type="submit">
             Create

@@ -13,7 +13,7 @@ const DataPanel = (props) => {
     const case_id = props.case_id
     const caseData = props.caseData
     const [toolState, settoolState] = useState("none")
-    const [toolResult, settoolResult] = useState({})
+    const [toolResult, settoolResult] = useState([])
     const [toolError, settoolError] = useState({})
     const [show, setShow] = useState(true);
 
@@ -21,11 +21,11 @@ const DataPanel = (props) => {
         const interval = setInterval(() => {
             Axios.get(`/tools/getToolState/${run_id}`)
                 .then(response => {
-                if (response.data.status === 'completed') {
+                if (response.data.state === 'completed') {
                     clearInterval(interval); // 작업이 완료되면 인터벌 해제
                     settoolResult(response.data.result);
                     settoolState('completed');
-                } else if (response.data.status === 'running') {
+                } else if (response.data.state === 'running') {
                     settoolState('running');
                 } else {
                     clearInterval(interval);
