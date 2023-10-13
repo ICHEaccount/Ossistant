@@ -46,10 +46,11 @@ def create_case():
         "description":case['description'],
         "created_date": datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
     }
-    if CaseModel.create(data) is False:
+    caseID=CaseModel.create(data)
+    if caseID is False:
         print('[-] DB Error')
         return jsonify({'Message':'DB Insertion Error'}),500
-    return jsonify({'Message':'Success'}),200
+    return jsonify({'Message':'Success', 'case_id' : caseID }),200
 
 
 @bp.route('/getCaseList')
@@ -104,7 +105,7 @@ def delete_case(case_id):
     try:
         result = CaseModel.objects(case_id=case_id).delete()
 
-        if result['n'] > 0:
+        if result:
             return jsonify({'Message': f'Case with ID {case_id} has been deleted'}), 200
         else:
             return jsonify({'Message': f'Case with ID {case_id} not found'}), 404
