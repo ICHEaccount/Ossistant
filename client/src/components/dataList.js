@@ -4,6 +4,8 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import DataCard from './dataCard';
 import lbs from '../labels';
+import CreateData from './createData';
+import { Card } from 'react-bootstrap';
 
 
 
@@ -15,9 +17,10 @@ const DataList = (props) => {
     
 
     const dataCardList=labels.map((label)=>{
-        if(!caseData) return null
+
+        if (caseData){
         const labelData = caseData[label]
-        if (labelData){
+
         return (<Tab eventKey={label} title={label}>
             <DataCard nodes={labelData} label={label}/>
         </Tab>)}

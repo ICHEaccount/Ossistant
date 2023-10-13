@@ -43,7 +43,7 @@ const CreateData = (props) => {
     const formList = properties.map((property)=>(
         <InputGroup className='mb-1'>
                 <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-                <Form.Control as={property==="note"?"textarea":null}
+                <Form.Control as={property==="note"?"textarea":"input"}
                 onChange={(e)=>{updateFormValue(property,e.target.value)}}
                 />
                 </InputGroup>
