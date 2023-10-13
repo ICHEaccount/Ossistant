@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
 import Visualization from '../components/relation/Visualization';
+import Timeline from '../components/timeline/timeline'
 
 
 const Case = () => {
