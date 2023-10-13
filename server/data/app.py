@@ -10,6 +10,7 @@ from db_conn.mongo.init import init_mongo
 from relation.ext import bp as ext_bp
 from case.case import bp as case_bp
 
+
 app = Flask(__name__)
 CORS(app)
 
@@ -23,7 +24,7 @@ app.config['MONGODB_PASSWORD'] = os.environ.get('MONGODB_PASSWORD')
 init_mongo(app)
 
 
-# blue print 
+
 app.register_blueprint(ext_bp)
 app.register_blueprint(case_bp)
 
