@@ -18,11 +18,6 @@ class Domain(StructuredNode):
             "status": self.status,
         }
 
-    @classmethod
-    def create_node(cls, data):
-        surface_user = cls(**data)  
-        surface_user.save()
-        return surface_user
 
     @classmethod
     def create_domain(cls, domain, regdate, status):
