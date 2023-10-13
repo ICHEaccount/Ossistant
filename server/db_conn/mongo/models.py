@@ -23,7 +23,8 @@ class CaseModel(db.DynamicDocument):
         try:
             new_case = cls(**data)
             new_case.save()
-            return True
+            #new_case.insert_one()
+            return new_case.case_id
         except PyMongoError as e:
             print(f'{cls.col_name} : Creation Error: {e}')
             return False
