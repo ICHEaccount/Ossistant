@@ -1,3 +1,4 @@
+
 from neomodel import Relationship
 
 from .user import SurfaceUser
@@ -14,3 +15,4 @@ class RelationshipManager:
         except Exception as e:
             print(f"Error creating the relationship: {str(e)}")
             return False
+
