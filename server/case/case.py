@@ -78,7 +78,7 @@ def getcaselist():
         return jsonify({'Message': 'Error while retrieving all cases'}), 500
     
 
-@bp.route('/getCaseInfo/<int:case_id>')
+@bp.route('/getCaseInfo/<case_id>')
 def get_case(case_id):
     try:
         case = CaseModel.objects.get(case_id=case_id)
@@ -100,7 +100,7 @@ def get_case(case_id):
         print(f'Error while retrieving case: {e}')
         return jsonify({'Message': 'Error while retrieving case'}), 500
 
-@bp.route('/deleteCase/<int:case_id>')
+@bp.route('/deleteCase/<case_id>')
 def delete_case(case_id):
     try:
         result = CaseModel.objects(case_id=case_id).delete()
