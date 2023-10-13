@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 RUN apt-get update 
 
-COPY ./case/requirements.txt requirements.txt
+COPY ./requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 WORKDIR /app
 
