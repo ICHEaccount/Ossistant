@@ -43,6 +43,7 @@ const ToolList = (props) => {
     
 
     const toolList=labels.map((label)=>{
+        if(!caseData) return null
         const labelTools = tools[label]
         if (labelTools){
         return (<Tab eventKey={label} title={label}>

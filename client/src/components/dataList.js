@@ -15,6 +15,7 @@ const DataList = (props) => {
     
 
     const dataCardList=labels.map((label)=>{
+        if(!caseData) return null
         const labelData = caseData[label]
         if (labelData){
         return (<Tab eventKey={label} title={label}>
