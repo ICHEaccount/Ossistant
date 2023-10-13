@@ -1,9 +1,5 @@
-import sys
-import os 
-import json
 import datetime
 
-# flaks 
 from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 

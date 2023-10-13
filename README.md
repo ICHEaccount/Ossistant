@@ -35,7 +35,7 @@ docker-compose -f client.docker-compose.yml down
 |osint|172.25.0.3|5005|
 |neo4j|172.25.0.4|7474(Dashboard), 7687|
 |client|172.25.0.5|3000|
-|case|172.25.0.6|5000| 
+|data|172.25.0.6|5000| 
 
 ## Commit Convention
 ```
