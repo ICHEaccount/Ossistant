@@ -30,7 +30,7 @@ def get_neo4j_data():
         n_dict['label'] = label
         n_dict['id'] = row[6] if row[6] else None
         
-        print(f"r_id : {r_id}, r_type: {r_type}, r_properties: {r_properties}")
+        # print(f"r_id : {r_id}, r_type: {r_type}, r_properties: {r_properties}")
         if r_type:
             nodes_and_relationships.append({'n': n_dict, 'r': {'id':r_id,'type': r_type, 'properties': r_properties}, 'm': m_dict})
         else:

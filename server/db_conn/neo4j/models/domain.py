@@ -45,14 +45,12 @@ class Domain(StructuredNode):
             return None
 
     @classmethod
-    def update_domain_properties(cls, node_id, regdate=None, status=None):
-        domain = cls.nodes.get_or_none(uid=node_id)
-        if domain:
-            if regdate is not None:
-                domain.regdate = regdate
-            if status is not None:
-                domain.status = status
-            domain.save()
+    def update_node_properties(cls, node_id, **kwargs):
+        node = cls.nodes.get_or_none(uid=node_id)
+        if node:
+            for key, value in kwargs.items():
+                setattr(node, key, value)
+            node.save()
             return True
         else:
             return False

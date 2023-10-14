@@ -13,7 +13,7 @@ bp = Blueprint('extension', __name__, url_prefix='/graph/ext')
 @bp.route('/create',methods=["POST"])
 def create_node():
     req = request.get_json()
-
+    print(req)
     if not req:
         return jsonify({'Error':'Invalid request'}), 404
     
@@ -23,11 +23,11 @@ def create_node():
     
     keys = list(req['keyword'].keys())
     req_arg = {keys[0]: req['keyword'][keys[0]]}
-
+    
     if req_label == 'SurfaceUser':
         node_id = SurfaceUser.node_exists_url(req['url'])
         if node_id is not None:
-            if SurfaceUser.update_node_properties(node_id, keys[0], req['keyword'][keys[0]]) is False:
+            if SurfaceUser.update_node_properties(node_id, req_arg) is False:
                 return jsonify({'Error':'Node update Error '}), 500
         else:
             req_arg['url'] = req['url']
@@ -37,7 +37,7 @@ def create_node():
     elif req_label == 'Domain':
         node_id = Domain.node_exists_url(req['url'])
         if node_id is not None:
-            if Domain.update_node_properties(node_id, keys[0], req['keyword'][keys[0]]) is False:
+            if Domain.update_node_properties(node_id, req_arg) is False:
                 return jsonify({'Error':'Node update Error '}), 500
         else:
             req_arg['url'] = req['url']
@@ -47,7 +47,7 @@ def create_node():
     elif req_label == 'Post':
         node_id = Post.node_exists_url(req['url'])
         if node_id is not None:
-            if Post.update_node_properties(node_id, keys[0], req['keyword'][keys[0]]) is False:
+            if Post.update_node_properties(node_id, req_arg) is False:
                 return jsonify({'Error':'Node update Error '}), 500
         else:
             req_arg['url'] = req['url']

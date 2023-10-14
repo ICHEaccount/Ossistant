@@ -16,13 +16,14 @@ def domain_function():
     ]
 
     results = []
-
+    if not results:
+        return None
     # Neo4j 데이터베이스에 연결하고 각 쿼리 실행
-    with GraphDatabase.driver("bolt://127.0.0.1:7687", auth=("neo4j", "icheneo4j")) as driver:
-        for query in queries:
-            with driver.session() as session:
-                result = session.run(query)
-                results.extend(result.data())
+    # with GraphDatabase.driver("bolt://127.0.0.1:7687", auth=("neo4j", "icheneo4j")) as driver:
+    #     for query in queries:
+    #         with driver.session() as session:
+    #             result = session.run(query)
+    #             results.extend(result.data())
 
     merged_results = [result['data'] for result in results]
     integrated_results = json.dumps(merged_results, indent=2)

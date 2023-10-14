@@ -46,16 +46,13 @@ class Post(StructuredNode):
             return None
         
     @classmethod
-    def update_post_properties(cls, node_id, title=None, writer=None, created_date=None, post_type=None):
-        post = cls.nodes.get_or_none(uid=node_id)
-        if post:
-            post.title = title
-            post.writer = writer
-            post.created_date = created_date
-            post.post_type = post_type
-            post.save()
+    def update_node_properties(cls, node_id, **kwargs):
+        node = cls.nodes.get_or_none(uid=node_id)
+        if node:
+            for key, value in kwargs.items():
+                setattr(node, key, value)
+            node.save()
             return True
         else:
-            return False 
-
+            return False
 
