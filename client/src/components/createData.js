@@ -38,7 +38,7 @@ const CreateData = (props) => {
         }
 
         console.log(formData);
-        // window.location.reload();
+        window.location.reload();
     }
 
 
