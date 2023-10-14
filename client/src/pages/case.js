@@ -1,14 +1,14 @@
 import React,{useState,useEffect} from 'react';
 import Axios from "axios";
 import { useParams } from 'react-router-dom';
-import RelationGraph from '../components/relationGraph';
-import Timeline from '../components/timeline';
+import DataList from '../components/dataList';
+import Tools from '../components/tools';
+import ProgressPanel from '../components/progressPanel'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
-import DataPanel from '../components/dataPanel';
-import Loading from '../components/loading';
-
+import Visualization from '../components/relation/Visualization';
+import TimelineVisualization from '../components/timeline/timeline'
 
 ///DUMMY DATA///
 const dummy = {
@@ -85,10 +85,19 @@ const Case = () => {
             <Col lg={4}>
                 <DataPanel case_id={case_id} caseData={case_data}/>
             </Col>
-            <Col lg={8} className='tw-border-l'>
-                <RelationGraph/>
-                <Timeline/>
-
+            <Col lg={6}>
+                <Visualization/>
+            </Col>
+            <Col lg={3}>
+                <Tools/>
+            </Col>
+        </Row>
+        <Row>
+            <Col lg={9}>
+                <TimelineVisualization/>
+            </Col>
+            <Col lg={3}>
+                <ProgressPanel/>
             </Col>
         </Row>
         </Container>:<Container className='mt-3 mb-3' fluid>

@@ -1,6 +1,7 @@
 from pymongo.errors import PyMongoError
 from .init import db
-from bson import ObjectId
+import uuid
+
 class CaseModel(db.DynamicDocument):
     col_name = 'Case'
     meta = {'collection':col_name}
@@ -22,7 +23,7 @@ class CaseModel(db.DynamicDocument):
     def create(cls, data) -> bool:
         try:
             if 'case_id' not in data:  # _id가 없는 경우에만 수동으로 생성
-                data['case_id'] = str(ObjectId())
+                data['case_id'] = str(uuid.uuid1())
             new_case = cls(**data)
             new_case.save()
             #new_case.insert_one()
