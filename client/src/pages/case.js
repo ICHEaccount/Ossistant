@@ -79,20 +79,10 @@ const Case = () => {
 
     return (
     <div>
-        {isLoad?<Container className='mt-3 mb-3' fluid>
+        {isLoad&&<Container className='mt-3 mb-3' fluid>
         <Row>
             <Col lg={4}>
                 <DataPanel case_id={case_id} caseData={case_data}/>
-            </Col>
-            <Col lg={8} className='tw-border-l'>
-                <Visualization/>
-                <TimelineVisualization/>
-            </Col>
-        </Row>
-        </Container>:<Container className='mt-3 mb-3' fluid>
-        <Row>
-            <Col lg={4}>
-                <DataPanel case_id={case_id} caseData={null}/>
             </Col>
             <Col lg={8} className='tw-border-l'>
                 <Visualization/>
