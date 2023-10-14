@@ -60,7 +60,7 @@ def get_data(case_id):
         domains = Domain.nodes.filter(case_id=case_id)
         if domains:
             domain_list = [domain._json_serializable() for domain in domains]
-            return jsonify({"case_id":case_id,"data":{"Domain":domain_list}}), 200
+            return jsonify({"case_id":case_id,"data":{"domain":domain_list}}), 200
         else:
             return jsonify({"case_id":case_id,"data":{}}), 200
     except Exception as e:

@@ -74,7 +74,7 @@ const Case = () => {
             })        
         
         
-    }, [case_data, case_id])
+    }, [case_id])
 
 
     return (

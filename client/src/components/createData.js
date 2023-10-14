@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Button from 'react-bootstrap/esm/Button';
 import lbs from '../labels'
-import { Axios } from 'axios';
+import Axios  from 'axios';
 import { useParams } from 'react-router-dom';
 
 const CreateData = (props) => {
@@ -29,16 +29,16 @@ const CreateData = (props) => {
     const submitData = async (e) => {
 
         e.preventDefault();
-
+        updateFormValue("case_id",case_id)
         try {
-            const res= await Axios.post('/data/createData',{formData,case_id})
+            const res= await Axios.post('/data/createData',formData)
             console.log('res',res);
         } catch (error) {
             console.error(error);
         }
 
         console.log(formData);
-        window.location.reload();
+        // window.location.reload();
     }
 
 

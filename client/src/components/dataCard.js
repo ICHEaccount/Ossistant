@@ -62,7 +62,9 @@ const DataCard = (props) => {
                     :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
                 </Card.Header>
                 <Form onSubmit={editData}>
-                    {Object.keys(node.property).map(key => (
+                    {Object.keys(node.property).map((key) =>{
+                        if(node.property[key]==null) return <></>
+                        return(
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
                     <Form.Control
@@ -70,7 +72,7 @@ const DataCard = (props) => {
                     disabled={!onEdit}
                     />
                     </InputGroup>
-                    ))}
+                    )})}
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text id='note'>note</InputGroup.Text>
                     <Form.Control
