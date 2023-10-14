@@ -27,9 +27,12 @@ const options = {
       },
     },
     Domain : {
-      shape : 'circle',
+      shape : 'star',
       color: {
         background: 'green',
+      },
+      font: {
+        size: 8, // Adjust font size as needed
       },
       label: {
         field: 'domain',

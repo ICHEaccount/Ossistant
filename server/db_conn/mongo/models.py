@@ -1,11 +1,13 @@
 from pymongo.errors import PyMongoError
 from .init import db
+# from bson import ObjectId
+import uuid
 
 class CaseModel(db.DynamicDocument):
     col_name = 'Case'
     meta = {'collection':col_name}
     
-    case_id = db.SequenceField(unique=True)
+    case_id = db.StringField(unique=True)
     case_name = db.StringField(required=True)
     case_num = db.StringField(required=True)
     investigator = db.StringField(required=True)
@@ -21,9 +23,12 @@ class CaseModel(db.DynamicDocument):
     @classmethod 
     def create(cls, data) -> bool:
         try:
+            if 'case_id' not in data:  # _id가 없는 경우에만 수동으로 생성
+                data['case_id'] = str(uuid.uuid1())
             new_case = cls(**data)
             new_case.save()
-            return True
+            #new_case.insert_one()
+            return new_case.case_id
         except PyMongoError as e:
             print(f'{cls.col_name} : Creation Error: {e}')
             return False

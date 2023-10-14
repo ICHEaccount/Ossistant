@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from neo4j import GraphDatabase
 
-bp = Blueprint('timeline', __name__, url_prefix='/data')
+bp = Blueprint('timeline', __name__, url_prefix='/timeline')
 
 def domain_function():
     queries = [
@@ -65,7 +65,7 @@ def post_function():
     results = []
 
     # Neo4j 데이터베이스에 연결하고 각 쿼리 실행
-    with GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "icheneo4j")) as driver:
+    with GraphDatabase.driver("bolt://172.25.0.4:7687", auth=("neo4j", "icheneo4j")) as driver:
         for query in queries:
             with driver.session() as session:
                 result = session.run(query)

@@ -3,13 +3,12 @@ import Axios from "axios";
 import { useParams } from 'react-router-dom';
 import DataList from '../components/dataList';
 import Tools from '../components/tools';
-import Timeline from '../components/timeline';
 import ProgressPanel from '../components/progressPanel'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
 import Visualization from '../components/relation/Visualization';
-import Timeline from '../components/timeline/timeline'
+import TimelineVisualization from '../components/timeline/timeline'
 
 
 const Case = () => {
@@ -31,7 +30,7 @@ const Case = () => {
         </Row>
         <Row>
             <Col lg={9}>
-                <Timeline/>
+                <TimelineVisualization/>
             </Col>
             <Col lg={3}>
                 <ProgressPanel/>
