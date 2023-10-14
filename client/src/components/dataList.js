@@ -19,7 +19,7 @@ const DataList = (props) => {
         // console.log(caseData);
         if (Object.keys(caseData).length!==0){
         const labelData = caseData[label]
-        console.log(label,labelData);
+        // console.log(label,labelData);
         return labelData?<Tab eventKey={label} title={label}>
             <DataCard nodes={labelData} label={label}/>
         </Tab>:<Tab eventKey={label} title={label}>

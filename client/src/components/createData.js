@@ -18,7 +18,7 @@ const CreateData = (props) => {
         initialFormData[property] = "";
     });
     initialFormData["note"] = "";
-    const [formData, setformData] = useState({})
+    const [formData, setformData] = useState({"case_id":case_id})
     const updateFormValue = (key, value) => {
         setformData(prevData => ({
             ...prevData,
@@ -29,7 +29,6 @@ const CreateData = (props) => {
     const submitData = async (e) => {
 
         e.preventDefault();
-        updateFormValue("case_id",case_id)
         try {
             const res= await Axios.post('/data/createData',formData)
             console.log('res',res);
