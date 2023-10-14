@@ -6,8 +6,10 @@ import Col from 'react-bootstrap/esm/Col';
 import Button from 'react-bootstrap/esm/Button';
 import lbs from '../labels'
 import { Axios } from 'axios';
+import { useParams } from 'react-router-dom';
 
 const CreateData = (props) => {
+    const {case_id} = useParams()
     // const [label, setlabel] = useState("")
     const label = props.label
     const properties = lbs[label].properties
@@ -29,7 +31,7 @@ const CreateData = (props) => {
         e.preventDefault();
 
         try {
-            const res= await Axios.post('/data/createData',formData)
+            const res= await Axios.post('/data/createData',{formData,case_id})
             console.log('res',res);
         } catch (error) {
             console.error(error);

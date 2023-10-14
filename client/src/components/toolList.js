@@ -28,17 +28,17 @@ const ToolList = (props) => {
     const [tools, settools] = useState([])
 
     useEffect(() => {
-        Axios.get(`/tools/getToolList`)
-            .then((res)=>{
-            if(res.data){
-                settools(res.data.data)
-                setIsload(true)
-            }else{
-                console.error(res.error);
-                setIsload(false)
-            }
-            })
-        
+        // Axios.get(`/tools/getToolList`)
+        //     .then((res)=>{
+        //     if(res.data){
+        //         settools(res.data.data)
+        //         setIsload(true)
+        //     }else{
+        //         console.error(res.error);
+        //         setIsload(false)
+        //     }
+        //     })
+        settools(dummy)
     }, [case_id])
     
 

@@ -1,12 +1,10 @@
 import React,{useState,useEffect} from 'react';
 import Axios from "axios";
 import { useParams } from 'react-router-dom';
-import DataList from '../components/dataList';
-import Tools from '../components/tools';
-import ProgressPanel from '../components/progressPanel'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
+import DataPanel from '../components/dataPanel';
 import Visualization from '../components/relation/Visualization';
 import TimelineVisualization from '../components/timeline/timeline'
 
@@ -66,6 +64,7 @@ const Case = () => {
         Axios.get(`/data/getData/${case_id}`)
             .then((res)=>{
             if(res.data){
+                // console.log(res.data);
                 setcase_data(res.data.data)
                 setisLoad(true)
             }else{
@@ -85,19 +84,9 @@ const Case = () => {
             <Col lg={4}>
                 <DataPanel case_id={case_id} caseData={case_data}/>
             </Col>
-            <Col lg={6}>
+            <Col lg={8} className='tw-border-l'>
                 <Visualization/>
-            </Col>
-            <Col lg={3}>
-                <Tools/>
-            </Col>
-        </Row>
-        <Row>
-            <Col lg={9}>
                 <TimelineVisualization/>
-            </Col>
-            <Col lg={3}>
-                <ProgressPanel/>
             </Col>
         </Row>
         </Container>:<Container className='mt-3 mb-3' fluid>
@@ -106,9 +95,8 @@ const Case = () => {
                 <DataPanel case_id={case_id} caseData={null}/>
             </Col>
             <Col lg={8} className='tw-border-l'>
-                <RelationGraph/>
-                <Timeline/>
-
+                <Visualization/>
+                <TimelineVisualization/>
             </Col>
         </Row>
         </Container>}
