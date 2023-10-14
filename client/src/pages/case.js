@@ -86,7 +86,7 @@ const Case = () => {
             </Col>
             <Col lg={8} className='tw-border-l'>
                 <Visualization/>
-                <TimelineVisualization/>
+                {/* <TimelineVisualization/> */}
             </Col>
         </Row>
         </Container>}
