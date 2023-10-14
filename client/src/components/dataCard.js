@@ -18,13 +18,9 @@ const DataCard = (props) => {
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [onEdit, setonEdit] = useState(false)
 
-    // useEffect(() => {
-    //     if(nodes==null){
-    //     setSelectedEventKey('create')
-    //     }
-
-    // }, [nodes])
-    
+    const editData = ()=>{
+        
+    }
 
 
     const nodeList = nodes?.map((node, idx) => (
@@ -55,54 +51,68 @@ const DataCard = (props) => {
 
     const selectedNode = nodes?.map((node,idx)=>
         selectedEventKey === `selected-${idx}` ? (
+            <Container>
             <Card className='mt-1'>
-            <Card.Header className='mb-1'>
-                <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
-                
-                {node.property[title]}
-                {onEdit?
-                <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
-                :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
-            </Card.Header>
-            <Form>
-                {Object.keys(node.property).map(key => (
-                <InputGroup className='mb-1'>
-                <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
-                <Form.Control
-                placeholder={node.property[key]}
-                disabled={!onEdit}
-                />
-                </InputGroup>
-                ))}
-                <InputGroup className='mb-2'>
-                <InputGroup.Text id='note'>note</InputGroup.Text>
-                <Form.Control
-                disabled={!onEdit}
-                as="textarea" />
-            </InputGroup>
-            </Form>
-            </Card>): null
+                <Card.Header className='mb-1'>
+                    <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
+
+                    {node.property[title]}
+                    {onEdit?
+                    <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
+                    :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
+                </Card.Header>
+                <Form onSubmit={editData}>
+                    {Object.keys(node.property).map(key => (
+                    <InputGroup className='mb-1 px-1'>
+                    <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
+                    <Form.Control
+                    placeholder={node.property[key]}
+                    disabled={!onEdit}
+                    />
+                    </InputGroup>
+                    ))}
+                    <InputGroup className='mb-1 px-1'>
+                    <InputGroup.Text id='note'>note</InputGroup.Text>
+                    <Form.Control
+                    disabled={!onEdit}
+                    as="textarea" />
+                    </InputGroup>
+                </Form>
+            </Card>
+            </Container>
+        ): null
     )
 
-    return (
-        <Container>
-            {selectedEventKey!=="list" ? selectedNode : nodeList}
-            {selectedEventKey==="create"?(
-            <Card className='mt-1'>
-            <Card.Header className='mb-1'>
-                <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
-                {`New ${label}`}
-            </Card.Header>
-                <CreateData label ={label}/>
-            </Card>
-            ):
-            <Card className='align-items-center mt-1' onClick={() => { setSelectedEventKey('create') }}>
-            <Button variant="light" size='sm' className='tw-w-full d-flex justify-content-center align-items-center'><PlusCircle /></Button>
-            </Card>
-            }
+    const switcher = () =>{
+        switch (selectedEventKey) {
+            case "list":
+                return (
+                    <Container>
+                        {nodeList}
+                        <Card className='align-items-center mt-1' onClick={() => { setSelectedEventKey('create') }}>
+                        <Button variant="light" size='sm' className='tw-w-full d-flex justify-content-center align-items-center'><PlusCircle /></Button>
+                        </Card>
+                    </Container>
+                )
+            case "create":
+                return(
+                    <Container>
+                        <Card className='mt-1'>
+                        <Card.Header className='mb-1'>
+                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
+                            {`New ${label}`}
+                        </Card.Header>
+                            <CreateData label ={label}/>
+                        </Card>
+                    </Container>
+                )
+            default:
+                return selectedNode
+        }
+    }
 
-        </Container>
-    
+    return (
+        switcher()
     );
 }
 

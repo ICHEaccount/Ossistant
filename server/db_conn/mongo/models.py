@@ -1,6 +1,5 @@
 from pymongo.errors import PyMongoError
 from .init import db
-# from bson import ObjectId
 import uuid
 
 class CaseModel(db.DynamicDocument):

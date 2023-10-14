@@ -1,15 +1,15 @@
 const labels = {
-    "post":{
-        "title":"Title",
-        "properties":["Url","Title","Created_Date","Type"]
+    "Post":{
+        "title":"title",
+        "properties":["url","title","content","created_date","post_type","note"]
     },
-    "user":{
-        "title":"Username",
-        "properties":["Username","Fake"]
+    "SurfaceUser":{
+        "title":"username",
+        "properties":["username","fake","note"]
     },
-    "domain":{
+    "Domain":{
         "title":"Domain",
-        "properties":["Domain","RegDate","Status"]
+        "properties":["domain","regdate","status","note"]
     }
 }
 

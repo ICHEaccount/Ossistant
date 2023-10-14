@@ -3,16 +3,19 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Stack from 'react-bootstrap/esm/Stack';
+import { useNavigate } from 'react-router-dom';
 
 function CaseCard(props) {
+    const navigate = useNavigate();
+
     const data = props.caseData
 
     const onMove = () =>{
-
+        navigate(`/case/${data.case_id}`)
     }
 
     const onEdit = () =>{
-
+        // todo
     }
 
     return (
@@ -24,7 +27,7 @@ function CaseCard(props) {
                 <Card.Subtitle className='text-muted'>
                     <Row>
                         <Col>
-                            {data.case_number}
+                            {data.case_num}
                         </Col>
                         <Col className="d-flex align-items-center">
                             <PersonVcard className='m-1'/>
@@ -32,7 +35,7 @@ function CaseCard(props) {
                         </Col>
                         <Col className="d-flex align-items-center">
                             <Calendar className='m-1'/>
-                            {data.creationDate}
+                            {data.created_date.split(':')[0]}
                         </Col>
                     </Row>
                 </Card.Subtitle>
