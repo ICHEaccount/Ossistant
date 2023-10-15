@@ -47,7 +47,7 @@ def create_data():
             return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
         except Exception as e:
             print(e)
-            return jsonify({"error": "An error occurred during data creation.", "details": str(e)}), 500
+            return jsonify({"error": "An error occurred during domain data creation.", "details": str(e)}), 500
         
     elif 'username' in data:
         try:
@@ -58,12 +58,26 @@ def create_data():
             new_user = SurfaceUser.create_node({
             "username": username,
             "url": url,
-            "fake": False
+            "fake": fake
             })
             return jsonify({"message": "SurfaceUser created successfully.", "user_uid": new_user.uid}), 201
         except Exception as e:
             print(e)
-            return jsonify({"error": "An error occurred during data creation.", "details": str(e)}), 500
+            return jsonify({"error": "An error occurred during SurfaceUser data creation.", "details": str(e)}), 500
+        
+    elif 'title' in data:
+        try:
+            url = data.get("url")
+            title = data.get("title")
+            content = data.get("content")
+
+
+
+            "url": self.url,
+            "title": self.title,
+            "writer": self.writer,
+            "created_date": self.created_date.isoformat(),
+            "post_type": self.post_type,
 
 
 
