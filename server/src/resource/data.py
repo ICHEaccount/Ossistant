@@ -25,9 +25,6 @@ def check_json_not_null(input):
                     return False
     return True
 
-@bp.route('/')
-def hell():
-    return 'hello world'
 
 @bp.route('/createData',methods=['POST'])
 def create_data():
