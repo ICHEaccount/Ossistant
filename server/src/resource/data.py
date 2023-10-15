@@ -69,7 +69,8 @@ def create_data():
             new_user = SurfaceUser.create_node({
             "username": username,
             "url": url,
-            "fake": fake
+            "fake": fake,
+            "case_id": case_id
             })
             #return jsonify({"message": "SurfaceUser created successfully.", "user_uid": new_user.uid}), 201
             return jsonify({"state":"success"}), 201
@@ -96,7 +97,8 @@ def create_data():
                 "title": title,
                 "content": content,
                 "created_date": created_date,
-                "post_type": post_type
+                "post_type": post_type,
+                "case_id": case_id
             })
             return jsonify({"state":"success"}), 201
         except Exception as e:
@@ -118,18 +120,35 @@ def get_data(case_id):
         if domains:
             domain_list=[]
             for domain in domains:
-                domain_list.append({"property":domain._json_serializable()})
+                domain_property = domain._json_serializable()
+                domain_property.pop("case_id", None)
+                domain_dict = {"node_id": str(domain.element_id), "property": domain_property}
+                domain_list.append(domain_dict)
+
+                #domain_list.append({"node_id": str(domain.element_id), "property":domain._json_serializable()})
             # domain_list = [{"property":domain._json_serializable() for domain in domains}]
 
         if users:
             user_list=[]
             for user in users:
-                user_list.append({"property":user._json_serializable()})
+                user_property = user._json_serializable()
+                user_property.pop("case_id", None)
+                user_property.pop("url", None) #프론트와 DB 설계 불일치
+                user_dict = {"node_id": str(user.element_id), "property": user_property}
+                user_list.append(user_dict)
 
         if posts:
             post_list=[]
             for post in posts:
-                post_list.append({"property":post._json_serializable()})
+                post_property = post._json_serializable()
+                post_property.pop("case_id", None)
+                
+                original_date = post_property.get("created_date")
+                formatted_date = datetime.strptime(original_date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y-%m-%d")
+                post_property["created_date"] = formatted_date
+
+                post_dict = {"node_id": str(post.element_id), "property": post_property}
+                post_list.append(post_dict)
 
             return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "User":user_list, "Post":post_list}}), 200
         else:
