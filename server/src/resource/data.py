@@ -6,6 +6,8 @@ from flask import request, jsonify,Blueprint
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
 from db_conn.neo4j.models.domain import Domain
+from db_conn.neo4j.models.user import SurfaceUser
+from db_conn.neo4j.models.post import Post
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -34,17 +36,35 @@ def create_data():
         print('[-] Invaild Case data')
         return jsonify({'Message':'Invalid data'}),400
 
-    try:
-        domain = data.get("domain")
-        regdate = data.get("regdate")
-        status = data.get("status")
-        case_id = data.get("case_id")
+    if 'domain' in data:
+        try:
+            domain = data.get("domain")
+            regdate = data.get("regdate")
+            status = data.get("status")
+            case_id = data.get("case_id")
 
-        new_domain = Domain.create_domain(domain=domain, regdate=regdate, status=status, case_id=case_id)
-        return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
-    except Exception as e:
-        print(e)
-        return jsonify({"error": "데이터 생성 중 오류가 발생했습니다.", "details": str(e)}), 500
+            new_domain = Domain.create_domain(domain=domain, regdate=regdate, status=status, case_id=case_id)
+            return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "An error occurred during data creation.", "details": str(e)}), 500
+        
+    elif 'username' in data:
+        try:
+            username = data.get("username")
+            url = data.get("url")
+            fake = data.get("fake")
+            
+            new_user = SurfaceUser.create_node({
+            "username": username,
+            "url": url,
+            "fake": False
+            })
+            return jsonify({"message": "SurfaceUser created successfully.", "user_uid": new_user.uid}), 201
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "An error occurred during data creation.", "details": str(e)}), 500
+
 
 
 @bp.route('/getData/<string:case_id>',methods=["GET"])
