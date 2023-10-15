@@ -112,12 +112,26 @@ def get_data(case_id):
     try:
         # case_id를 사용하여 도메인을 조회합니다.
         domains = Domain.nodes.filter(case_id=case_id)
+        users = SurfaceUser.nodes.filter(case_id=case_id)
+        posts = Post.nodes.filter(case_id=case_id)
+
         if domains:
             domain_list=[]
             for domain in domains:
                 domain_list.append({"property":domain._json_serializable()})
             # domain_list = [{"property":domain._json_serializable() for domain in domains}]
-            return jsonify({"case_id":case_id,"data":{"Domain":domain_list}}), 200
+
+        if users:
+            user_list=[]
+            for user in users:
+                user_list.append({"property":user._json_serializable()})
+
+        if posts:
+            post_list=[]
+            for post in posts:
+                post_list.append({"property":post._json_serializable()})
+
+            return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "User":user_list, "Post":post_list}}), 200
         else:
             return jsonify({"case_id":case_id,"data":{}}), 200
     except Exception as e:
