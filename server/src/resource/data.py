@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 # flaks 
 from flask import request, jsonify,Blueprint
@@ -80,14 +80,16 @@ def create_data():
         
     elif 'case_id' in data and 'Post' in data:
         try:
-            post_data = data.get("User")
+            post_data = data.get("Post")
             case_id = data.get("case_id")
 
             url = post_data.get("url")
             title = post_data.get("title")
             content = post_data.get("content")
-            created_date = post_data.get("created_date")
-            post_type = post_data.get("post_type")           
+            created_date_str = post_data.get("created_date")
+            post_type = post_data.get("post_type")
+            
+            created_date = datetime.strptime(created_date_str, "%Y-%m-%d")         
 
             new_post = Post.create_node({
                 "url": url,
