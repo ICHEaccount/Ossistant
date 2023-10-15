@@ -44,10 +44,11 @@ def create_data():
             case_id = data.get("case_id")
 
             new_domain = Domain.create_domain(domain=domain, regdate=regdate, status=status, case_id=case_id)
-            return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
+            #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
+            return jsonify({"state":"success"}), 201
         except Exception as e:
-            print(e)
-            return jsonify({"error": "An error occurred during domain data creation.", "details": str(e)}), 500
+            #print(e)
+            return jsonify({"state":"fail", "error": str(e)}), 200
         
     elif 'username' in data:
         try:
@@ -60,24 +61,31 @@ def create_data():
             "url": url,
             "fake": fake
             })
-            return jsonify({"message": "SurfaceUser created successfully.", "user_uid": new_user.uid}), 201
+            #return jsonify({"message": "SurfaceUser created successfully.", "user_uid": new_user.uid}), 201
+            return jsonify({"state":"success"}), 201
         except Exception as e:
-            print(e)
-            return jsonify({"error": "An error occurred during SurfaceUser data creation.", "details": str(e)}), 500
+            #print(e)
+            #return jsonify({"error": "An error occurred during SurfaceUser data creation.", "details": str(e)}), 200
+            return jsonify({"state":"fail", "error": str(e)}), 200
         
     elif 'title' in data:
         try:
             url = data.get("url")
             title = data.get("title")
             content = data.get("content")
+            created_date = data.get("created_date")
+            post_type = data.get("post_type")
 
-
-
-            "url": self.url,
-            "title": self.title,
-            "writer": self.writer,
-            "created_date": self.created_date.isoformat(),
-            "post_type": self.post_type,
+            new_post = Post.create_node({
+                "url": url,
+                "title": title,
+                "content": content,
+                "created_date": created_date,
+                "post_type": post_type
+            })
+            return jsonify({"state":"success"}), 201
+        except Exception as e:
+            return jsonify({"state":"fail", "error": str(e)}), 200
 
 
 
