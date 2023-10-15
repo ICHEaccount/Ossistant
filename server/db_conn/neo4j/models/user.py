@@ -6,12 +6,14 @@ class SurfaceUser(StructuredNode):
     username = StringProperty()
     url = StringProperty()
     fake = BooleanProperty(default=False)
+    case_id = StringProperty()
 
     def _json_serializable(self):
         return {
             "username": self.username,
             "url": self.url,
             "fake": self.fake,
+            "case_id": self.case_id
         }
     
     @classmethod

@@ -10,6 +10,7 @@ class Post(StructuredNode):
     content = StringProperty()
     created_date = DateTimeProperty()
     post_type = IntegerProperty()
+    case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
@@ -22,6 +23,7 @@ class Post(StructuredNode):
             "content": self.content,
             "created_date": self.created_date.isoformat(),
             "post_type": self.post_type,
+            "case_id": self.case_id
         }
 
     @classmethod
