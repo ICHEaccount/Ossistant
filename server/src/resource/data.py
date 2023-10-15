@@ -13,35 +13,42 @@ bp = Blueprint('data', __name__, url_prefix='/data')
 
 def check_json_not_null(input):
     for value in input.values():
-        if value is None:
-            return False
-        elif isinstance(value, dict):
+        if isinstance(value, dict):
             if not check_json_not_null(value):
+                return False
+            if "null" in value.values():
                 return False
         elif isinstance(value, list):
             for item in value:
                 if isinstance(item, dict):
                     if not check_json_not_null(item):
                         return False
-                elif item is None:
-                    return False
+                    if "null" in item.values():
+                        return False
+        elif value is None and value is not "null":
+            return False
     return True
+
+
 
 
 @bp.route('/createData',methods=['POST'])
 def create_data():
     data = request.get_json()
     print(data)
-    if check_json_not_null(data) is False:
-        print('[-] Invaild Case data')
-        return jsonify({'Message':'Invalid data'}),400
+    #if check_json_not_null(data) is False:
+    #    print('[-] Invaild Case data')
+    #    return jsonify({'Message':'Invalid data'}),400
 
-    if 'domain' in data:
+    if 'case_id' in data and 'Domain' in data:
         try:
-            domain = data.get("domain")
-            regdate = data.get("regdate")
-            status = data.get("status")
+            domain_data = data.get("Domain")
             case_id = data.get("case_id")
+
+            domain = domain_data.get("domain")
+            regdate = domain_data.get("regdate")
+            status = domain_data.get("status")           
+            note = domain_data.get("note")
 
             new_domain = Domain.create_domain(domain=domain, regdate=regdate, status=status, case_id=case_id)
             #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
@@ -50,12 +57,15 @@ def create_data():
             #print(e)
             return jsonify({"state":"fail", "error": str(e)}), 200
         
-    elif 'username' in data:
+    elif 'case_id' in data and 'User' in data:
         try:
-            username = data.get("username")
-            url = data.get("url")
-            fake = data.get("fake")
-            
+            user_data = data.get("User")
+            case_id = data.get("case_id")
+
+            username = user_data.get("username")
+            url = user_data.get("url")
+            fake = user_data.get("fake")
+                 
             new_user = SurfaceUser.create_node({
             "username": username,
             "url": url,
@@ -68,13 +78,16 @@ def create_data():
             #return jsonify({"error": "An error occurred during SurfaceUser data creation.", "details": str(e)}), 200
             return jsonify({"state":"fail", "error": str(e)}), 200
         
-    elif 'title' in data:
+    elif 'case_id' in data and 'Post' in data:
         try:
-            url = data.get("url")
-            title = data.get("title")
-            content = data.get("content")
-            created_date = data.get("created_date")
-            post_type = data.get("post_type")
+            post_data = data.get("User")
+            case_id = data.get("case_id")
+
+            url = post_data.get("url")
+            title = post_data.get("title")
+            content = post_data.get("content")
+            created_date = post_data.get("created_date")
+            post_type = post_data.get("post_type")           
 
             new_post = Post.create_node({
                 "url": url,
