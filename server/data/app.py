@@ -15,7 +15,7 @@ from timeline.time import bp as timeline_bp
 app = Flask(__name__)
 CORS(app)
 
-# MongoDB
+# Flask Config
 load_dotenv()
 app.config['MONGODB_DB'] = os.environ.get("MONGODB_DB")
 app.config['MONGODB_HOST'] = os.environ.get('MONGODB_HOST')

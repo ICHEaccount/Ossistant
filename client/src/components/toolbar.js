@@ -5,18 +5,19 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Form, Link, useLocation} from 'react-router-dom';
 import logo from '../images/logo.png';
-import {List, House} from 'react-bootstrap-icons';
+import {List, House, PersonVcard, Calendar} from 'react-bootstrap-icons';
 import Axios from "axios";
 import Help from './help';
+import { Col, Row } from 'react-bootstrap';
 
 
 const Toolbar = () => {
     const location = useLocation();
     const [case_id, setcase_id] = useState(null)
-    const [case_name, setcase_name] = useState("")
+    const [case_name, setcase_name] = useState(null)
     const [case_number, setcase_number] = useState("")
     const [investigator, setinvestigator] = useState("")
-    const [description, setdescription] = useState("")
+    const [created_date, setcreated_date] = useState("")
     const [cases, setcases] = useState([])
     const [isload, setisload] = useState(false)
     const [isCasePage, setisCasePage] = useState(false)
@@ -37,10 +38,11 @@ const Toolbar = () => {
                 Axios.get(`/case/getCaseInfo/${case_id}`)
                 .then((res)=>{
                 if(res.data){
-                    setcase_number(res.data.case_number)
-                    setcase_name(res.data.case_number)
+                    setcase_number(res.data.case_num)
+                    setcase_name(res.data.case_name)
                     setinvestigator(res.data.investigator)
-                    setdescription(res.data.description)
+                    setcreated_date(res.data.created_date.split(':')[0])
+                    
                     console.log(res.data);
                 }else{
                     alert('Backend Connection Failed')
@@ -72,7 +74,7 @@ const Toolbar = () => {
 
 
     return (
-    <Navbar expand="lg" className="tw-bg-white">
+    <Navbar expand="lg" className="tw-bg-white justify-content-between">
         <Container>
         <Navbar.Brand href="/" className='tw-font-bold'>
             <img
@@ -82,7 +84,7 @@ const Toolbar = () => {
             />{' '}
             OSSISTANT
         </Navbar.Brand>
-        <Navbar.Text className=''>{`${case_number} ${case_name} ${investigator} ${description}`}</Navbar.Text>
+        
         <div className="ml-auto d-flex" >
             {isCasePage &&
             (<Link to="/">
@@ -90,7 +92,19 @@ const Toolbar = () => {
             </Link>)}
             <Help location = {location.pathname}/>
             <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
-                {case_id?(<Dropdown.Item href="#editCase">Edit Case</Dropdown.Item>):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
+                {case_id?(
+                    <div>
+                    <NavDropdown.ItemText >{case_name}</NavDropdown.ItemText>
+                    <NavDropdown.ItemText >
+                        <PersonVcard className='tw-m-1 tw-inline' />
+                        {investigator}
+                    </NavDropdown.ItemText>
+                    <NavDropdown.ItemText>
+                        <Calendar className='tw-m-1 tw-inline'/>
+                        {created_date}
+                    </NavDropdown.ItemText>
+                    </div>
+                ):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
                 <NavDropdown.Divider />
                 {isload?(caseList):<NavDropdown.ItemText>No Case</NavDropdown.ItemText>}
                 <NavDropdown.Divider />
