@@ -33,7 +33,7 @@ services:
 #    volumes:
 #      - ./server/database/mongodb/data:/data/db
 
-<<<<<<< HEAD
+
 #  client:
 #    container_name: client
 #    build:
@@ -71,7 +71,6 @@ services:
 
   case:
     container_name: case
-=======
   client:
     container_name: client
     build:
@@ -109,7 +108,6 @@ services:
   
   data:
     container_name: data
->>>>>>> e8ad90dccee4970c6d78a619b55296235864b89a
     build:
       context: ./server/data
       dockerfile: ./data.Dockerfile

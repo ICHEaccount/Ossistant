@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
@@ -86,7 +86,6 @@ def create_post():
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', debug=True, port=5011)
-=======
 
 from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
@@ -238,6 +237,3 @@ def create_domain():
 def create_post():
     post = post_function()
     return jsonify({'post_dicts':post}), 200
-
-
->>>>>>> e8ad90dccee4970c6d78a619b55296235864b89a
