@@ -6,7 +6,7 @@ class Post(StructuredNode):
     uid = UniqueIdProperty()
     url = StringProperty()
     title = StringProperty()
-    #writer = StringProperty()
+    writer = StringProperty()
     content = StringProperty()
     created_date = DateTimeProperty()
     post_type = IntegerProperty()
@@ -19,7 +19,7 @@ class Post(StructuredNode):
         return {
             "url": self.url,
             "title": self.title,
-            #"writer": self.writer,
+            # "writer": self.writer,
             "content": self.content,
             "created_date": self.created_date.isoformat(),
             "post_type": self.post_type,

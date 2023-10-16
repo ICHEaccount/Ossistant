@@ -78,23 +78,7 @@ class CaseModel(db.DynamicDocument):
             print(f'{cls.col_name} : Modification Error: {e}')
             return False
 
-    @classmethod
-    def create_tool(cls, case_id, tool_id, tool) -> bool:
-        try:
-            case = cls.objects(case_id=case_id).first()
-            if case:
-                new_tool = ToolModel(tool_id=tool_id, tool=tool, created_date=datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S"))
-                case.tool = new_tool
-                case.save()
-                return True
-            else:
-                print(f'{cls.col_name} : Case not found')
-                return False
-        except Exception as e:
-            print(f'{cls.col_name} : Tool Creation Error: {e}')
-            return False
-        
-    
+    +
     @classmethod
     def create_runs(cls, case_id, tool_id):
         try:
