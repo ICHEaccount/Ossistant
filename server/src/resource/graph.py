@@ -38,10 +38,3 @@ def get_neo4j_data():
         print(nodes_and_relationships[:4])
     return jsonify(nodes_and_relationships)
 
-
-
-
-
-
-
-

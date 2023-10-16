@@ -58,8 +58,6 @@ const Case = () => {
     const [case_data, setcase_data] = useState({})
     const [isLoad, setisLoad] = useState(false)
 
-
-
     useEffect(() => {
         Axios.get(`/data/getData/${case_id}`)
             .then((res)=>{

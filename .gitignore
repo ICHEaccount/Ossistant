@@ -1,9 +1,13 @@
 # npm 
 client/node_modules/
 database/
-
 ## etc
 .DS_Store
 __pycache__/
 *.py[cod]
 *$py.class
+
+## for pycharm
+venv2
+.idea
+#
