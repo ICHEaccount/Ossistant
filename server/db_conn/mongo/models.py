@@ -78,7 +78,7 @@ class CaseModel(db.DynamicDocument):
             print(f'{cls.col_name} : Modification Error: {e}')
             return False
 
-    +
+    
     @classmethod
     def create_runs(cls, case_id, tool_id):
         try:
