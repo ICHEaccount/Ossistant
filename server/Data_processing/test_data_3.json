@@ -3,104 +3,111 @@
         {
             "domain": "puritipo.co.kr",
             "regdate": "2023-09-08",
-            "status": "1"
+            "status": "1",
+            "note": "This is Domain 1"
         },
         {
             "domain": "s-richman.com",
             "regdate": "2019-07-21",
-            "status": "0"
+            "status": "0",
+            "note": "This is Domain 2"
         },
         {
             "domain": "cheonan-asan.com",
             "regdate": "2019-08-01",
-            "status": "1"
+            "status": "1",
+            "note": "This is Domain 3"
         },
         {
             "domain": "puritipo.com",
             "regdate": "2023-09-08",
-            "status": "1"
+            "status": "1",
+            "note": "This is Domain 4"
         },
         {
             "domain": "puritipo.net",
             "regdate": "2023-09-08",
-            "status": "1"
+            "status": "1",
+            "note": "This is Domain 5"
         }
     ],
-    "User":[
+    "SurfaceUser":[
         {
-            "src": "https://blog.naver.com/beentack8/221610229884",
-            "type": "user",
-            "keyword": "testuser1"
+            "username": "testuser1",
+            "fake": "1",
+            "url": "puritipo.co.kr",
+            "note": "This is SurfaceUser 1"
         },
         {
-            "src": "puritipo.co.kr",
-            "type": "user",
-            "keyword": "beentack8"
+            "username": "beentack8",
+            "fake": "0",
+            "url": "https://blog.naver.com/beentack8/221610229884",
+            "note": "This is SurfaceUser 2"
         }
     ],
     "Post":[
         {
-            "src": "https://blog.naver.com/beentack8/221610229884",
-            "type": "post",
-            "keyword": {
-                "post_writer": "우렁우렁각시",
-                "post_date": "2019-08-08 22:03",
-                "post_title": "비온뒤 하늘은 멋있다."
-            }
+            "url": "https://blog.naver.com/beentack8/221610229884",
+            "title": "비온뒤 하늘은 멋있다.",
+            "content": "Content 1",
+            "writer": "우렁우렁각시",
+            "created_date" : "2019-06-23 01:23",
+            "post_type": "Naver",
+            "note": "This is post 1"
         },
         {
-            "src": "https://blog.naver.com/beentack8/221569102020",
-            "type": "post",
-            "keyword": {
-                "post_writer": "우렁우렁각시",
-                "post_date": "2019-06-24 01:23",
-                "post_title": "천안 웨딩박람회,천안웨딩홀,천안 결혼준비!!"
-            }
+            "url": "https://blog.naver.com/beentack8/221569102020",
+            "title": "천안 웨딩박람회,천안웨딩홀,천안 결혼준비!!",
+            "content :" : "Content 2",
+            "writer": "우렁우렁각시",
+            "created_date" : "2019-06-24 01:23",
+            "post_type": "Naver",
+            "note": "This is post 2"
         },
         {
-            "src": "https://blog.naver.com/yeongchang13/221672725197",
-            "type": "post",
-            "keyword": {
-                "post_writer": "yeongchang13님의블로그",
-                "post_date": "2019-10-09 15:03",
-                "post_title": "그때로 돌아가는 마술 888555"
-            }
+            "url": "https://blog.naver.com/yeongchang13/221672725197",
+            "title": "그때로 돌아가는 마술 888555",
+            "content": "Content 3",
+            "writer": "우렁우렁각시",
+            "created_date": "2019-10-09 15:03",
+            "post_type": "Naver",
+            "note": "This is post 3"
         },
         {
-            "src": "https://blog.naver.com/dud_ckd98/221654099625",
-            "type": "post",
-            "keyword": {
-                "post_writer": "리치맨",
-                "post_date": "2019-09-20 16:50",
-                "post_title": "LG시네빔 하고 비교하지 마세요~"
-            }
+            "url": "https://blog.naver.com/dud_ckd98/221654099625",
+            "title": "LG시네빔 하고 비교하지 마세요~",
+            "content": "Content 4",
+            "writer": "우렁우렁각시",
+            "created_date": "2019-09-20 16:50",
+            "post_type": "Naver",
+            "note": "This is post 4"
         },
         {
-            "src": "https://blog.naver.com/dud_ckd98/221655446289",
-            "type": "post",
-            "keyword": {
-                "post_writer": "리치맨",
-                "post_date": "2019-09-22 03:07",
-                "post_title": "PC카카오톡 광고 배너 없애기"
-            }
+            "url": "https://blog.naver.com/dud_ckd98/221655446289",
+            "title": "PC카카오톡 광고 배너 없애기",
+            "content": "Content 5",
+            "writer": "리치맨",
+            "created_date": "2019-09-22 03:07",
+            "post_type": "Naver",
+            "note": "This is post 5"
         },
         {
-            "src": "https://blog.naver.com/dud_ckd98/221656776132",
-            "type": "post",
-            "keyword": {
-                "post_writer": "리치맨",
-                "post_date": "2019-09-23 14:12",
-                "post_title": "천안웨딩촬영 :: 인생사진 제대로 건지고 싶다면?"
-            }
+            "url": "https://blog.naver.com/dud_ckd98/221656776132",
+            "title": "천안웨딩촬영 :: 인생사진 제대로 건지고 싶다면?",
+            "content": "Content 6",
+            "writer": "리치맨",
+            "created_date": "2019-09-23 14:12",
+            "post_type": "Naver",
+            "note": "This is post 6"
         },
         {
-            "src": "https://blog.naver.com/dud_ckd98/221664046864",
-            "type": "post",
-            "keyword": {
-                "post_writer": "리치맨",
-                "post_date": "2019-09-30 19:09",
-                "post_title": "비행기결항기준 왜 이렇게 늦어지는 것일까?"
-            }
+            "url": "https://blog.naver.com/dud_ckd98/221664046864",
+            "title": "비행기결항기준 왜 이렇게 늦어지는 것일까?",
+            "content": "Content 7",
+            "writer": "리치맨",
+            "created_date": "2019-09-30 19:09",
+            "post_type": "Naver",
+            "note": "This is post 7"
         }
     ]
 }

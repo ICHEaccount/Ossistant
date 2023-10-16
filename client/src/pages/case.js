@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import Axios from "axios";
 import { useParams } from 'react-router-dom';
 import DataList from '../components/dataList';
-import RelationGraph from '../components/relationGraph';
+import RelationGraph from '../components/relation_graph/RelationGraph';
 import Tools from '../components/tools';
 import Timeline from '../components/timeline';
 import ProgressPanel from '../components/progressPanel'
