@@ -7,8 +7,10 @@ class Post(StructuredNode):
     url = StringProperty()
     title = StringProperty()
     writer = StringProperty()
+    content = StringProperty()
     created_date = DateTimeProperty()
     post_type = IntegerProperty()
+    case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
@@ -17,9 +19,11 @@ class Post(StructuredNode):
         return {
             "url": self.url,
             "title": self.title,
-            "writer": self.writer,
+            # "writer": self.writer,
+            "content": self.content,
             "created_date": self.created_date.isoformat(),
             "post_type": self.post_type,
+            "case_id": self.case_id
         }
 
     @classmethod
@@ -46,16 +50,13 @@ class Post(StructuredNode):
             return None
         
     @classmethod
-    def update_post_properties(cls, node_id, title=None, writer=None, created_date=None, post_type=None):
-        post = cls.nodes.get_or_none(uid=node_id)
-        if post:
-            post.title = title
-            post.writer = writer
-            post.created_date = created_date
-            post.post_type = post_type
-            post.save()
+    def update_node_properties(cls, node_id, **kwargs):
+        node = cls.nodes.get_or_none(uid=node_id)
+        if node:
+            for key, value in kwargs.items():
+                setattr(node, key, value)
+            node.save()
             return True
         else:
-            return False 
-
+            return False
 

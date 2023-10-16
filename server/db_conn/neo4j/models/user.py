@@ -6,12 +6,14 @@ class SurfaceUser(StructuredNode):
     username = StringProperty()
     url = StringProperty()
     fake = BooleanProperty(default=False)
+    case_id = StringProperty()
 
     def _json_serializable(self):
         return {
             "username": self.username,
             "url": self.url,
             "fake": self.fake,
+            "case_id": self.case_id
         }
     
     @classmethod
@@ -38,11 +40,12 @@ class SurfaceUser(StructuredNode):
             return None
         
     @classmethod
-    def update_node_properties(cls, node_id, prop_key, prop_data):
-        user = cls.nodes.get_or_none(uid=node_id)
-        if user:
-            setattr(user, prop_key, prop_data)
-            user.save()
+    def update_node_properties(cls, node_id, **kwargs):
+        node = cls.nodes.get_or_none(uid=node_id)
+        if node:
+            for key, value in kwargs.items():
+                setattr(node, key, value)
+            node.save()
             return True
         else:
             return False
