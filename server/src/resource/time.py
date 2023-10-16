@@ -1,4 +1,3 @@
-
 from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
@@ -79,7 +78,10 @@ def post_function():
 
     return sorted_results
 
-@bp.route('/post',methods=["GET"])
+@app.route('/post',methods=["GET"])
 def create_post():
     post = post_function()
     return jsonify({'post_dicts':post}), 200
+
+if __name__ == '__main__':
+    app.run(host = '0.0.0.0', debug=True, port=5011)
