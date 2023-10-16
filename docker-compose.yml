@@ -17,7 +17,7 @@ services:
       - ./server/database/neo4j/data:/data 
       - ./server/database/neo4j/import:/import
       - ./server/database/neo4j/conf:/var/lib/neo4j/conf
-#
+
 #  mongodb:
 #    image: mongo
 #    container_name: mongodb
