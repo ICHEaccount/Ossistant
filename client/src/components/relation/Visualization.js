@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Network, DataSet } from 'vis-network/standalone';
 import 'vis-network/styles/vis-network.css';
@@ -14,7 +13,6 @@ function Visualization() {
       nodes: new DataSet(),
       edges: new DataSet(),
     };
-
 
     axios.get('/graph/node').then((response) => {
       const graphData = response.data;

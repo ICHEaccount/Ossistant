@@ -1,4 +1,3 @@
-
 from neomodel import Relationship
 
 from .user import SurfaceUser

@@ -31,7 +31,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=1234 
       - MONGO_INITDB_DATABASE=ossistant
     volumes:
-      - ./server/database/mongodb/data:/data/db
+      - ./database/mongodb/data:/data/db
 
   client:
     container_name: client
