@@ -1,5 +1,6 @@
 # npm 
 client/node_modules/
+database/
 
 ## etc
 .DS_Store

@@ -1,14 +1,12 @@
 import React,{useState,useEffect} from 'react';
 import Axios from "axios";
 import { useParams } from 'react-router-dom';
-import RelationGraph from '../components/relationGraph';
-import Timeline from '../components/timeline';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
 import DataPanel from '../components/dataPanel';
-import Loading from '../components/loading';
-
+import Visualization from '../components/relation/Visualization';
+import TimelineVisualization from '../components/timeline/timeline'
 
 ///DUMMY DATA///
 const dummy = {
@@ -66,6 +64,7 @@ const Case = () => {
         Axios.get(`/data/getData/${case_id}`)
             .then((res)=>{
             if(res.data){
+                // console.log(res.data);
                 setcase_data(res.data.data)
                 setisLoad(true)
             }else{
@@ -75,31 +74,19 @@ const Case = () => {
             })        
         
         
-    }, [case_data, case_id])
+    }, [case_id])
 
 
     return (
     <div>
-        {isLoad?<Container className='mt-3 mb-3' fluid>
+        {isLoad&&<Container className='mt-3 mb-3' fluid>
         <Row>
             <Col lg={4}>
                 <DataPanel case_id={case_id} caseData={case_data}/>
             </Col>
             <Col lg={8} className='tw-border-l'>
-                <RelationGraph/>
-                <Timeline/>
-
-            </Col>
-        </Row>
-        </Container>:<Container className='mt-3 mb-3' fluid>
-        <Row>
-            <Col lg={4}>
-                <DataPanel case_id={case_id} caseData={null}/>
-            </Col>
-            <Col lg={8} className='tw-border-l'>
-                <RelationGraph/>
-                <Timeline/>
-
+                <Visualization/>
+                {/* <TimelineVisualization/> */}
             </Col>
         </Row>
         </Container>}

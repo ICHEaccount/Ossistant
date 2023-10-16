@@ -19,24 +19,24 @@ const DataPanel = (props) => {
 
     const toolrunner = (run_id) =>{
         const interval = setInterval(() => {
-            Axios.get(`/tools/getToolState/${run_id}`)
-                .then(response => {
-                if (response.data.state === 'completed') {
-                    clearInterval(interval); // 작업이 완료되면 인터벌 해제
-                    settoolResult(response.data.result);
-                    settoolState('completed');
-                } else if (response.data.state === 'running') {
-                    settoolState('running');
-                } else {
-                    clearInterval(interval);
-                    settoolState('unknown');
-                }
-                })
-                .catch(error => {
-                clearInterval(interval);
-                settoolState('error');
-                settoolError(error)
-                });
+            // Axios.get(`/tools/getToolState/${run_id}`)
+            //     .then(response => {
+            //     if (response.data.state === 'completed') {
+            //         clearInterval(interval); // 작업이 완료되면 인터벌 해제
+            //         settoolResult(response.data.result);
+            //         settoolState('completed');
+            //     } else if (response.data.state === 'running') {
+            //         settoolState('running');
+            //     } else {
+            //         clearInterval(interval);
+            //         settoolState('unknown');
+            //     }
+            //     })
+            //     .catch(error => {
+            //     clearInterval(interval);
+            //     settoolState('error');
+            //     settoolError(error)
+            //     });
           }, 5000); // 5초마다 확인
     }
 

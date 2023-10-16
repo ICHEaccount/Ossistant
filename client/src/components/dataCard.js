@@ -14,7 +14,6 @@ const DataCard = (props) => {
     const label = props.label
     const nodes = props.nodes
     const title = labels[label].title
-
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [onEdit, setonEdit] = useState(false)
 
@@ -23,10 +22,12 @@ const DataCard = (props) => {
     }
 
 
-    const nodeList = nodes?.map((node, idx) => (
+    const nodeList = nodes?.map((node, idx) => {
+
+        return(
         <Card
         className='mt-1'
-        key={node.id}
+        // key={node.id}
         >
         <Card.Body>
             <Row>
@@ -47,7 +48,7 @@ const DataCard = (props) => {
         
         </Card.Body>
         </Card>
-    ));
+    )});
 
     const selectedNode = nodes?.map((node,idx)=>
         selectedEventKey === `selected-${idx}` ? (
@@ -62,7 +63,9 @@ const DataCard = (props) => {
                     :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
                 </Card.Header>
                 <Form onSubmit={editData}>
-                    {Object.keys(node.property).map(key => (
+                    {Object.keys(node.property).map((key) =>{
+                        if(node.property[key]==null) return <></>
+                        return(
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
                     <Form.Control
@@ -70,7 +73,7 @@ const DataCard = (props) => {
                     disabled={!onEdit}
                     />
                     </InputGroup>
-                    ))}
+                    )})}
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text id='note'>note</InputGroup.Text>
                     <Form.Control
@@ -88,7 +91,7 @@ const DataCard = (props) => {
             case "list":
                 return (
                     <Container>
-                        {nodeList}
+                        {nodes?nodeList:null}
                         <Card className='align-items-center mt-1' onClick={() => { setSelectedEventKey('create') }}>
                         <Button variant="light" size='sm' className='tw-w-full d-flex justify-content-center align-items-center'><PlusCircle /></Button>
                         </Card>

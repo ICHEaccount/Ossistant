@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: document.getElementById('description').value
         };
 
-        fetch('http://127.0.0.1:5005/case/createCase', {
+        fetch('http://127.0.0.1:5000/case/createCase', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

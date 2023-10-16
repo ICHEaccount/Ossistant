@@ -13,10 +13,10 @@ services:
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
       - NEO4J_AUTH=neo4j/icheneo4j 
     volumes:
-      - ./server/database/neo4j/plugins:/plugins
-      - ./server/database/neo4j/data:/data 
-      - ./server/database/neo4j/import:/import
-      - ./server/database/neo4j/conf:/var/lib/neo4j/conf
+      - ./database/neo4j/plugins:/plugins
+      - ./database/neo4j/data:/data 
+      - ./database/neo4j/import:/import
+      - ./database/neo4j/conf:/var/lib/neo4j/conf
 
   mongodb:
     image: mongo
@@ -31,7 +31,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=1234 
       - MONGO_INITDB_DATABASE=ossistant
     volumes:
-      - ./server/database/mongodb/data:/data/db
+      - ./database/mongodb/data:/data/db
 
   client:
     container_name: client
@@ -53,7 +53,7 @@ services:
     tty: true
     depends_on:
       - mongodb
-      - case
+      - osint
 
   osint:
     container_name: osint
@@ -68,14 +68,15 @@ services:
     ports:
       - 5005:5000
   
-  case:
-    container_name: case
+  data:
+    container_name: data
     build:
-      context: ./server
-      dockerfile: ./case/case.Dockerfile
+      context: ./server/src
+      dockerfile: ./data.Dockerfile
     volumes:
-      - ./server/case:/app
+      - ./server/src:/app
       - ./server/db_conn/mongo:/db_conn/mongo
+      - ./server/db_conn/neo4j:/db_conn/neo4j
     networks:
       icheTest:
         ipv4_address: 172.25.0.6
