@@ -1,12 +1,13 @@
 # flaks 
 from flask import request, jsonify,Blueprint
 
-from db_conn.neo4j import graphdb
-from db_conn.neo4j.models.main_node import SurfaceUser
-from db_conn.neo4j.models.sub_node import Post
+from db_conn.neo4j import db
+from db_conn.neo4j.models.user import SurfaceUser
+from db_conn.neo4j.models.post import Post
+from db_conn.neo4j.models.domain import Domain
 from db_conn.neo4j.models.relationship_manager import RelationshipManager
 
-bp = Blueprint('tool', __name__, url_prefix='/graph/ext')
+bp = Blueprint('extension', __name__, url_prefix='/graph/ext')
 
 
 @bp.route('/create',methods=["POST"])
@@ -25,18 +26,34 @@ def create_node():
 
     if req_label == 'SurfaceUser':
         node_id = SurfaceUser.node_exists_url(req['url'])
-        if len(node_id)!=0:
-            if SurfaceUser.update_node_properties(node_id[0], keys[0], req['keyword'][keys[0]]) is False:
+        if node_id is not None:
+            if SurfaceUser.update_node_properties(node_id, keys[0], req['keyword'][keys[0]]) is False:
                 return jsonify({'Error':'Node update Error '}), 500
         else:
             req_arg['url'] = req['url']
-            node = SurfaceUser(**req_arg).create()
+            node = SurfaceUser.create_node(req_arg)
             if not node:
-                return jsonify({'Error':'Node update Error'}), 500
+                return jsonify({'Error':'Node creation Error'}), 500
     elif req_label == 'Domain':
-        pass 
+        node_id = Domain.node_exists_url(req['url'])
+        if node_id is not None:
+            if Domain.update_node_properties(node_id, keys[0], req['keyword'][keys[0]]) is False:
+                return jsonify({'Error':'Node update Error '}), 500
+        else:
+            req_arg['url'] = req['url']
+            node = Domain.create_node(req_arg)
+            if not node:
+                return jsonify({'Error':'Node creation Error'}), 500
     elif req_label == 'Post':
-        pass
+        node_id = Post.node_exists_url(req['url'])
+        if node_id is not None:
+            if Post.update_node_properties(node_id, keys[0], req['keyword'][keys[0]]) is False:
+                return jsonify({'Error':'Node update Error '}), 500
+        else:
+            req_arg['url'] = req['url']
+            node = Post.create_node(req_arg)
+            if not node:
+                return jsonify({'Error':'Node creation Error'}), 500
 
     return jsonify({'Message':'Success'}), 200
     

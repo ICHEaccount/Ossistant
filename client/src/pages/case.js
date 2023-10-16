@@ -2,13 +2,17 @@ import React,{useState,useEffect} from 'react';
 import Axios from "axios";
 import { useParams } from 'react-router-dom';
 import DataList from '../components/dataList';
+<<<<<<< HEAD
 import RelationGraph from '../components/relation_graph/RelationGraph';
+=======
+>>>>>>> e8ad90dccee4970c6d78a619b55296235864b89a
 import Tools from '../components/tools';
 import Timeline from '../components/timeline';
 import ProgressPanel from '../components/progressPanel'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
+import Visualization from '../components/relation/Visualization';
 
 
 const Case = () => {
@@ -22,7 +26,7 @@ const Case = () => {
                 <DataList case_id={case_id}/>
             </Col>
             <Col lg={6}>
-                <RelationGraph/>
+                <Visualization/>
             </Col>
             <Col lg={3}>
                 <Tools/>

@@ -2,7 +2,11 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+<<<<<<< HEAD
   "proxy": "http://127.0.0.1:5011",
+=======
+  "proxy": "http://172.25.0.6:5000",
+>>>>>>> e8ad90dccee4970c6d78a619b55296235864b89a
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -20,7 +24,8 @@
     "react-scripts": "5.0.1",
     "vis-data": "^7.1.7",
     "vis-network": "^9.1.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

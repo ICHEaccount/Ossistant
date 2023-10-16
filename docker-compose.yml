@@ -33,6 +33,7 @@ services:
 #    volumes:
 #      - ./server/database/mongodb/data:/data/db
 
+<<<<<<< HEAD
 #  client:
 #    container_name: client
 #    build:
@@ -70,12 +71,52 @@ services:
 
   case:
     container_name: case
+=======
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: client.Dockerfile
+    restart: "on-failure"
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.5
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment: 
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mongodb
+      - osint
+
+  osint:
+    container_name: osint
     build:
       context: ./server
-      dockerfile: ./case/case.Dockerfile
+      dockerfile: ./osint/domain/domain.Dockerfile
     volumes:
-      - ./server/case:/app
+      - ./server/osint/domain/app:/app
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.3
+    ports:
+      - 5005:5000
+  
+  data:
+    container_name: data
+>>>>>>> e8ad90dccee4970c6d78a619b55296235864b89a
+    build:
+      context: ./server/data
+      dockerfile: ./data.Dockerfile
+    volumes:
+      - ./server/data:/app
       - ./server/db_conn/mongo:/db_conn/mongo
+      - ./server/db_conn/neo4j:/db_conn/neo4j
     networks:
       icheTest:
         ipv4_address: 172.25.0.6
