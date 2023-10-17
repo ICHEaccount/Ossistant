@@ -7,7 +7,7 @@ class Domain(StructuredNode):
     domain = StringProperty(unique_index=True)
     regdate = StringProperty()
     status = BooleanProperty(default=True)
-    # case_id = StringProperty()
+    case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
         super(Domain, self).__init__(*args, **kwargs)
@@ -16,8 +16,8 @@ class Domain(StructuredNode):
         return {
             "domain": self.domain,
             "regdate": self.regdate,
-            "status": self.status
-            # "case_id": self.case_id
+            "status": self.status,
+            "case_id": self.case_id
         }
 
 
