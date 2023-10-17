@@ -137,6 +137,9 @@ def get_data(case_id):
         users = SurfaceUser.nodes.filter(case_id=case_id)
         posts = Post.nodes.filter(case_id=case_id)
 
+        if not domains and not users and not posts:
+            return jsonify({"case_id":case_id,"data":{}}), 200
+
         domain_list=[]
         user_list=[]
         post_list=[]
@@ -164,9 +167,8 @@ def get_data(case_id):
 
                 post_dict = {"node_id": str(post.element_id), "property": post_property}
                 post_list.append(post_dict)
+        
+        return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "SurfaceUser":user_list, "Post":post_list}}), 200
 
-            return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "SurfaceUser":user_list, "Post":post_list}}), 200
-        else:
-            return jsonify({"case_id":case_id,"data":{}}), 200
     except Exception as e:
         return jsonify({"error": "도메인 검색 중 오류가 발생했습니다.", "details": str(e)}), 500

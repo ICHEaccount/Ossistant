@@ -127,7 +127,7 @@ const ToolCard = (props) => {
                                                         key={`${node.node_id}-${p}`}
                                                         type="checkbox"
                                                         label={node.property[p]}
-                                                        checked={selectedItems[node.node_id] && selectedItems[node.node_id][p]}
+                                                        // checked={selectedItems[node.node_id] && selectedItems[node.node_id][p]}
                                                         onChange={() => toggleItemSelection(node.node_id, p)}
                                                     />
                                                 );
