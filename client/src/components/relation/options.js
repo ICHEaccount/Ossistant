@@ -1,44 +1,54 @@
+import SurfaceUserImage from '../../images/node_icon/surfaceuser.png';
+import PostImage from '../../images/node_icon/post.png';
+import DomainImage from '../../images/node_icon/domain.png';
+
 const options = {
   groups: {
     SurfaceUser: {
-      shape: 'circle',
-      color: {
-        background: 'skyblue',
-       },
-      font: {
-        size: 12, // Adjust font size as needed
+      shape: 'image',
+      image: {
+        selected: SurfaceUserImage,
+        unselected: SurfaceUserImage, 
+        background: 'transparent', 
       },
       label: {
         field: 'username',
         drawThreshold: 1,
-        },
-      },
-    Email: {
-      shape: 'circle',
-      color: {
-        background: 'yellow',
       },
       font: {
         size: 12, // Adjust font size as needed
-      },
-      label: {
-        field: 'username',
-        drawThreshold: 1,
       },
     },
-    Domain : {
-      shape : 'star',
-      color: {
-        background: 'green',
+    Post: {
+      shape: 'image',
+      image: {
+        selected: PostImage,
+        unselected: PostImage, 
+        background: 'transparent', 
+      },
+      label: {
+        field: 'username',
+        drawThreshold: 1,
       },
       font: {
-        size: 8, // Adjust font size as needed
+        size: 12, // Adjust font size as needed
+      },
+    },
+    Domain: {
+      shape: 'image',
+      image: {
+        selected: DomainImage,
+        unselected: DomainImage, 
+        background: 'transparent', 
       },
       label: {
         field: 'domain',
         drawThreshold: 1,
       },
-    }
+      font: {
+        size: 12, // Adjust font size as needed
+      },
+    },    
   },
   edges: {
     arrows: {
