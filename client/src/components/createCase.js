@@ -30,16 +30,16 @@ const CreateCase = () => {
 
         e.preventDefault();
 
-        try {
-            const res= await Axios.post('/case/createCase',formContent)
+    
+        await Axios.post('/case/createCase',formContent)
+        .then((res)=>{
             console.log('res',res);
             navigate(`/case/${res.data.case_id}`)
-        } catch (error) {
+        })
+        .catch((error)=>{
             console.error(error);
             seterrors(error.response.data||{});
-        }
-
-        // console.log(formContent);
+        })
     }
     
 

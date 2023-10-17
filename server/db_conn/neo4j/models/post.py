@@ -21,7 +21,7 @@ class Post(StructuredNode):
             "title": self.title,
             # "writer": self.writer,
             "content": self.content,
-            "created_date": self.created_date.isoformat(),
+            "created_date": self.created_date,
             "post_type": self.post_type,
             "case_id": self.case_id
         }
