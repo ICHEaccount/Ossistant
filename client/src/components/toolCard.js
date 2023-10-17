@@ -9,6 +9,7 @@ const ToolCard = (props) => {
     const tools = props.labelTools;
     const labelData = props.labelData;
     const toolState = props.toolState;
+    const case_id = props.case_id;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [selectedItems, setSelectedItems] = useState({});
     const [show, setshow] = useState(false)
@@ -40,13 +41,19 @@ const ToolCard = (props) => {
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
 
         const selectedNodes = {
+            case_id: case_id,
             tool_id: selectedTool.id,
-            properties: labelData
-                .map((node, nodeIdx) => {
+            properties: labelData.map((node, nodeIdx) => {
                     if (selectedItems[node.node_id]) {
+                        const property_list = Object.keys(node.property).reduce((acc, key) => {
+                            if (selectedItems[node.node_id][key]) {
+                                acc.push({ [key]: node.property[key] });
+                            }
+                            return acc;
+                        }, []);
                         return {
                             node_id: node.node_id,
-                            property: Object.keys(node.property).filter((p) => selectedItems[node.node_id][p]),
+                            property: property_list,
                         };
                     }
                     return null; // 선택되지 않은 항목은 null 처리

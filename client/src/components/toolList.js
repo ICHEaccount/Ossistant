@@ -49,7 +49,7 @@ const ToolList = (props) => {
         if(labelTools!==undefined) console.log(labelTools);
         return (
             <Tab eventKey={label} title={label}>
-            <ToolCard labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
+            <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
             </Tab>
             )
             
