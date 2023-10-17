@@ -1,5 +1,7 @@
 from neomodel import StructuredNode, RelationshipTo, UniqueIdProperty,StringProperty, BooleanProperty
+
 from .domain import Domain
+from .post import Post
 
 class SurfaceUser(StructuredNode):
     uid = UniqueIdProperty()
@@ -7,7 +9,11 @@ class SurfaceUser(StructuredNode):
     url = StringProperty()
     fake = BooleanProperty(default=False)
     case_id = StringProperty()
+    # note = StringProperty()
+
+    # Relation
     register = RelationshipTo(Domain, 'REGISTER')
+    posting = RelationshipTo(Post,'POSTING')
 
     def _json_serializable(self):
         return {

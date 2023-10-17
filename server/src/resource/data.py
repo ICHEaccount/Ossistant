@@ -11,6 +11,16 @@ from db_conn.neo4j.models.post import Post
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
+# Search function that compare post writer and surfaceuser username 
+def compare_post_user_username(post_obj:Post, user_obj:SurfaceUser):
+    if post_obj.writer == user_obj.username:
+        if not user_obj.posting.is_connected(post_obj):
+            user_obj.posting.connect(post_obj)
+        return True
+    return False
+    
+
+
 def check_json_not_null(input):
     for value in input.values():
         if isinstance(value, dict):
@@ -85,6 +95,7 @@ def create_data():
 
             url = post_data.get("url")
             title = post_data.get("title")
+            writer = post_data.get("writer")
             content = post_data.get("content")
             created_date = post_data.get("created_date")
             post_type = post_data.get("post_type")
@@ -95,11 +106,18 @@ def create_data():
             new_post = Post.create_node({
                 "url": url,
                 "title": title,
+                "writer":writer,
                 "content": content,
                 "created_date": created_date,
                 "post_type": post_type,
                 "case_id": case_id
             })
+            if not new_post:
+                return jsonify({'state':'Error'}),500
+            
+            user_obj = SurfaceUser.nodes.first_or_none(username=writer)
+            if user_obj:
+                compare_post_user_username(new_post,user_obj)
             return jsonify({"state":"success"}), 201
         
 
@@ -119,8 +137,10 @@ def get_data(case_id):
         users = SurfaceUser.nodes.filter(case_id=case_id)
         posts = Post.nodes.filter(case_id=case_id)
 
+        domain_list=[]
+        user_list=[]
+        post_list=[]
         if domains:
-            domain_list=[]
             for domain in domains:
                 domain_property = domain._json_serializable()
                 domain_property.pop("case_id", None)
@@ -129,9 +149,8 @@ def get_data(case_id):
 
                 #domain_list.append({"node_id": str(domain.element_id), "property":domain._json_serializable()})
             # domain_list = [{"property":domain._json_serializable() for domain in domains}]
-
+        
         if users:
-            user_list=[]
             for user in users:
                 user_property = user._json_serializable()
                 user_property.pop("case_id", None)
@@ -139,7 +158,6 @@ def get_data(case_id):
                 user_list.append(user_dict)
 
         if posts:
-            post_list=[]
             for post in posts:
                 post_property = post._json_serializable()
                 post_property.pop("case_id", None)

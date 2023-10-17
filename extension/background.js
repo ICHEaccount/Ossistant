@@ -43,7 +43,7 @@ chrome.runtime.onInstalled.addListener(() => {
     const keywordSubMenus = {
         "Domain": ["domain", "regdate", "status"],
         "SurfaceUser": ["username", "fake"],
-        "Post": ["url", "title", "content", "created_date", "post_type"]
+        "Post": ["url", "title", "writer", "content", "creatd_date", "post_type"]
     };
 
     for (let parentMenu in keywordSubMenus) {
