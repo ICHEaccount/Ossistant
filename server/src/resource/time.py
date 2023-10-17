@@ -9,7 +9,7 @@ from neo4j import GraphDatabase
 app = Flask(__name__)
 CORS(app)
 
-bp = Blueprint('tool', __name__, url_prefix='/data')
+bp = Blueprint('timeline', __name__, url_prefix='/timeline')
 
 def post_function():
     queries = [

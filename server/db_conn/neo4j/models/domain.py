@@ -6,8 +6,8 @@ class Domain(StructuredNode):
     uid = UniqueIdProperty()
     domain = StringProperty(unique_index=True)
     regdate = StringProperty()
-    status = BooleanProperty()
-    case_id = StringProperty()
+    status = BooleanProperty(default=True)
+    # case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
         super(Domain, self).__init__(*args, **kwargs)
@@ -16,14 +16,14 @@ class Domain(StructuredNode):
         return {
             "domain": self.domain,
             "regdate": self.regdate,
-            "status": self.status,
-            "case_id": self.case_id
+            "status": self.status
+            # "case_id": self.case_id
         }
 
 
     @classmethod
-    def create_domain(cls, domain, regdate, status, case_id):
-        domain_node = cls(domain=domain, regdate=regdate, status=status, case_id=case_id)
+    def create_domain(cls, domain, regdate, status):
+        domain_node = cls(domain=domain, regdate=regdate, status=status)
         domain_node.save()
         return domain_node
 
@@ -34,7 +34,7 @@ class Domain(StructuredNode):
 
     @classmethod
     def get_domain_by_name(cls, domain):
-        return cls.nodes.filter(domain=domain).first()
+        return cls.nodes.get(domain=domain)
 
     @classmethod
     def node_exists_url(cls, url):
