@@ -94,8 +94,6 @@ def run_tool():
         result = tool_whois(domain)
         regdate = result['regdate']
 
-        # changee to tool status 
-        run.status = 'completed'
 
         # email to username 
         regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
