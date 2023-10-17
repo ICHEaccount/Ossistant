@@ -25,8 +25,8 @@ const Toolbar = () => {
     useEffect(() => {
         //check if the current location is case page
         const { pathname } = location;
-        if (pathname.startsWith('/case/')) {
-            const newCaseId = pathname.replace('/case/', '');
+        if (pathname.startsWith('/casepage/')) {
+            const newCaseId = pathname.replace('/casepage/', '');
             setcase_id(newCaseId)
             setisCasePage(true)
         } else {
@@ -43,7 +43,7 @@ const Toolbar = () => {
                     setinvestigator(res.data.investigator)
                     setcreated_date(res.data.created_date.split(':')[0])
                     
-                    console.log(res.data);
+                    // console.log(res.data);
                 }else{
                     alert('Backend Connection Failed')
                 }
@@ -56,7 +56,7 @@ const Toolbar = () => {
             if(res.data){
                 setcases(res.data)
                 setisload(true)
-                console.log(res.data);
+                // console.log(res.data);
             }else{
                 alert('Backend Connection Failed')
             }
@@ -69,7 +69,7 @@ const Toolbar = () => {
     
     //add only 3 recent case to the list
     const caseList = cases.slice(0, 3).map((caseData,idx)=>{
-        return (<NavDropdown.Item href={`/case/${caseData.case_id}`}>{caseData.case_name}</NavDropdown.Item>)
+        return (<NavDropdown.Item href={`/casepage/${caseData.case_id}`}>{caseData.case_name}</NavDropdown.Item>)
     })
 
 

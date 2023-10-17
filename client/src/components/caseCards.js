@@ -11,7 +11,7 @@ function CaseCard(props) {
     const data = props.caseData
 
     const onMove = () =>{
-        navigate(`/case/${data.case_id}`)
+        navigate(`/casepage/${data.case_id}`)
     }
 
     const onEdit = () =>{
@@ -22,7 +22,7 @@ function CaseCard(props) {
     <Card>
         <Row className='m-2'>
         <Col md="11">
-        <Card.Link href={`/case/${data.case_id}`}>
+        <Card.Link href={`/casepage/${data.case_id}`}>
         <Card.Title>Case: {data.case_name}</Card.Title>
                 <Card.Subtitle className='text-muted'>
                     <Row>

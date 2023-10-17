@@ -43,10 +43,10 @@ const ToolCard = (props) => {
             tool_id: selectedTool.id,
             properties: labelData
                 .map((node, nodeIdx) => {
-                    if (selectedItems[node.id]) {
+                    if (selectedItems[node.node_id]) {
                         return {
-                            node_id: node.id,
-                            property: Object.keys(node.property).filter((p) => selectedItems[node.id][p]),
+                            node_id: node.node_id,
+                            property: Object.keys(node.property).filter((p) => selectedItems[node.node_id][p]),
                         };
                     }
                     return null; // 선택되지 않은 항목은 null 처리
@@ -67,6 +67,7 @@ const ToolCard = (props) => {
     };
 
     const toolList = tools?.map((tool, idx) => {
+        // console.log(tools);
         return (
             <Card className="mt-1" key={tool.name}>
                 <Card.Body>
@@ -116,11 +117,11 @@ const ToolCard = (props) => {
                                             if (p in node.property) {
                                                 return (
                                                     <Form.Check
-                                                        key={`${node.id}-${p}`}
+                                                        key={`${node.node_id}-${p}`}
                                                         type="checkbox"
                                                         label={node.property[p]}
-                                                        checked={selectedItems[node.id] && selectedItems[node.id][p]}
-                                                        onChange={() => toggleItemSelection(node.id, p)}
+                                                        checked={selectedItems[node.node_id] && selectedItems[node.node_id][p]}
+                                                        onChange={() => toggleItemSelection(node.node_id, p)}
                                                     />
                                                 );
                                             } else return `require ${p}`;

@@ -8,49 +8,6 @@ import DataPanel from '../components/dataPanel';
 import Visualization from '../components/relation/Visualization';
 import TimelineVisualization from '../components/timeline/timeline'
 
-///DUMMY DATA///
-const dummy = {
-    "case_id": "1234567890abcdef", //requested case id
-    "data":
-    //neo4j node data list
-    {"post":[
-        {"id":"1234", 
-        "property": {
-        "Url":"blog.naver.com",
-        "Title":"post1",
-        "Created_Date": "2023-09-05",
-        "Type": "naver"
-        }},
-
-        {"id":"5678", 
-        "property": {
-        "Url":"x.com",
-        "Title":"post2",
-        "Created_Date": "2023-09-06",
-        "Type": "twitter"
-        }}
-    ],
-    "user":[
-        {"id":"1111",
-        "property":{
-        "Username": "iche",
-        "Fake": "false"
-        }},
-
-        {"id":"2222",
-        "property":{
-        "Username": "osint",
-        "Fake": "true"
-        }}
-    ],
-    "domain":[
-        {"id":"0000",
-        "property":{
-            "Domain":"puritipo.com"
-        }}
-    ]}
-    
-}
 
 const Case = () => {
     const params = useParams();

@@ -8,7 +8,7 @@ const Help = (props) => {
     const [tips, settips] = useState(null)
     
     useEffect(() => {
-        if(loc.startsWith('/case/')){
+        if(loc.startsWith('/casepage/')){
             const tip = () =>{
                 return(
                     <p className='tw-text-left'>

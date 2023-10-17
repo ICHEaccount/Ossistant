@@ -14,7 +14,7 @@ function App() {
         <Toolbar/>
         <Routes>
           <Route path="/" element={<Main/>}/>
-          <Route path="/case/:case_id" element={<Case/>}/>
+          <Route path="/casepage/:case_id" element={<Case/>}/>
         </Routes>
       </BrowserRouter>
       
