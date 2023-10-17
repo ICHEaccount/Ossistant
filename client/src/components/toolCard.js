@@ -9,6 +9,7 @@ const ToolCard = (props) => {
     const tools = props.labelTools;
     const labelData = props.labelData;
     const toolState = props.toolState;
+    const case_id = props.case_id;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [selectedItems, setSelectedItems] = useState({});
     const [show, setshow] = useState(false)
@@ -40,13 +41,19 @@ const ToolCard = (props) => {
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
 
         const selectedNodes = {
+            case_id: case_id,
             tool_id: selectedTool.id,
-            properties: labelData
-                .map((node, nodeIdx) => {
-                    if (selectedItems[node.id]) {
+            properties: labelData.map((node, nodeIdx) => {
+                    if (selectedItems[node.node_id]) {
+                        const property_list = Object.keys(node.property).reduce((acc, key) => {
+                            if (selectedItems[node.node_id][key]) {
+                                acc.push({ [key]: node.property[key] });
+                            }
+                            return acc;
+                        }, []);
                         return {
-                            node_id: node.id,
-                            property: Object.keys(node.property).filter((p) => selectedItems[node.id][p]),
+                            node_id: node.node_id,
+                            property: property_list,
                         };
                     }
                     return null; // 선택되지 않은 항목은 null 처리
@@ -67,6 +74,7 @@ const ToolCard = (props) => {
     };
 
     const toolList = tools?.map((tool, idx) => {
+        // console.log(tools);
         return (
             <Card className="mt-1" key={tool.name}>
                 <Card.Body>
@@ -116,11 +124,11 @@ const ToolCard = (props) => {
                                             if (p in node.property) {
                                                 return (
                                                     <Form.Check
-                                                        key={`${node.id}-${p}`}
+                                                        key={`${node.node_id}-${p}`}
                                                         type="checkbox"
                                                         label={node.property[p]}
-                                                        checked={selectedItems[node.id] && selectedItems[node.id][p]}
-                                                        onChange={() => toggleItemSelection(node.id, p)}
+                                                        checked={selectedItems[node.node_id] && selectedItems[node.node_id][p]}
+                                                        onChange={() => toggleItemSelection(node.node_id, p)}
                                                     />
                                                 );
                                             } else return `require ${p}`;

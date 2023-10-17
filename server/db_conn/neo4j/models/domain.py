@@ -22,8 +22,8 @@ class Domain(StructuredNode):
 
 
     @classmethod
-    def create_domain(cls, domain, regdate, status):
-        domain_node = cls(domain=domain, regdate=regdate, status=status)
+    def create_domain(cls, domain, regdate, status,case_id):
+        domain_node = cls(domain=domain, regdate=regdate, status=status,case_id=case_id)
         domain_node.save()
         return domain_node
 

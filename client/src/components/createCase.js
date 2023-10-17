@@ -34,7 +34,7 @@ const CreateCase = () => {
         await Axios.post('/case/createCase',formContent)
         .then((res)=>{
             console.log('res',res);
-            navigate(`/case/${res.data.case_id}`)
+            navigate(`/casepage/${res.data.case_id}`)
         })
         .catch((error)=>{
             console.error(error);

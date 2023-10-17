@@ -90,7 +90,7 @@ function TimelineVisualization() {
   },]); // 데이터셋
 
   useEffect(() => {
-    axios.get('/post').then((response) => {
+    axios.get('/timeline/post').then((response) => {
       const serverData = response.data;
 
       const data = serverData.post_dicts;

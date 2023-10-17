@@ -7,16 +7,16 @@ import ToolCard from './toolCard';
 import Loading from './loading';
 
 const dummy = {
-    "domain":[
+    "Domain":[
         {"name":"whois",
-        "id":"2222",
-        "apply":["Domain"]}
+        "id":"01",
+        "apply":["domain"]}
     ]
     ,
-    "user":[
+    "SurfaceUser":[
         {"name":"osintagram",
-        "id":"1111",
-        "apply":["Username"]}
+        "id":"02",
+        "apply":["username"]}
     ],
 }
 
@@ -45,21 +45,22 @@ const ToolList = (props) => {
     const toolList=labels.map((label)=>{
         if(Object.keys(caseData).length===0) return null
         const labelTools = tools[label]
-        if (labelTools){
-        return (<Tab eventKey={label} title={label}>
-            <ToolCard labelTools={labelTools} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
-        </Tab>)}
-        else{
-        return (<Tab eventKey={label} title={label}>
-            <ToolCard labelTools={null} labelData={caseData[label]} label={label}/>
-        </Tab>)}
+        // console.log(labelTools);
+        if(labelTools!==undefined) console.log(labelTools);
+        return (
+            <Tab eventKey={label} title={label}>
+            <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
+            </Tab>
+            )
+            
+    
     })
 
 
     return (
     <div>
         <Tabs>
-        {isload?toolList:<Loading/>}
+        {toolList}
         </Tabs>
 
     </div>
