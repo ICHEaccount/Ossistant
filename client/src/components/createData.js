@@ -18,12 +18,17 @@ const CreateData = (props) => {
         initialFormData[property] = "";
     });
     initialFormData["note"] = "";
-    const [formData, setformData] = useState({"case_id":case_id})
+    const [formData, setformData] = useState({"case_id":case_id,[label]:{}})
     const updateFormValue = (key, value) => {
-        setformData(prevData => ({
-            ...prevData,
-            [key]: value
-        }));
+        setformData(prevState => {
+            return {
+                ...prevState,
+                [label] : {
+                    ...prevState.label,
+                    [key]: value
+                }
+            };
+        });
     }
 
     const submitData = async (e) => {
@@ -33,11 +38,11 @@ const CreateData = (props) => {
             const res= await Axios.post('/data/createData',formData)
             console.log('res',res);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
 
         console.log(formData);
-        window.location.reload();
+        // window.location.reload();
     }
 
 

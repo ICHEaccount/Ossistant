@@ -49,7 +49,7 @@ def create_data():
             regdate = domain_data.get("regdate")
             status = domain_data.get("status")           
             note = domain_data.get("note")
-
+            print(domain_data)
             new_domain = Domain.create_domain(domain=domain, regdate=regdate, status=status, case_id=case_id)
             #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
             return jsonify({"state":"success"}), 201
@@ -57,15 +57,14 @@ def create_data():
             #print(e)
             return jsonify({"state":"fail", "error": str(e)}), 200
         
-    elif 'case_id' in data and 'User' in data:
+    elif 'case_id' in data and 'SurfaceUser' in data:
         try:
-            user_data = data.get("User")
+            user_data = data.get("SurfaceUser")
             case_id = data.get("case_id")
 
             username = user_data.get("username")
             url = user_data.get("url")
             fake = user_data.get("fake")
-                 
             new_user = SurfaceUser.create_node({
             "username": username,
             "url": url,
@@ -87,10 +86,11 @@ def create_data():
             url = post_data.get("url")
             title = post_data.get("title")
             content = post_data.get("content")
-            created_date_str = post_data.get("created_date")
+            created_date = post_data.get("created_date")
             post_type = post_data.get("post_type")
             
-            created_date = datetime.strptime(created_date_str, "%Y-%m-%d")         
+            if(created_date):
+                created_date = datetime.strptime(created_date, "%Y-%m-%d")         
 
             new_post = Post.create_node({
                 "url": url,
@@ -101,8 +101,10 @@ def create_data():
                 "case_id": case_id
             })
             return jsonify({"state":"success"}), 201
+        
+
         except Exception as e:
-            return jsonify({"state":"fail", "error": str(e)}), 200
+            return jsonify({"state":"fail", "error": str(e)}), 400
 
 
 
@@ -133,7 +135,6 @@ def get_data(case_id):
             for user in users:
                 user_property = user._json_serializable()
                 user_property.pop("case_id", None)
-                user_property.pop("url", None) #프론트와 DB 설계 불일치
                 user_dict = {"node_id": str(user.element_id), "property": user_property}
                 user_list.append(user_dict)
 
@@ -142,15 +143,11 @@ def get_data(case_id):
             for post in posts:
                 post_property = post._json_serializable()
                 post_property.pop("case_id", None)
-                
-                original_date = post_property.get("created_date")
-                formatted_date = datetime.strptime(original_date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y-%m-%d")
-                post_property["created_date"] = formatted_date
 
                 post_dict = {"node_id": str(post.element_id), "property": post_property}
                 post_list.append(post_dict)
 
-            return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "User":user_list, "Post":post_list}}), 200
+            return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "SurfaceUser":user_list, "Post":post_list}}), 200
         else:
             return jsonify({"case_id":case_id,"data":{}}), 200
     except Exception as e:

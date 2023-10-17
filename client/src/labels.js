@@ -5,7 +5,7 @@ const labels = {
     },
     "SurfaceUser":{
         "title":"username",
-        "properties":["username","fake","note"]
+        "properties":["username","fake","url","note"]
     },
     "Domain":{
         "title":"domain",
