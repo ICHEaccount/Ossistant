@@ -7,13 +7,13 @@ import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Button from 'react-bootstrap/esm/Button';
 import Container from 'react-bootstrap/esm/Container';
-import labels from '../labels';
+import lbs from '../labels';
 import CreateData from './createData';
 
 const DataCard = (props) => {
     const label = props.label
     const nodes = props.nodes
-    const title = labels[label].title
+    const title = lbs[label].title
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [onEdit, setonEdit] = useState(false)
 
@@ -63,23 +63,29 @@ const DataCard = (props) => {
                     :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
                 </Card.Header>
                 <Form onSubmit={editData}>
-                    {Object.keys(node.property).map((key) =>{
-                        if(node.property[key]==null) return <></>
+                    {lbs[label].properties.map((key) => {
+                        if(key==="note"){
+                            return (<InputGroup className='mb-1 px-1'>
+                            <InputGroup.Text id='note'>note</InputGroup.Text>
+                            <Form.Control
+                            disabled={!onEdit}
+                            placeholder={node.property.note}
+                            as="textarea" />
+                            </InputGroup>)
+                        }
                         return(
-                    <InputGroup className='mb-1 px-1'>
-                    <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
-                    <Form.Control
-                    placeholder={node.property[key]}
-                    disabled={!onEdit}
-                    />
-                    </InputGroup>
-                    )})}
-                    <InputGroup className='mb-1 px-1'>
-                    <InputGroup.Text id='note'>note</InputGroup.Text>
-                    <Form.Control
-                    disabled={!onEdit}
-                    as="textarea" />
-                    </InputGroup>
+                            <InputGroup className='mb-1 px-1'>
+                            <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
+                            <Form.Control
+                            placeholder={node.property[key]}
+                            disabled={!onEdit}
+                            />
+                            </InputGroup>
+                        )
+                        
+                    }
+                    )}
+                    
                 </Form>
             </Card>
             </Container>
