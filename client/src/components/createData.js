@@ -38,7 +38,7 @@ const CreateData = (props) => {
         await Axios.post('/data/createData',formData)
         .then((res)=>{
             console.log(res);
-            // window.location.reload()
+            window.location.reload()
         })
         .catch((error)=>{
             console.log(error);
