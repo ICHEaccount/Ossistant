@@ -71,9 +71,6 @@ def run_tool():
 
     tool_id = tool_data['tool_id']
     
-    # tool_query = tool_data['properties']['property']
-    # run_id = uuid.uuid4()  # getting run_id
-    
     # run the requested tool
     if tool_id == '01':
 
