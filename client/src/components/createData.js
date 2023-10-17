@@ -17,14 +17,13 @@ const CreateData = (props) => {
     properties.forEach(property => {
         initialFormData[property] = "";
     });
-    initialFormData["note"] = "";
     const [formData, setformData] = useState({"case_id":case_id,[label]:{}})
     const updateFormValue = (key, value) => {
         setformData(prevState => {
             return {
                 ...prevState,
                 [label] : {
-                    ...prevState.label,
+                    ...prevState[label],
                     [key]: value
                 }
             };
@@ -34,15 +33,18 @@ const CreateData = (props) => {
     const submitData = async (e) => {
 
         e.preventDefault();
-        try {
-            const res= await Axios.post('/data/createData',formData)
-            console.log('res',res);
-        } catch (error) {
-            console.log(error);
-        }
-
         console.log(formData);
-        // window.location.reload();
+
+        await Axios.post('/data/createData',formData)
+        .then((res)=>{
+            console.log(res);
+            window.location.reload()
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+
+
     }
 
 
@@ -50,6 +52,7 @@ const CreateData = (props) => {
         <InputGroup className='mb-1'>
                 <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
                 <Form.Control as={property==="note"?"textarea":"input"}
+                value={formData[label][property]||""}
                 onChange={(e)=>{updateFormValue(property,e.target.value)}}
                 />
                 </InputGroup>
