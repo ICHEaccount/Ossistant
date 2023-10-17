@@ -80,19 +80,19 @@ class CaseModel(db.DynamicDocument):
 
     
     @classmethod
-    def create_runs(cls, case_id, tool_id):
+    def create_runs(cls, case_id, tool_id, status='ready'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id,runtime=runtime, status='ready')
+                run = RunModel(tool_id=tool_id,runtime=runtime, status=status)
                 run.save()
                 case.runs.append(run)
                 case.save()
-                return True
+                return run 
             else:
                 print(f'{cls.col_name} : Case not found')
-                return False
+                return None
         except Exception as e:
             print(f'{cls.col_name} : Run Creation Error: {e}')
             return False

@@ -1,19 +1,20 @@
-from neomodel import StructuredNode, UniqueIdProperty,StringProperty, BooleanProperty
-from ..init import db
+from neomodel import StructuredNode, RelationshipTo, UniqueIdProperty,StringProperty, BooleanProperty
+from .domain import Domain
 
 class SurfaceUser(StructuredNode):
     uid = UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
     fake = BooleanProperty(default=False)
-    case_id = StringProperty()
+    # case_id = StringProperty()
+    register = RelationshipTo(Domain, 'REGISTER')
 
     def _json_serializable(self):
         return {
             "username": self.username,
             "url": self.url,
             "fake": self.fake,
-            "case_id": self.case_id
+            # "case_id": self.case_id
         }
     
     @classmethod
@@ -49,3 +50,5 @@ class SurfaceUser(StructuredNode):
             return True
         else:
             return False
+    
+

@@ -58,10 +58,12 @@ services:
   osint:
     container_name: osint
     build:
-      context: ./server
-      dockerfile: ./osint/domain/domain.Dockerfile
+      context: ./server/osint
+      dockerfile: ./osint.Dockerfile
     volumes:
-      - ./server/osint/domain/app:/app
+      - ./server/osint:/app
+      - ./server/db_conn/mongo:/db_conn/mongo
+      - ./server/db_conn/neo4j:/db_conn/neo4j
     networks:
       icheTest:
         ipv4_address: 172.25.0.3
