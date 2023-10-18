@@ -6,7 +6,7 @@ const ToolResultBanner = (props) => {
     const error = props.error
     const [show, setShow] = useState(true);
 
-    console.log(toolState);
+    // console.log(toolState);
     switch (toolState) {
         case "completed":
             return(
