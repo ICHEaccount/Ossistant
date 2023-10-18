@@ -5,7 +5,8 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import options from './options'; 
 
-function Visualization() {
+function Visualization(props) {
+  const isDone = props.isDone
   useEffect(() => {
     const container = document.getElementById('graph-container');
 
@@ -43,11 +44,11 @@ function Visualization() {
     return () => {
       network.destroy();
     };
-  }, []);
+  }, [isDone]);
 
   return (
     <div>
-      <div id="graph-container" style={{ width: '500px', height: '400px', }}></div>
+      <div id="graph-container" style={{ width: '100%', height: '100%', }}></div>
     </div>
   );
 }

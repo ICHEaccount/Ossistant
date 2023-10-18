@@ -48,11 +48,11 @@ def result_response(txt):
 
 def tool_whois(domain):
     search = whois.whois(domain) 
-    # print(search)
+    print(search)
     result = json.dumps(search, default=str, ensure_ascii=False)  # type(result) is STR
-    # print(result)
+    print(result)
     res = result_response(result)
-
+    print(res)
     # return data for node 
     node_data = {
         'email': search['admin_email'],
@@ -101,11 +101,11 @@ def run_tool():
             username = match.group(1)
             user = SurfaceUser.nodes.first_or_none(username=username)
             if not user:
-                user = SurfaceUser(username=username).save()
+                user = SurfaceUser(username=username,case_id=case_id).save()
 
             domain_obj = Domain.nodes.first_or_none(domain=domain)
             if not domain_obj:
-                domain_obj = Domain(domain=domain,regdate=regdate, status=False).save()
+                domain_obj = Domain(domain=domain,regdate=regdate, status=False,case_id=case_id).save()
 
             # Establishing the relationship
             if not user.register.is_connected(domain_obj):

@@ -46,7 +46,7 @@ const ToolList = (props) => {
         if(Object.keys(caseData).length===0) return null
         const labelTools = tools[label]
         // console.log(labelTools);
-        if(labelTools!==undefined) console.log(labelTools);
+        // if(labelTools!==undefined) console.log(labelTools);
         return (
             <Tab eventKey={label} title={label}>
             <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
