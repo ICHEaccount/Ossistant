@@ -76,7 +76,8 @@ function Timeline({ labels, datasets }) {
   );
 }
 
-function TimelineVisualization() {
+function TimelineVisualization(props) {
+  const isDone = props.isDone
   const [datasets, setDatasets] = useState([
   // 기본 데이터
   {
@@ -187,7 +188,7 @@ function TimelineVisualization() {
       console.error('서버 오류:', error);
       // 사용자에게 오류 메시지 표시 또는 다른 오류 처리 작업 수행
     });
-  }, []);
+  }, [isDone]);
 
   return (
     <div>
