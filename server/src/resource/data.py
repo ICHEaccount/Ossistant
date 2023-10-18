@@ -63,6 +63,7 @@ def create_data():
                 'domain':domain,
                 'regdate':regdate,
                 'status':status,
+                "case_id": case_id
                 # 'note':note
             })
             #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201

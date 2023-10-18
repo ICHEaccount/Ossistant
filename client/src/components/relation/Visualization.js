@@ -19,7 +19,7 @@ function Visualization(props) {
       const graphData = response.data;
       graphData.forEach(item => {
         console.log(item);
-        const label = item.n.name || item.n.domain || item.n.title;
+        const label = item.n.username || item.n.domain || item.n.title;
         const group = item.n.label;
         const nodeId = item.n.id || uuidv4(); 
         console.log(group);
