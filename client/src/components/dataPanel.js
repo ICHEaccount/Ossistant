@@ -6,37 +6,37 @@ import DataList from '../components/dataList';
 import { Database , Gear, FileEarmarkText} from 'react-bootstrap-icons';
 import ToolList from './toolList';
 import Report from './report';
-import { Axios } from 'axios';
+import Axios  from 'axios';
 
 
 const DataPanel = (props) => {
     const case_id = props.case_id
     const caseData = props.caseData
     const [toolState, settoolState] = useState("none")
-    const [toolResult, settoolResult] = useState([])
+    // const [toolResult, settoolResult] = useState([])
     const [toolError, settoolError] = useState({})
     const [show, setShow] = useState(true);
 
     const toolrunner = (run_id) =>{
         const interval = setInterval(() => {
-            // Axios.get(`/tools/getToolState/${run_id}`)
-            //     .then(response => {
-            //     if (response.data.state === 'completed') {
-            //         clearInterval(interval); // 작업이 완료되면 인터벌 해제
-            //         settoolResult(response.data.result);
-            //         settoolState('completed');
-            //     } else if (response.data.state === 'running') {
-            //         settoolState('running');
-            //     } else {
-            //         clearInterval(interval);
-            //         settoolState('unknown');
-            //     }
-            //     })
-            //     .catch(error => {
-            //     clearInterval(interval);
-            //     settoolState('error');
-            //     settoolError(error)
-            //     });
+            Axios.get(`/tools/getToolState/${run_id}`)
+                .then(response => {
+                if (response.data.state === 'completed') {
+                    clearInterval(interval); // 작업이 완료되면 인터벌 해제
+                    // settoolResult(response.data.result);
+                    settoolState('completed');
+                } else if (response.data.state === 'running') {
+                    settoolState('running');
+                } else {
+                    clearInterval(interval);
+                    settoolState('unknown');
+                }
+                })
+                .catch(error => {
+                clearInterval(interval);
+                settoolState('error');
+                settoolError(error)
+                });
           }, 5000); // 5초마다 확인
     }
 
@@ -47,7 +47,7 @@ const DataPanel = (props) => {
                 <Alert show={show} variant="success" >
                     <Alert.Heading>Success</Alert.Heading>
                     <p>
-                        {toolResult.newData?toolResult.newData:"But Nothing acquired"}
+                        {/* {toolResult.newData?toolResult.newData:"But Nothing acquired"} */}
                     </p>
                     <div className="d-flex justify-content-end">
                         <Button onClick={() => setShow(false)} variant="outline-success">
