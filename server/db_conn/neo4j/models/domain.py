@@ -4,9 +4,10 @@ from ..init import db
 
 class Domain(StructuredNode):
     uid = UniqueIdProperty()
+    url = StringProperty()
     domain = StringProperty(unique_index=True)
     regdate = StringProperty()
-    status = BooleanProperty(default=True)
+    status = StringProperty(default="None")
     case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
@@ -22,10 +23,11 @@ class Domain(StructuredNode):
 
 
     @classmethod
-    def create_domain(cls, domain, regdate, status,case_id):
-        domain_node = cls(domain=domain, regdate=regdate, status=status,case_id=case_id)
-        domain_node.save()
-        return domain_node
+    def create_node(cls, data):
+        node = cls(**data)  
+        node.save()
+        return node
+
 
     @classmethod
     def get_all_domains(cls):
@@ -51,7 +53,7 @@ class Domain(StructuredNode):
             for key, value in kwargs.items():
                 setattr(node, key, value)
             node.save()
-            return True
+            return node
         else:
             return False
 

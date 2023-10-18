@@ -40,7 +40,6 @@ function Visualization(props) {
       })
     });
     const network = new Network(container, data, options);
-
     return () => {
       network.destroy();
     };

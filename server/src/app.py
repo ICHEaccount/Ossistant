@@ -37,4 +37,4 @@ app.register_blueprint(data_bp)
 app.register_blueprint(tool_bp)
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', debug=True, port=5013)
+    app.run(host = '0.0.0.0', debug=True, port=5000)

@@ -20,7 +20,6 @@ def compare_post_user_username(post_obj:Post, user_obj:SurfaceUser):
     return False
     
 
-
 def check_json_not_null(input):
     for value in input.values():
         if isinstance(value, dict):
@@ -60,7 +59,12 @@ def create_data():
             status = domain_data.get("status")           
             note = domain_data.get("note")
             print(domain_data)
-            new_domain = Domain.create_domain(domain=domain, regdate=regdate, status=status, case_id=case_id)
+            new_domain = Domain.create_node({
+                'domain':domain,
+                'regdate':regdate,
+                'status':status,
+                # 'note':note
+            })
             #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
             return jsonify({"state":"success"}), 201
         except Exception as e:

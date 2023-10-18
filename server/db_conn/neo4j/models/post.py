@@ -8,8 +8,9 @@ class Post(StructuredNode):
     title = StringProperty()
     writer = StringProperty()
     content = StringProperty()
+    # created_date = StringProperty()
     created_date = DateTimeProperty()
-    post_type = IntegerProperty()
+    post_type = StringProperty()
     case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
@@ -53,10 +54,15 @@ class Post(StructuredNode):
     def update_node_properties(cls, node_id, **kwargs):
         node = cls.nodes.get_or_none(uid=node_id)
         if node:
-            for key, value in kwargs.items():
-                setattr(node, key, value)
-            node.save()
-            return True
+            try:
+                for key, value in kwargs.items():
+                    setattr(node, key, value)
+                node.save()
+                return node
+            except Exception as e:
+                print(f"An error occurred during node update: {e}")
+                return False
         else:
+            print("Node does not exist.")
             return False
 
