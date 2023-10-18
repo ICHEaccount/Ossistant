@@ -3,7 +3,6 @@ from flask import request, jsonify,Blueprint
 from db_conn.neo4j import db
 from db_conn.neo4j.models.user import SurfaceUser
 from db_conn.neo4j.models.post import Post
-from db_conn.neo4j.models.relationship_manager import RelationshipManager
 
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
@@ -35,6 +34,6 @@ def get_neo4j_data():
             nodes_and_relationships.append({'n': n_dict, 'r': {'id':r_id,'type': r_type, 'properties': r_properties}, 'm': m_dict})
         else:
             nodes_and_relationships.append({'n': n_dict, 'r': None, 'm': m_dict})
-        print(nodes_and_relationships[:4])
+        # print(nodes_and_relationships[:4])
     return jsonify(nodes_and_relationships)
 

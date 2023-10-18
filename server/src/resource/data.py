@@ -20,7 +20,6 @@ def compare_post_user_username(post_obj:Post, user_obj:SurfaceUser):
     return False
     
 
-
 def check_json_not_null(input):
     for value in input.values():
         if isinstance(value, dict):

@@ -3,8 +3,7 @@ import re
 import whois 
 
 from db_conn.mongo.models import RunModel, CaseModel
-from db_conn.neo4j.models.relationship_manager import RelationshipManager
-from db_conn.neo4j.models.relationship_manager import SurfaceUser, Domain
+from db_conn.neo4j.lib.relation_manager import SurfaceUser, Domain
 
 from flask import request, jsonify,Blueprint
 

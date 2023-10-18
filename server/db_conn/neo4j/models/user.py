@@ -7,7 +7,7 @@ class SurfaceUser(StructuredNode):
     uid = UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
-    fake = BooleanProperty(default=False)
+    fake = StringProperty(default="fake")
     case_id = StringProperty()
     # note = StringProperty()
 
@@ -53,7 +53,7 @@ class SurfaceUser(StructuredNode):
             for key, value in kwargs.items():
                 setattr(node, key, value)
             node.save()
-            return True
+            return node
         else:
             return False
     
