@@ -8,7 +8,7 @@
     import DataPanel from '../components/dataPanel';
     import Visualization from '../components/relation/Visualization';
     import TimelineVisualization from '../components/timeline/timeline'
-    import { Alert, Button } from 'react-bootstrap';
+    import { Alert, Button, Stack } from 'react-bootstrap';
 import ToolResultBanner from '../components/toolResultBanner';
 
 
@@ -74,8 +74,15 @@ import ToolResultBanner from '../components/toolResultBanner';
                     <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
-                    <Visualization isDone={isDone}/>
-                    <TimelineVisualization isDone={isDone}/>
+                    <Container className="tw-max-h-screen tw-flex-grow">
+                    <div className="tw-flex tw-h-2/3">
+                        <Visualization isDone={isDone} className="tw-w-full"/>
+                    </div>
+                    <div className="tw-flex tw-h-1/3 tw-flex-grow">
+                        <TimelineVisualization isDone={isDone} className="tw-w-full"/>
+                    </div>
+                    </Container>
+
                 </Col>
             </Row>
             </Container>}

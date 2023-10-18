@@ -71,7 +71,7 @@ function Timeline({ labels, datasets }) {
 
   return (
     <div>
-      <Line options={options} data={data} height="400px" />
+      <Line options={options} data={data} style={{ width: '100%', height: '100%', }}/>
     </div>
   );
 }
@@ -191,9 +191,7 @@ function TimelineVisualization(props) {
   }, [isDone]);
 
   return (
-    <div>
       <Timeline datasets={datasets} />
-    </div>
   );
 }
 export default TimelineVisualization;

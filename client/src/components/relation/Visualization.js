@@ -48,7 +48,7 @@ function Visualization(props) {
 
   return (
     <div>
-      <div id="graph-container" style={{ width: '500px', height: '400px', }}></div>
+      <div id="graph-container" style={{ width: '100%', height: '100%', }}></div>
     </div>
   );
 }
