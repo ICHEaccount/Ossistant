@@ -9,7 +9,7 @@ class Post(StructuredNode):
     writer = StringProperty()
     content = StringProperty()
     # created_date = StringProperty()
-    create_date = DateTimeProperty()
+    created_date = DateTimeProperty()
     post_type = StringProperty()
     case_id = StringProperty()
 

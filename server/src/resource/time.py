@@ -4,116 +4,82 @@ from datetime import datetime
 import re
 import json
 from datetime import datetime
-
-from db_conn.neo4j.init import db 
-
-# Neo4j 데이터베이스에 연결합니다.
-# app = Flask(__name__)
-# CORS(app)
+from db_conn.neo4j.init import db
+from neo4j import GraphDatabase
 
 bp = Blueprint('timeline', __name__, url_prefix='/timeline')
 
-DOMAIN = 0 
-POST = 1 
-SURFACEUSER = 2
-
 def post_function():
-    node_status = [False, False, False]
     queries = [
-        "MATCH (d:Domain) RETURN PROPERTIES(d)",
-        "MATCH (p:Post) RETURN PROPERTIES(p)",
-        "MATCH (s:SurfaceUser) RETURN PROPERTIES(s)"
+        "MATCH (d:Domain) RETURN PROPERTIES(d) AS data",
+        "MATCH (p:Post) RETURN PROPERTIES(p) AS data",
+        "MATCH (s:SurfaceUser) RETURN PROPERTIES(s) AS data"
     ]
-    result_list = []
-    i = 0 
+
+    results = []
+
     for query in queries:
-        result , _ = db.cypher_query(query)
-        if  result[0]:
-            node_status[i]= True
-        i = i+1
-        
-        result_list.extend(result[0])
+        result, _ = db.cypher_query(query)
+        for row in result:
+            data = row[0]  # 각 튜플의 첫 번째 요소를 가져옵니다.
+            results.append(data)
 
-    # Data from graphDB  
-    if result_list:
-        merged_results = [json.loads(json.dumps(result)) for result in result_list]
-        
-    
-    # Old 
-    # results = []
+    username_dict = None
+    for item in results:
+        if "username" in item:
+            username_dict = item
+            break
 
-    # # Neo4j 데이터베이스에 연결하고 각 쿼리 실행
-    # with GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "icheneo4j")) as driver:
-    #     for query in queries:
-    #         with driver.session() as session:
-    #             result = session.run(query)
-    #             results.extend(result.data())
+    # username이 있는 경우, 같은 url 또는 domain 값을 가진 딕셔너리에 username 추가
+    if username_dict:
+        for item in results:
+            if item.get("domain") == username_dict.get("url"):
+                item["username"] = username_dict.get("username")
 
-                                                                                                                                                                                                                                                                                                
-    # return jsonify({'return':merged_results})
+    # 결과를 저장할 리스트
+    filtered_data_domain = [] # This is domain
 
-    # SurfaceUser - post 
-    # Username dict.url == other dict.url, Add domain 
-    for i, data_dict in enumerate(merged_results):
-        if 'username' in data_dict:
-            username = data_dict['username']
-            if 'url' in data_dict:
-                url = data_dict['url']
-                for j, other_dict in enumerate(merged_results):
-                    if i != j and 'url' in other_dict and 'username' not in other_dict:
-                        if other_dict['url'] == url:
-                            other_dict['username'] = username
+    for item in results:
+        if 'domain' in item:
+            filtered_item = {
+                "domain": item["domain"],
+                "regdate": item.get("regdate"),
+                "status": item.get("status")
+            }
 
-    # SurfaceUser - domain 
-    for i, data_dict in enumerate(merged_results):
-        if 'username' in data_dict:
-            username = data_dict['username']
-            if 'url' in data_dict:
-                url = data_dict['url']
-                for j, other_dict in enumerate(merged_results):
-                    if i != j and 'domain' in other_dict and 'username' not in other_dict:
-                        if other_dict['domain'] == url:
-                            other_dict['username'] = username
+            # 'username' 키가 있는지 확인하고, 있다면 그 값을 추가
+            if 'username' in item:
+                filtered_item["username"] = item["username"]
 
-    # Delete key value(No Visualization)
-    for data_dict in merged_results:
-        if "note" in data_dict:
-            del data_dict["note"]
-    
-    # Delete fake 
-    merged_results = [data_dict for data_dict in merged_results if "fake" not in data_dict]
+            filtered_data_domain.append(filtered_item)
 
-    # Post - domain 
-    # if node_status[POST] is True and node_status[DOMAIN] is True:
-    #     for data_dict in merged_results:
-    #         if 'created_date' in data_dict:
-    #             data_dict['regdate'] = data_dict.pop('created_date')
+    # 데이터셋을 반복하면서 domain 값을 분석하고 domain_name을 추가
+    for item in filtered_data_domain:
+        domain_value = item.get("domain")
+        if domain_value:
+            # 정규 표현식을 사용하여 도메인 이름 추출
+            match = re.search(r'www\.(.*?)\.', domain_value)
+            if match:
+                domain_name = match.group(1)
+                item["domain_name"] = domain_name
 
-    #     # 정규 표현식 패턴을 사용하여 HH:MM 형식 제거하고 YYYY-MM-DD로 변환
-    #     for data_dict in merged_results:
-    #         if 'regdate' in data_dict:
-    #             date_dict = data_dict['regdate']
-    #             datetime_obj = datetime.strptime(date_dict, '%Y-%m-%d %H:%M:%S')
-    #             date_str = datetime_obj.strftime('%Y-%m-%d')
-    #             # date_str = re.sub(r'\s\d{2}:\d{2}', '', date_str)  # HH:MM 부분 제거
-    #             data_dict['regdate'] = date_str
-    #     # YYYY-MM-DD 형식으로만 시간 순서대로 딕셔너리 정렬
-    #     sorted_results = sorted(merged_results, key=lambda x: datetime.strptime(x['regdate'], '%Y-%m-%d'))
+    # 날짜 형식으로 변환
+    for item in filtered_data_domain:
+        item["regdate"] = datetime.strptime(item["regdate"], "%Y-%m-%d").date()
 
-    #     for data_dict in sorted_results:
-    #         if 'domain' in data_dict:
-    #             if 'writer' in data_dict:
-    #                 data_dict['writer : domain'] = f"{data_dict['writer']} : {data_dict['domain']}"
-    #             else:
-    #                 data_dict['writer : domain'] = data_dict['domain']
+    # 날짜를 기준으로 정렬 (lambda 함수 사용)
+    sorted_data = sorted(filtered_data_domain, key=lambda x: x["regdate"])
 
-    #         return sorted_results
-    return None
+    # 날짜를 문자열로 다시 변환
+    for item in sorted_data:
+        item["regdate"] = item["regdate"].strftime("%Y-%m-%d")
 
-@bp.route('/post',methods=["GET"])
+
+    return sorted_data
+
+
+@bp.route('/post', methods=["GET"])
 def create_post():
     post = post_function()
-    return jsonify({'post_dicts':post}), 200
+    return jsonify({'post_dicts': post}), 200
 
-# if __name__ == '__main__':
-#     app.run(host = '0.0.0.0', debug=True, port=5011)

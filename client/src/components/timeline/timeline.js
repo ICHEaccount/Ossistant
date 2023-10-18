@@ -107,42 +107,14 @@ function TimelineVisualization() {
 
       const datasets = [];
 
-      const uniqueLabels = Array.from(new Set(data.map(post => post['writer'])));
+      const uniqueLabels = Array.from(new Set(data.map(post => post['domain_name'])));
 
       data.forEach((post, index) => {
-        let label = 'Domain'; // 기본 레이블
+        let label = post['domain_name'];
         let tag = '';
-        if (post['writer']) {
-            label = post['writer'];
-        }
-
-        if (post['url']) {
-            tag += `url: ${post['url']} \n`;
-        }
-
-        if (post['domain']) {
-            tag += `domain: ${post['domain']} \n`;
-        }
-
-        if (post['username']) {
-            tag += `username: ${post['username']} \n`;
-        }
-
-        if (post['title']) {
-            tag += `title: ${post['title']} \n`;
-        }
-
-        if (post['post_type']) {
-            tag += `post_type: ${post['post_type']} \n`;
-        }
-
-        if (post['status']) {
-            tag += `status: ${post['status']} \n`;
-        }
-
-        // writer 값이 존재하는 경우 writer를 레이블로 사용
-        if (post['writer']) {
-            label = post['writer'];
+        const xValue = post['regdate'];
+        if (post['domain_name']) {
+            label = post['domain_name'];
         }
         const backgroundColor = backgroundColors[index % backgroundColors.length];
 

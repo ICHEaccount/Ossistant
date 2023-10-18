@@ -39,7 +39,6 @@ function Visualization() {
       })
     });
     const network = new Network(container, data, options);
-
     return () => {
       network.destroy();
     };
