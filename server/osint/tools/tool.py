@@ -105,6 +105,9 @@ def run_tool():
             domain_obj = Domain.nodes.first_or_none(domain=domain)
             if not domain_obj:
                 domain_obj = Domain(domain=domain,regdate=regdate, status=False,case_id=case_id).save()
+            else:
+                inp_data = {'regdate':regdate}
+                domain_obj = Domain.update_node_properties(node_id=domain_obj.uid,**inp_data)
 
             # Establishing the relationship
             if not user.register.is_connected(domain_obj):

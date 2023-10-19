@@ -86,6 +86,10 @@ def create_data():
             "fake": fake,
             "case_id": case_id
             })
+
+            post_obj = Post.nodes.first_or_none(writer=username)
+            if post_obj:
+                compare_post_user_username(post_obj=post_obj,user_obj=new_user) 
             #return jsonify({"message": "SurfaceUser created successfully.", "user_uid": new_user.uid}), 201
             return jsonify({"state":"success"}), 201
         except Exception as e:

@@ -51,19 +51,19 @@ const options = {
     },    
   },
   edges: {
-    arrows: {
-      to: { enabled: true, scaleFactor: 1, type: 'arrow' },
-    },
     color: {
       color: '#848484',
       highlight: '#FF0000',
     },
     font: {
-      size: 12,
+      size: 8,
     },
     scaling: {
       min: 1,
       max: 15,
+    },
+    smooth: {
+      type: 'dynamic',
     },
   },
 };

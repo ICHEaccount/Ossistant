@@ -11,7 +11,7 @@ def get_neo4j_data():
     query = """
     MATCH (n)
     OPTIONAL MATCH (n)-[r]-(m)
-    RETURN n, labels(n),TYPE(r), PROPERTIES(r), m,ID(r), ID(n), ID(m)
+    RETURN n, labels(n),TYPE(r), PROPERTIES(r), m, r.uid, n.uid, m.uid
     """
     results, _ = db.cypher_query(query)
 
