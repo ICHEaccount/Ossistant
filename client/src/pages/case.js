@@ -84,19 +84,19 @@ import ToolResultBanner from '../components/toolResultBanner';
 
         return (
         <div>
-            {isLoad&&<Container className='mt-3 mb-3' fluid>
+            {isLoad&&<Container className='mt-3 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
                     <ToolResultBanner toolState={toolState} error={toolError}/>
                     <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner} newData={newData}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
-                    <Container className="tw-max-h-screen tw-flex-grow">
-                    <div className="tw-flex tw-h-2/3">
-                        <Visualization isDone={isDone} className="tw-w-full"/>
+                    <Container className="tw-flex-grow">
+                    <div className="tw-flex tw-border tw-rounded-md mb-2">
+                        <Visualization isDone={isDone}/>
                     </div>
-                    <div className="tw-flex tw-h-1/3 tw-flex-grow">
-                        <TimelineVisualization isDone={isDone} className="tw-w-full"/>
+                    <div className="tw-flex tw-border tw-rounded-md tw-flex-grow tw-justify-center">
+                        <TimelineVisualization isDone={isDone}/>
                     </div>
                     </Container>
 

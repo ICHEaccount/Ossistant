@@ -43,7 +43,12 @@ const ToolList = (props) => {
     
 
     const toolList=labels.map((label)=>{
-        if(Object.keys(caseData).length===0) return null
+        if(Object.keys(caseData).length===0) return (
+            <Tab eventKey={label} title={label}>
+                <p className='tw-text-center tw-text-lg'>No Data Yet</p>
+            {/* <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/> */}
+            </Tab>
+            )
         const labelTools = tools[label]
         // console.log(labelTools);
         // if(labelTools!==undefined) console.log(labelTools);

@@ -89,6 +89,7 @@ def run_tool():
         domain = tool_data['properties'][0]['property'][0]['domain']
         result = tool_whois(domain)
         regdate = result['regdate']
+        if regdate: regdate=regdate.strftime('%Y-%m-%d')
 
 
         # email to username 

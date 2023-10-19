@@ -58,7 +58,8 @@ def post_function():
         domain_value = item.get("domain")
         if domain_value:
             # 정규 표현식을 사용하여 도메인 이름 추출
-            match = re.search(r'www\.(.*?)\.', domain_value)
+            match = re.search('(?:https?://)?(?:www\.)?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)', domain_value)
+            # match = re.search(r'www\.(.*?)\.', domain_value)
             if match:
                 domain_name = match.group(1)
                 item["domain_name"] = domain_name
