@@ -9,10 +9,12 @@ import Button from 'react-bootstrap/esm/Button';
 import Container from 'react-bootstrap/esm/Container';
 import lbs from '../labels';
 import CreateData from './createData';
+import cls from 'classnames'
 
 const DataCard = (props) => {
     const label = props.label
     const nodes = props.nodes
+    const newData = props.newData
     const title = lbs[label].title
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [onEdit, setonEdit] = useState(false)
@@ -23,10 +25,11 @@ const DataCard = (props) => {
 
 
     const nodeList = nodes?.map((node, idx) => {
-
+        // console.log(newData.some((newNode)=>newNode.node_id===node.node_id));
+        console.log(newData);
         return(
         <Card
-        className='mt-1'
+        className={cls('mt-1',{"tw-bg-blue-200":newData&&newData.some((newNode)=>newNode.node_id===node.node_id)})}
         // key={node.id}
         >
         <Card.Body>
