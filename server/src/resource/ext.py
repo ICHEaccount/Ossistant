@@ -1,3 +1,4 @@
+import re
 # flaks 
 from flask import request, jsonify,Blueprint
 
@@ -30,7 +31,8 @@ def create_node():
     
     keys = list(req['keyword'].keys())
     req_arg = {keys[0]: req['keyword'][keys[0]]}
-    
+    req_arg['case_id'] = '1' # Fix 
+
     if req_label == 'SurfaceUser':
         node_id = SurfaceUser.node_exists_url(req['url'])
         if node_id is not None:
@@ -63,8 +65,15 @@ def create_node():
             
     elif req_label == 'Post':
         node_id = Post.node_exists_url(req['url'])
+        
+        # parsing writer from url 
+        pattern = r"(?<=\.com\/)[^/]+"
+        match = re.search(pattern, req['url'])
+        writer = match.group(0) if match else None
+        req_arg['writer'] = writer
+
         if node_id:
-            post_obj = Post.update_node_properties(node_id, **req_arg)
+            post_obj = Post.update_node_properties(node_id, req_arg)
             if post_obj is False:
                 return jsonify({'Error':'Node update Error '}), 500
             user_obj = SurfaceUser.nodes.first_or_none(username=post_obj.writer)
