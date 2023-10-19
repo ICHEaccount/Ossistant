@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Network, DataSet } from 'vis-network/standalone';
 import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
@@ -7,8 +7,9 @@ import options from './options';
 
 function Visualization(props) {
   const isDone = props.isDone
+  const visJSRef = useRef(null)
   useEffect(() => {
-    const container = document.getElementById('graph-container');
+    // const container = document.getElementById('graph-container');
 
     const data = {
       nodes: new DataSet(),
@@ -47,16 +48,12 @@ function Visualization(props) {
         }
       });
     });
-    const network = new Network(container, data, options);
-    return () => {
-      network.destroy();
-    };
-  }, [isDone]);
+    const network = visJSRef.current && new Network(visJSRef.current, data, options);
+
+  }, [isDone,visJSRef]);
 
   return (
-    <div>
-      <div id="graph-container" style={{ width: '100%', height: '100%', }}></div>
-    </div>
+      <div ref={visJSRef} style={{height:"400px", width:"900px"}}></div>
   );
 }
 

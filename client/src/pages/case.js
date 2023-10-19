@@ -91,12 +91,12 @@ import ToolResultBanner from '../components/toolResultBanner';
                     <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner} newData={newData}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
-                    <Container className="tw-max-h-screen tw-flex-grow">
-                    <div className="tw-flex tw-h-2/3">
-                        <Visualization isDone={isDone} className="tw-w-full"/>
+                    <Container className="tw-flex-grow">
+                    <div className="tw-flex tw-border tw-rounded-md">
+                        <Visualization isDone={isDone}/>
                     </div>
-                    <div className="tw-flex tw-h-1/3 tw-flex-grow">
-                        <TimelineVisualization isDone={isDone} className="tw-w-full"/>
+                    <div className="tw-flex tw-flex-grow">
+                        <TimelineVisualization isDone={isDone}/>
                     </div>
                     </Container>
 

@@ -71,7 +71,7 @@ function Timeline({ labels, datasets }) {
 
   return (
     <div>
-      <Line options={options} data={data} style={{ width: '100%', height: '100%', }}/>
+      <Line options={options} data={data} style={{height:"200px"}}/>
     </div>
   );
 }
