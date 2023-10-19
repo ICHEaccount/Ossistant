@@ -64,7 +64,7 @@ jobs:
           script: |
             whoami
             cd server
-            touch dddddd
+            touch ddddd
             docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_PASSWORD }}
             docker system prune -a --volumes -f
             docker compose pull -q
