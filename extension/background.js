@@ -1,4 +1,9 @@
 chrome.runtime.onInstalled.addListener(() => {
+
+    const keepAlive = () => setInterval(chrome.runtime.getPlatformInfo, 20e3);
+    chrome.runtime.onStartup.addListener(keepAlive);
+    keepAlive();
+
     // extension functions
     const topMenus = ["collect clue", "store memo", "take snapshot", "using SNS parser"];
     for (let menu of topMenus) {
@@ -61,6 +66,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
     // context menu listener
     chrome.contextMenus.onClicked.addListener((info, tab) => {
+
         const selectedText = info.selectionText;
         const siteUrl = tab.url;
 

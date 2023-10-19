@@ -8,7 +8,7 @@ class SurfaceUser(StructuredNode):
     uid = UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
-    fake = StringProperty(default="fake")
+    fake = StringProperty(default="None")
     case_id = StringProperty()
     # note = StringProperty()
 

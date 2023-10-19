@@ -24,7 +24,7 @@ class Domain(StructuredNode):
 
     @classmethod
     def create_node(cls, data):
-        node = cls(**data)  
+        node = cls(**data)
         node.save()
         return node
 
