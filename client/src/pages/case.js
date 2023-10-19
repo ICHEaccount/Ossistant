@@ -21,21 +21,38 @@ import ToolResultBanner from '../components/toolResultBanner';
         // const [toolResult, settoolResult] = useState([])
         const [toolError, settoolError] = useState({})
         const [isDone, setisDone] = useState(false)
-
+        const [newData, setnewData] = useState([])
 
         useEffect(() => {
             Axios.get(`/data/getData/${case_id}`)
                 .then((res)=>{
                 if(res.data){
                     // console.log(res.data);
+                    if(isDone){const newDataList = {};
+                    Object.keys(res.data.data).forEach((label) => {
+                        if(case_data[label]){
+                            res.data.data[label].forEach((item) => {
+                                newDataList[label]=[]
+                                const isOldData = case_data[label].some((oldItem) => oldItem.node_id === item.node_id);
+                                if (!isOldData) {
+                                    newDataList[label].push(item);
+                                }
+                            })
+                        }else{
+                            newDataList[label]=res.data.data[label]
+                        }
+                        }
+                    );
+                    
+                    console.log(newDataList);
+                    setnewData(newDataList)}
                     setcase_data(res.data.data)
                     setisLoad(true)
                 }else{
                     console.error(res.error);
                     setisLoad(false)
                 }
-                })        
-            
+                })
             
         }, [case_id,isDone])
 
@@ -71,7 +88,7 @@ import ToolResultBanner from '../components/toolResultBanner';
             <Row>
                 <Col lg={4}>
                     <ToolResultBanner toolState={toolState} error={toolError}/>
-                    <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner}/>
+                    <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner} newData={newData}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
                     <Container className="tw-max-h-screen tw-flex-grow">

@@ -14,7 +14,7 @@ const DataPanel = (props) => {
     const caseData = props.caseData
     const toolrunner = props.toolrunner
     const toolState = props.toolState
-    
+    const newData=props.newData
     
     const LeftTabs = () => {
         return (
@@ -42,7 +42,7 @@ const DataPanel = (props) => {
             </Col>
             <Col sm={9}>
                 <Tab.Content>
-                <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData}/></Tab.Pane>
+                <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData} newData={newData}/></Tab.Pane>
                 <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} toolState={toolState} toolrunner={toolrunner}/></Tab.Pane>
                 <Tab.Pane eventKey="report"><Report case_id={case_id} caseData={caseData}/></Tab.Pane>
                 

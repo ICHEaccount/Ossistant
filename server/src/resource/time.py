@@ -65,14 +65,16 @@ def post_function():
 
     # 날짜 형식으로 변환
     for item in filtered_data_domain:
-        item["regdate"] = datetime.strptime(item["regdate"], "%Y-%m-%d").date()
+        if item["regdate"] :
+            item["regdate"] = datetime.strptime(item["regdate"], "%Y-%m-%d").date()
 
     # 날짜를 기준으로 정렬 (lambda 함수 사용)
     sorted_data = sorted(filtered_data_domain, key=lambda x: x["regdate"])
 
     # 날짜를 문자열로 다시 변환
     for item in sorted_data:
-        item["regdate"] = item["regdate"].strftime("%Y-%m-%d")
+        if item["regdate"] :
+            item["regdate"] = item["regdate"].strftime("%Y-%m-%d")
 
 
     return sorted_data
