@@ -17,27 +17,35 @@ function Visualization(props) {
 
     axios.get('/graph/node').then((response) => {
       const graphData = response.data;
+      const addedNodes = new Set();
+      const addedEdges = new Set();
+    
       graphData.forEach(item => {
-        console.log(item);
         const label = item.n.username || item.n.domain || item.n.title;
         const group = item.n.label;
-        const nodeId = item.n.id || uuidv4(); 
-        console.log(group);
-        data.nodes.add({ id: nodeId, label, group });
-
+        const nodeId = item.n.id;
+    
+        if (!addedNodes.has(nodeId)) {
+          data.nodes.add({ id: nodeId, label, group });
+          addedNodes.add(nodeId);
+        }
+    
         if (item.r) {
           const fromNodeId = item.n.id;
-          const toNodeId = item.r.id;
-          const relationshipId = uuidv4();
-
-          data.edges.add({
-            id: relationshipId,
-            from: fromNodeId,
-            to: toNodeId,
-            label: item.r.type,
-          });
+          const toNodeId = item.m.id;
+          const relationshipId = item.r.id;
+    
+          if (!addedEdges.has(relationshipId)) {
+            data.edges.add({
+              id: relationshipId,
+              from: fromNodeId,
+              to: toNodeId,
+              label: item.r.type,
+            });
+            addedEdges.add(relationshipId);
+          }
         }
-      })
+      });
     });
     const network = new Network(container, data, options);
     return () => {

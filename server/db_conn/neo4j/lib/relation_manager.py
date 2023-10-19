@@ -10,7 +10,7 @@ class RelationManager:
         user_obj = SurfaceUser.nodes.first_or_none(username=username)
         post_obj = Post.nodes.first_or_none(writer=username)
         flag = False 
-        if user_obj and post_obj:
+        if user_obj is not None and post_obj is not None:
             if user_obj.username == post_obj.writer:
                 return True
 
