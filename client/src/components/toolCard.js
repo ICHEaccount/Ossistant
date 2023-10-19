@@ -15,6 +15,8 @@ const ToolCard = (props) => {
     const [show, setshow] = useState(false)
     const runButton = useRef(null)
 
+    // console.log(labelData);
+
     const toggleItemSelection = (idx, p) => {
         setSelectedItems((prevItems) => {
             const updatedItems = { ...prevItems };
@@ -115,12 +117,13 @@ const ToolCard = (props) => {
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
-                        {labelData ? (
+                        {labelData.length ? (
                             <Form onSubmit={runTool}>
                                 {tool.apply.map((p, idx) => (
                                     <Form.Group key={idx}>
                                         <Form.Label>{p}</Form.Label>
                                         {labelData.map((node, idx) => {
+                                            console.log(labelData);
                                             if (p in node.property) {
                                                 return (
                                                     <Form.Check
