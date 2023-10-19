@@ -29,6 +29,7 @@ function Timeline({ labels, datasets }) {
   };
 
   const options = {
+    maintainAspectRatio: false,
     showLine: false,
     scales: {
       x: {
@@ -71,7 +72,7 @@ function Timeline({ labels, datasets }) {
 
   return (
     <div>
-      <Line options={options} data={data} style={{height:"200px"}}/>
+      <Line options={options} data={data} style={{height:"200px",width:"840px"}}/>
     </div>
   );
 }
