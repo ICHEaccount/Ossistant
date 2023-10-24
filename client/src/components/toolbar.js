@@ -91,7 +91,7 @@ const Toolbar = () => {
                 <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
             </Link>)}
             <Help location = {location.pathname}/>
-            <NavDropdown id="basic-nav-dropdown" menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
+            <NavDropdown id="basic-nav-dropdown" align="end"  menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
                 {case_id?(
                     <div>
                     <NavDropdown.ItemText >{case_name}</NavDropdown.ItemText>
