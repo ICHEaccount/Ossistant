@@ -122,7 +122,7 @@ def delete_case(case_id):
 def edit_case():
     request_data = request.get_json()
 
-    if "case_name" in request_data and "case_number" in request_data and "investigator" in request_data and "description" in request_data:
+    if "case_name" in request_data and "investigator" in request_data:
         caseName = request_data["case_name"]
         caseNum = request_data["case_number"]
         investigator = request_data["investigator"]
@@ -139,7 +139,7 @@ def edit_case():
 
             result = CaseModel.objects(case_id=case_id).update(**updated_data)
 
-            if result['n'] > 0:
+            if result> 0:
                 return "Your modification request was processed successfully.", 200
             else:
                 return "Case not found for the given case_id.", 404
