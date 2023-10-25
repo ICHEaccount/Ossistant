@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
-import CreateCase from './createCase'
 import Card from 'react-bootstrap/Card';
+import CreateCase from './case/createCase.js'
 
 const IntroCard = () => {
     return (

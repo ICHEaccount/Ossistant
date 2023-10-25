@@ -5,7 +5,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import options from './options'; 
 
-function Visualization(props) {
+function RelationGraph(props) {
   const isDone = props.isDone
   const visJSRef = useRef(null)
   useEffect(() => {
@@ -57,4 +57,4 @@ function Visualization(props) {
   );
 }
 
-export default Visualization;
+export default RelationGraph;

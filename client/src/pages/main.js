@@ -1,12 +1,11 @@
 import React,{useState,useEffect} from 'react';
 import Axios from "axios";
 import Loading from '../components/loading';
-import CaseCard from '../components/caseCards';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import CaseCard from '../components/case/caseCards';
 import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
 import IntroCard from '../components/introCard';
+import { Container, Row } from 'react-bootstrap';
 
 
 const Main = () => {
@@ -43,7 +42,7 @@ const Main = () => {
     return (
     <div>
         <Container className='mb-3'>
-        <Row >
+        <Row>
             <Col lg={6}>
                     <IntroCard/>
             </Col>

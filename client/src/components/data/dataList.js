@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import DataCard from './dataCard';
-import lbs from '../labels';
+import lbs from '../../labels';
 import { Card } from 'react-bootstrap';
 
 

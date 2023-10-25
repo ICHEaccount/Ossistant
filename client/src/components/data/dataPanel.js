@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import { Alert, Button, Nav, Tab } from 'react-bootstrap';
-import DataList from '../components/dataList';
+import DataList from './dataList';
 import { Database , Gear, FileEarmarkText} from 'react-bootstrap-icons';
-import ToolList from './toolList';
-import Report from './report';
+import ToolList from '../tool/toolList';
+import Report from '../report';
 import Axios  from 'axios';
 
 

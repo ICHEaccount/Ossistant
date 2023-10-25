@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Button from 'react-bootstrap/esm/Button';
 import Container from 'react-bootstrap/esm/Container';
-import lbs from '../labels';
+import lbs from '../../labels';
 import CreateData from './createData';
 import cls from 'classnames'
 
