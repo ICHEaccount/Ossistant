@@ -5,7 +5,8 @@ const Timeline = (props) => {
   const isDone = props.isDone
   return (
     <div>
-      {/* <DomainTimeline isDone={isDone}/> */}
+      {/* Enter Each Timeline Here */}
+      <DomainTimeline isDone={isDone}/>
     </div>
   )
 }

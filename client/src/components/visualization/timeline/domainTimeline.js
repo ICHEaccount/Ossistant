@@ -80,6 +80,7 @@ const DomainTimeline = (props) => {
             newDatasets.push(postDataset);
         });
 
+        console.log(newDatasets);
         // React 상태로 데이터를 설정
         setDatasets(newDatasets);
         } else {
@@ -102,6 +103,7 @@ const DomainTimeline = (props) => {
             console.error('서버 오류:', error);
         // 사용자에게 오류 메시지 표시 또는 다른 오류 처리 작업 수행
         });
+        console.log(datasets);
     }, [isDone]);
 
     
@@ -149,7 +151,7 @@ const DomainTimeline = (props) => {
     
     return (
         <div>
-            <Line options={options} data={datasets} style={{height:"200px",width:"840px"}}/>
+            <Line options={options} data={{datasets}} style={{height:"200px",width:"840px"}}/>
         </div>
     );
 }
