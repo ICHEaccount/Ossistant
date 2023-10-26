@@ -3,9 +3,10 @@ import re
 import whois 
 
 from db_conn.mongo.models import RunModel, CaseModel
-from db_conn.neo4j.lib.relation_manager import SurfaceUser, Domain
 
 from flask import request, jsonify,Blueprint
+
+from .lib.tool_whois import run_whois
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
@@ -26,100 +27,37 @@ def check_json_not_null(input):
                     return False
     return True
 
-def result_response(txt):
-    data = json.loads(txt)
-
-    response_data = {
-        "run_id": "",
-        "state": "completed",
-        "result": [
-            {
-                "domain": {
-                    "domain": data.get("domain_name"),
-                    "regdate": data.get("creation_date")
-                }
-            }
-        ]
-    }
-    response_data = json.dumps(response_data)
-    print(f'res : {response_data}')
-    return response_data
-
-def tool_whois(domain):
-    search = whois.whois(domain) 
-    print(search)
-    result = json.dumps(search, default=str, ensure_ascii=False)  # type(result) is STR
-    print(result)
-    res = result_response(result)
-    print(res)
-    # return data for node 
-    node_data = {
-        'email': search['admin_email'],
-        'regdate':search['creation_date'],
-        'domain':search['domain_name']
-    }
-    return node_data
-
 
 @bp.route('/runTools', methods=['POST'])
 def run_tool():
-    tool_data = request.get_json()
-    if check_json_not_null(tool_data) is False:
+    # check requested json
+    runtools_requested_json = request.get_json()
+    if check_json_not_null(runtools_requested_json) is False:
         print('[-] Invalid Request')
         return jsonify({'Message': 'Invalid request'}), 400
 
-    tool_id = tool_data['tool_id']
-    
+    # parse basic infos from requested json
+    case_id = runtools_requested_json['case_id']
+    tool_id = runtools_requested_json['tool_id']
+
+    # If runtools_requested_json has case_id key
+    case = CaseModel.objects(case_id=case_id).first()
+    if not case:
+        return jsonify({'Message': 'Case Not Found'}), 500
+
+    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='running')
+    if run is None:
+        return jsonify({'Message': 'Run Creation Error'}), 500
+
     # run the requested tool
-    if tool_id == '01':
-
-        # Add to Run(Mongodb) 
-        # Need Case_id 
-        # If tool_data has case_id key 
-        case_id = tool_data['case_id']
-        case = CaseModel.objects(case_id=case_id).first()
-        if not case:
-            return jsonify({'Message':'Case Not Found'}), 500
-        
-        run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='running')
-        if run is None:
-            return jsonify({'Message':'Run Creation Error'}), 500
-        
-        # Execute Tool(whois)
-        domain = tool_data['properties'][0]['property'][0]['domain']
-        result = tool_whois(domain)
-        regdate = result['regdate']
-        if regdate: regdate=regdate.strftime('%Y-%m-%d')
-
-
-        # email to username 
-        regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
-        pattern = re.compile(regex)
-        email = result['email']
-        match = re.match(pattern, email)
-        if match:
-            username = match.group(1)
-            user = SurfaceUser.nodes.first_or_none(username=username)
-            if not user:
-                user = SurfaceUser(username=username,case_id=case_id).save()
-
-            domain_obj = Domain.nodes.first_or_none(domain=domain)
-            if not domain_obj:
-                domain_obj = Domain(domain=domain,regdate=regdate, status=False,case_id=case_id).save()
-            else:
-                inp_data = {'regdate':regdate}
-                domain_obj = Domain.update_node_properties(node_id=domain_obj.uid,**inp_data)
-
-            # Establishing the relationship
-            if not user.register.is_connected(domain_obj):
-                user.register.connect(domain_obj)
-            
-            run.status = 'completed'
-            run.save()
-            return jsonify({'run_id':run.run_id}), 200
-
+    if tool_id == '01':  # whois
+        domain = runtools_requested_json['properties'][0]['property'][0]['domain']
+        run_id = run_whois(case_id, domain, run)  # Execute Tool(whois)
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
+
+    if run_id:
+        return jsonify({'run_id': run_id}), 200
     
 
 @bp.route('/getToolState/<int:run_id>',methods=["GET"])
