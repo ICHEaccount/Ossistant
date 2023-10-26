@@ -28,6 +28,14 @@
                 font-size: 3.5rem;
             }
         }
+        .case-item {
+            border: 1px solid #000; /* 검정색 테두리 */
+            padding: 8px; /* 내부 여백 */
+            margin: 5px; /* 외부 여백 */
+            cursor: pointer; /* 마우스 오버 시 커서 변경 */
+            background-color: #f9f9f9; /* 배경 색상 */
+            border-radius: 5px; /* 테두리 둥글게 */
+        }
     </style>
 </head>
 
@@ -66,9 +74,10 @@
             <div class="form-floating">
                 <input class="form-control" id="searchCaseName" placeholder="Case name">
                 <label for="searchCaseName">Case name</label>
+                <!-- 사건명 검색 결과 드롭다운 -->
+                <div id="searchResults" class="list-group"></div>
             </div>
-
-            <button class="btn btn-primary d-block mx-auto w-50 py-2" type="button" id="searchCaseBtn">Search</button>
+            <button class="btn btn-primary d-block mx-auto w-50 py-2" type="submit" id="searchCaseBtn">Continue</button>
 
             <p class="mt-5 mb-3 text-body-secondary">&copy; 2023 ICHE</p>
         </form>

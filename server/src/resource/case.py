@@ -46,7 +46,7 @@ def check_json_not_null(input):
 
 
 
-@bp.route('/createCase',methods=['POST'])
+@bp.route('/createCase', methods=['POST'])
 def create_case():
 
     case = request.get_json()
@@ -68,6 +68,16 @@ def create_case():
         print('[-] DB Error')
         return jsonify({'Message':'DB Insertion Error'}),500
     return jsonify({'Message':'Success', 'case_id' : caseID }),200
+
+@bp.route('/searchCases', methods=['GET'])
+def search_cases():
+    query = request.args.get('query')
+    if not query:
+        return jsonify([]), 200
+
+    matching_cases = CaseModel.objects(case_name__icontains=query)
+    return jsonify([{"case_name": case.case_name, "case_id": case.case_id} for case in matching_cases]), 200
+
 
 
 @bp.route('/getCaseList')
