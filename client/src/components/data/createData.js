@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Button from 'react-bootstrap/esm/Button';
-import lbs from '../labels'
+import lbs from '../../labels'
 import Axios  from 'axios';
 import { useParams } from 'react-router-dom';
 

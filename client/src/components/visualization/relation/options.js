@@ -1,6 +1,6 @@
-import SurfaceUserImage from '../../images/node_icon/surfaceuser.png';
-import PostImage from '../../images/node_icon/post.png';
-import DomainImage from '../../images/node_icon/domain.png';
+import SurfaceUserImage from '../../../images/node_icon/surfaceuser.png';
+import PostImage from '../../../images/node_icon/post.png';
+import DomainImage from '../../../images/node_icon/domain.png';
 
 const options = {
   groups: {

@@ -1,15 +1,12 @@
-    import React,{useState,useEffect} from 'react';
-    import Axios from "axios";
-    import { useParams } from 'react-router-dom';
-    import Row from 'react-bootstrap/esm/Row';
-    import Col from 'react-bootstrap/esm/Col';
-    import Toast from 'react-bootstrap/Toast';
-    import Container from 'react-bootstrap/esm/Container';
-    import DataPanel from '../components/dataPanel';
-    import Visualization from '../components/relation/Visualization';
-    import TimelineVisualization from '../components/timeline/timeline'
-    import { Alert, Button, Stack } from 'react-bootstrap';
-import ToolResultBanner from '../components/toolResultBanner';
+import React,{useState,useEffect} from 'react';
+import Axios from "axios";
+import { useParams } from 'react-router-dom';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
+import Container from 'react-bootstrap/esm/Container';
+import DataPanel from '../components/data/dataPanel';
+import ToolResultBanner from '../components/tool/toolResultBanner';
+import VisualPanel from '../components/visualPanel';
 
 
     const Case = () => {
@@ -91,15 +88,7 @@ import ToolResultBanner from '../components/toolResultBanner';
                     <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner} newData={newData}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
-                    <Container className="tw-flex-grow">
-                    <div className="tw-flex tw-border tw-rounded-md mb-2">
-                        <Visualization isDone={isDone}/>
-                    </div>
-                    <div className="tw-flex tw-border tw-rounded-md tw-flex-grow tw-justify-center">
-                        <TimelineVisualization isDone={isDone}/>
-                    </div>
-                    </Container>
-
+                    <VisualPanel isDone={isDone}/>
                 </Col>
             </Row>
             </Container>}
