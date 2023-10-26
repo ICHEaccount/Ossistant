@@ -1,6 +1,7 @@
 from neomodel import StructuredNode, UniqueIdProperty,StringProperty, DateTimeProperty, IntegerProperty
 
 from ..init import db
+from .manager.model_manager import NodeManager
 
 class Post(StructuredNode):
     uid = UniqueIdProperty()
@@ -11,6 +12,7 @@ class Post(StructuredNode):
     # created_date = StringProperty()
     created_date = DateTimeProperty()
     post_type = StringProperty()
+    label = StringProperty()
     case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
@@ -66,3 +68,25 @@ class Post(StructuredNode):
             print("Node does not exist.")
             return False
 
+@NodeManager
+class Comment(StructuredNode):
+    uid = UniqueIdProperty()
+    url = StringProperty()
+    name = StringProperty()
+    content = StringProperty()
+    created_date = StringProperty()
+    case_id = StringProperty()
+    label = StringProperty()
+    note = StringProperty()
+
+def to_json(self):
+    return {
+        "uid": self.uid,
+        "url": self.url,
+        "name": self.name,
+        "content": self.content,
+        "created_date": self.created_date,
+        "case_id": self.case_id,
+        "label": self.label,
+        "note": self.note
+    }

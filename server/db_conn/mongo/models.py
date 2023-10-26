@@ -52,8 +52,8 @@ class CaseModel(db.DynamicDocument):
     def create(cls, data) -> bool:
         try:
             # if 'case_id' not in data:  # _id가 없는 경우에만 수동으로 생성
-            #     data['case_id'] = str(uuid.uuid1())
-            data['case_id'] = '1'
+            data['case_id'] = str(uuid.uuid1())
+            # data['case_id'] = '1'
             new_case = cls(**data)
             new_case.save()
             return new_case.case_id
