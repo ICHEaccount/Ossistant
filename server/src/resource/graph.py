@@ -1,8 +1,7 @@
 from flask import request, jsonify,Blueprint
 
-from server.db_conn.neo4j import db
-from db_conn.neo4j.models.user import SurfaceUser
-from db_conn.neo4j.models.post import Post
+from db_conn.neo4j.init import db
+from db_conn.neo4j.models import * 
 
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
