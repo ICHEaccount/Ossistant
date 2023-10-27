@@ -180,20 +180,3 @@ def get_data(case_id):
     except Exception as e:
         return jsonify({"error": "도메인 검색 중 오류가 발생했습니다.", "details": str(e)}), 500
     
-
-
-# Manual
-@bp.route('/test',methods=["POST"])
-def test():
-    data = {
-        'email':'hello_papa@naver.com',
-        'fake':'yes'
-    }
-    node = Email.create_node(data, data['email'])
-    if node:
-        return jsonify({'msg':'success'}),200
-    else:
-        return jsonify({'msg':'Nop'}),500
-    
-
-
