@@ -52,6 +52,10 @@ def create_data():
     # req_data = dict()
     # req_data['case_id'] = data['case_id']
 
+
+    if not data:
+        return jsonify({'error': 'Invalid data'}), 404
+    
     if 'case_id' in data and 'Domain' in data:
         try:
             domain_data = data.get("Domain")
@@ -60,18 +64,15 @@ def create_data():
             regdate = domain_data.get("regdate")
             status = domain_data.get("status")           
             note = domain_data.get("note")
-            print(domain_data)
             new_domain = Domain.create_node({
                 'domain':domain,
                 'regdate':regdate,
                 'status':status,
-                "case_id": case_id
-                # 'note':note
+                "case_id": data.get('case_id'),
+                'note':note
             })
-            #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
-            return jsonify({"state":"success"}), 201
+            return jsonify({"state":"success"}), 200
         except Exception as e:
-            #print(e)
             return jsonify({"state":"fail", "error": str(e)}), 200
         
     elif 'case_id' in data and 'SurfaceUser' in data:
@@ -187,6 +188,7 @@ def get_data(case_id):
 
 
 # Flask 라우트 함수 수정
+# Query로 대체 
 @bp.route('/deleteData/<string:data_id>', methods=["GET"])
 def delete_data(data_id):
     if data_id:

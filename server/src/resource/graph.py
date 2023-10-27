@@ -76,6 +76,7 @@ def modify_node():
 
     del data['uid']
     del data['type']
+    
     if node_type == 'Domain':
         node = Domain.update_node_properties(res.get('uid'),**data)
     elif node_type == 'SurfaceUser':

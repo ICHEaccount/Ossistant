@@ -55,32 +55,37 @@ const NodeInfoCard = ({ selectedNode }) => {
 
   return (
     <div>
-      {Object.entries(nodeAttributes).map(([key, value], index) => (
-        <div key={index}>
-          <Card style={{ width: '18rem' }}>
-            <Card.Header>{key}</Card.Header>
-            <Card.Body
-              onDoubleClick={() => {
-                setEditIndex(index);
-                setEditedValue(value);
-              }}
-            >
-              {editIndex === index ? (
-                <input
-                  type="text"
-                  value={editedValue}
-                  onChange={(e) => setEditedValue(e.target.value)}
-                  onKeyPress={(e) => handleKeyPress(e, key)}
-                  onBlur={() => setEditIndex(null)}
-                  autoFocus
-                />
-              ) : (
-                value
-              )}
-            </Card.Body>
-          </Card>
-        </div>
-      ))}
+      {Object.entries(nodeAttributes).map(([key, value], index) => {
+      if (key !== 'uid' && key !== 'type') {
+        return (
+          <div key={index}>
+            <Card style={{ width: '18rem' }}>
+              <Card.Header>{key}</Card.Header>
+              <Card.Body
+                onDoubleClick={() => {
+                  setEditIndex(index);
+                  setEditedValue(value);
+                }}
+              >
+                {editIndex === index ? (
+                  <input
+                    type="text"
+                    value={editedValue}
+                    onChange={(e) => setEditedValue(e.target.value)}
+                    onKeyPress={(e) => handleKeyPress(e, key)}
+                    onBlur={() => setEditIndex(null)}
+                    autoFocus
+                  />
+                ) : (
+                  value
+                )}
+              </Card.Body>
+            </Card>
+          </div>
+        );
+      }
+      return null; // 이 부분은 필요한 경우에만 추가
+    })}
     </div>
   );
 };
