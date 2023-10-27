@@ -5,6 +5,19 @@ from db_conn.neo4j.models import *
 
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
+# Should be change 
+# @bp.route("/node/<string:case_id>", methods=["GET"])
+# def get_neo4j_data(case_id):
+#     query = f"""
+#     MATCH (n)
+#     WHERE n.case_id = '{case_id}'
+#     OPTIONAL MATCH (n)-[r]-(m)
+#     RETURN n, labels(n),TYPE(r), PROPERTIES(r), m, r.uid, n.uid, m.uid
+#     """
+#     pass
+
+
+
 @bp.route("/node", methods=["GET"])
 def get_neo4j_data():
     query = """

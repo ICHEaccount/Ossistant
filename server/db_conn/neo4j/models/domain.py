@@ -1,9 +1,7 @@
 from neomodel import StructuredNode, UniqueIdProperty,StringProperty, BooleanProperty, DateTimeProperty
 
 from ..init import db
-from .manager.model_manager import NodeManager
 
-@NodeManager
 class Domain(StructuredNode):
     uid = UniqueIdProperty()
     url = StringProperty()
@@ -24,11 +22,11 @@ class Domain(StructuredNode):
         }
 
 
-    # @classmethod
-    # def create_node(cls, data):
-    #     node = cls(**data)
-    #     node.save()
-    #     return node
+    @classmethod
+    def create_node(cls, data):
+        node = cls(**data)
+        node.save()
+        return node
 
     @classmethod
     def get_all_domains(cls):
@@ -47,14 +45,14 @@ class Domain(StructuredNode):
         except cls.DoesNotExist:
             return None
 
-    # @classmethod
-    # def update_node_properties(cls, node_id, **kwargs):
-    #     node = cls.nodes.get_or_none(uid=node_id)
-    #     if node:
-    #         for key, value in kwargs.items():
-    #             setattr(node, key, value)
-    #         node.save()
-    #         return node
-    #     else:
-    #         return False
+    @classmethod
+    def update_node_properties(cls, node_id, **kwargs):
+        node = cls.nodes.get_or_none(uid=node_id)
+        if node:
+            for key, value in kwargs.items():
+                setattr(node, key, value)
+            node.save()
+            return node
+        else:
+            return False
 

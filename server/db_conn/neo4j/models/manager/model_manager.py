@@ -35,7 +35,7 @@ class NodeManager:
     
     @classmethod
     def delete_node(self, node_id):
-        node = self.cls.nodes.get(uid=node_id)
+        node = self.cls.nodes.get_or_none(uid=node_id)
         if node:
             for rel in node.relationships.all():
                 rel.delete()        
