@@ -7,6 +7,7 @@ from db_conn.mongo.models import RunModel, CaseModel
 from flask import request, jsonify,Blueprint
 
 from .lib.tool_whois import run_whois
+from .lib.tool_maigret import run_maigret
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
@@ -53,6 +54,9 @@ def run_tool():
     if tool_id == '01':  # whois
         domain = runtools_requested_json['properties'][0]['property'][0]['domain']
         run_id = run_whois(case_id, domain, run)  # Execute Tool(whois)
+    elif tool_id == '03':
+        username = runtools_requested_json['properties'][0]['property'][0]['username']
+        run_id = run_maigret(case_id, username, run)
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
