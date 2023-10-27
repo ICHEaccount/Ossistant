@@ -11,7 +11,7 @@ class SurfaceUser(StructuredNode):
     username = StringProperty()
     url = StringProperty()
     fake = StringProperty(default="None")
-    # case_id = StringProperty()
+    case_id = StringProperty()
     note = StringProperty()
 
     # Relation
