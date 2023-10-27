@@ -5,9 +5,7 @@ from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
-from db_conn.neo4j.models.domain import Domain
-from db_conn.neo4j.models.user import SurfaceUser
-from db_conn.neo4j.models.post import Post
+from db_conn.neo4j.models import *
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -181,3 +179,4 @@ def get_data(case_id):
 
     except Exception as e:
         return jsonify({"error": "도메인 검색 중 오류가 발생했습니다.", "details": str(e)}), 500
+    
