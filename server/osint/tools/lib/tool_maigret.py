@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 # import maigret
 
 
@@ -7,12 +8,13 @@ def run_maigret(case_id, username, run):
     print("Current working directory:", os.getcwd())
 
     try:
-        exec(f"maigret {username} --json simple")
-        return run.run_id
-    except Exception as e:
-        print(f"Failed to run maigret. {e}")
-        run_failed = 'run failed'
+        # exec(f"maigret {username} --json simple")
+        subprocess.run(['maigret', username, '--json', 'simple'], check=True)
+    except subprocess.CalledProcessError as e:
+        run_failed = f'Run failed. Username is {username}. Return code: {e.returncode}'
         return run_failed
+
+    return run.run_id
 
 
 def check_maigret(username):  # unfinished

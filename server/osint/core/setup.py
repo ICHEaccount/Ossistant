@@ -6,6 +6,8 @@ import json
 
 # print("Current working directory:", os.getcwd())
 
+# If any tool use setup.py, delete tools.json, too.
+# Expecting usage: theHarvester
 with open('./core/tools.json','r') as jfile:
     data = json.load(jfile)
 
