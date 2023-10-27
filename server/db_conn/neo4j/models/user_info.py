@@ -21,7 +21,6 @@ class Email(StructuredNode):
             "note": self.note
         }
 
-
 @NodeManager
 class Phone(StructuredNode):
     uid = UniqueIdProperty()
