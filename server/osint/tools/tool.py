@@ -53,15 +53,21 @@ def run_tool():
     # run the requested tool
     if tool_id == '01':  # whois
         domain = runtools_requested_json['properties'][0]['property'][0]['domain']
+        if domain is None:
+            return jsonify({'Message': 'Invalid domain'}), 400
         run_id = run_whois(case_id, domain, run)  # Execute Tool(whois)
     elif tool_id == '03':
         username = runtools_requested_json['properties'][0]['property'][0]['username']
+        if username is None:
+            return jsonify({'Message': 'Invalid username'}), 400
         run_id = run_maigret(case_id, username, run)
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
-    if run_id:
+    if isinstance(run_id, int):
         return jsonify({'run_id': run_id}), 200
+    else:
+        return jsonify({'Message': run_id}), 400
     
 
 @bp.route('/getToolState/<int:run_id>',methods=["GET"])

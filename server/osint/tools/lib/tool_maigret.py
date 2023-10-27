@@ -10,8 +10,8 @@ def run_maigret(case_id, username, run):
     try:
         subprocess.Popen(['maigret', username, '--json', 'simple'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except Exception as e:
-        run_failed = f'Run failed. Username is {username}. Return code: {e}'
-        return run_failed
+        message = f'Run maigret failed. Username is {username}. Return code: {e}'
+        return message
 
     return run.run_id
 
