@@ -5,7 +5,7 @@ from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
-from server.db_conn.neo4j.models import *
+from db_conn.neo4j.models import *
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
