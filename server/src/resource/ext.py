@@ -29,7 +29,7 @@ def create_node():
     
     keys = list(req['keyword'].keys())
     req_arg = {keys[0]: req['keyword'][keys[0]]}
-    req_arg['case_id'] = '1' # Fix 
+    # req_arg['case_id'] = '1' # Fix 
 
     if req_label == 'SurfaceUser':
         node_id = SurfaceUser.node_exists_url(req['url'])
