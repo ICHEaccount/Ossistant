@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         let selectedCaseId = searchInput.dataset.caseId;
         if (selectedCaseId) {
-            window.open('http://127.0.0.1:3000/case/' + selectedCaseId, '_blank');
+            window.open('http://127.0.0.1:3000/casepage/' + selectedCaseId, '_blank');
         } else {
             alert('케이스를 선택해주세요.');
         }
