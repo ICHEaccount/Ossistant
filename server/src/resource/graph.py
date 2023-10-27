@@ -1,6 +1,6 @@
 from flask import request, jsonify,Blueprint
 
-from server.db_conn.neo4j import db
+from db_conn.neo4j.init import db
 from db_conn.neo4j.models.user import SurfaceUser
 from db_conn.neo4j.models.post import Post
 
@@ -36,4 +36,24 @@ def get_neo4j_data():
             nodes_and_relationships.append({'n': n_dict, 'r': None, 'm': m_dict})
         # print(nodes_and_relationships[:4])
     return jsonify(nodes_and_relationships)
+
+
+def get_node_properties_by_uid(uid):
+    query = f"MATCH (n) WHERE n.uid = '{uid}' RETURN properties(n) as properties"
+    results, _ = db.cypher_query(query)
+    if results and results[0] and 'properties' in results[0]:
+        return results[0]['properties']
+    else:
+        return None
+
+@bp.route("/node/<string:uid>", methods=["GET"])
+def get_node_properties(uid):
+    if uid:
+        result = get_node_properties_by_uid(uid)
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({'error': 'Node not found with the specified uid.'}), 404
+    else:
+        return jsonify({'error': 'UID parameter is missing.'}), 400
 

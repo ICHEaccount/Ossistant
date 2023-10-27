@@ -154,7 +154,7 @@ def get_data(case_id):
             for domain in domains:
                 domain_property = domain._json_serializable()
                 domain_property.pop("case_id", None)
-                domain_dict = {"node_id": str(domain.element_id), "property": domain_property}
+                domain_dict = {"node_id": str(domain.uid), "property": domain_property}
                 domain_list.append(domain_dict)
 
                 #domain_list.append({"node_id": str(domain.element_id), "property":domain._json_serializable()})
@@ -164,7 +164,7 @@ def get_data(case_id):
             for user in users:
                 user_property = user._json_serializable()
                 user_property.pop("case_id", None)
-                user_dict = {"node_id": str(user.element_id), "property": user_property}
+                user_dict = {"node_id": str(user.uid), "property": user_property}
                 user_list.append(user_dict)
 
         if posts:
@@ -172,9 +172,10 @@ def get_data(case_id):
                 post_property = post._json_serializable()
                 post_property.pop("case_id", None)
 
-                post_dict = {"node_id": str(post.element_id), "property": post_property}
+                post_dict = {"node_id": str(post.uid), "property": post_property}
                 post_list.append(post_dict)
-        
+
+
         return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "SurfaceUser":user_list, "Post":post_list}}), 200
 
     except Exception as e:
