@@ -38,20 +38,9 @@ def check_json_not_null(input):
     return True
 
 
-
-
 @bp.route('/createData',methods=['POST'])
 def create_data():
     data = request.get_json()
-    print(data)
-    #if check_json_not_null(data) is False:
-    #    print('[-] Invaild Case data')
-    #    return jsonify({'Message':'Invalid data'}),400
-
-
-    # req_data = dict()
-    # req_data['case_id'] = data['case_id']
-
 
     if not data:
         return jsonify({'error': 'Invalid data'}), 404
