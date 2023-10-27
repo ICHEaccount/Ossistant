@@ -33,7 +33,7 @@ def check_json_not_null(input):
                         return False
                     if "null" in item.values():
                         return False
-        elif value is None and value is not "null":
+        elif value is None and value != "null":
             return False
     return True
 
