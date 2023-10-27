@@ -1,21 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Card from 'react-bootstrap/Card';
+import axios from 'axios';
 
 const NodeInfoCard = ({ selectedNode }) => {
   const [nodeAttributes, setNodeAttributes] = useState({});
+  const [editIndex, setEditIndex] = useState(null);
+  const [editedValue, setEditedValue] = useState('');
 
   const fetchNodeAttributes = async (nodeId) => {
     try {
-      const response = await fetch(`/graph/node/${nodeId}`);
-      const data = await response.json();
-      return data;
+      const response = await axios.get(`/graph/node/${nodeId}`);
+      return response.data;
     } catch (error) {
       console.error('Error fetching node attributes:', error);
       return {};
     }
   };
 
-  // Call fetchNodeAttributes when the selectedNode changes
+  const handleEdit = async (key, newValue) => {
+    const updatedAttributes = { ...nodeAttributes, [key]: newValue };
+    setNodeAttributes(updatedAttributes);
+    try {
+      const jsonString = JSON.stringify(updatedAttributes);
+      console.log('json : '+jsonString);
+      await axios.post('/graph/node/modify', jsonString, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setEditIndex(null);
+    } catch (error) {
+      // Handle error appropriately
+      console.error('An error occurred:', error);
+    }
+  };
+
+  const handleKeyPress = (event, key) => {
+    if (event.key === 'Enter') {
+      handleEdit(key, editedValue);
+    }
+  };
+
   useEffect(() => {
     if (selectedNode) {
       fetchNodeAttributes(selectedNode).then((attributes) => {
@@ -29,14 +54,33 @@ const NodeInfoCard = ({ selectedNode }) => {
   }
 
   return (
-    <div className="card" style={{ width: '18rem' }}>
-      <div className="card-body">
-        <h5 className="card-title">Node Attributes</h5>
-        <p className="card-text">Selected Node ID: {nodeAttributes.id}</p>
-        <p className="card-text">Node Name: {nodeAttributes.name}</p>
-        <p className="card-text">Node Type: {nodeAttributes.type}</p>
-        {/* Render additional attributes here */}
-      </div>
+    <div>
+      {Object.entries(nodeAttributes).map(([key, value], index) => (
+        <div key={index}>
+          <Card style={{ width: '18rem' }}>
+            <Card.Header>{key}</Card.Header>
+            <Card.Body
+              onDoubleClick={() => {
+                setEditIndex(index);
+                setEditedValue(value);
+              }}
+            >
+              {editIndex === index ? (
+                <input
+                  type="text"
+                  value={editedValue}
+                  onChange={(e) => setEditedValue(e.target.value)}
+                  onKeyPress={(e) => handleKeyPress(e, key)}
+                  onBlur={() => setEditIndex(null)}
+                  autoFocus
+                />
+              ) : (
+                value
+              )}
+            </Card.Body>
+          </Card>
+        </div>
+      ))}
     </div>
   );
 };

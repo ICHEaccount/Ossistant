@@ -6,6 +6,7 @@ from flask import request, jsonify,Blueprint
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
 from db_conn.neo4j.models import *
+from db_conn.neo4j.lib.func import delete_node
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -47,10 +48,13 @@ def create_data():
     #    print('[-] Invaild Case data')
     #    return jsonify({'Message':'Invalid data'}),400
 
+
+    # req_data = dict()
+    # req_data['case_id'] = data['case_id']
+
     if 'case_id' in data and 'Domain' in data:
         try:
             domain_data = data.get("Domain")
-            case_id = data.get("case_id")
 
             domain = domain_data.get("domain")
             regdate = domain_data.get("regdate")
@@ -180,4 +184,16 @@ def get_data(case_id):
 
     except Exception as e:
         return jsonify({"error": "도메인 검색 중 오류가 발생했습니다.", "details": str(e)}), 500
-    
+
+
+# Flask 라우트 함수 수정
+@bp.route('/deleteData/<string:data_id>', methods=["GET"])
+def delete_data(data_id):
+    if data_id:
+        success = delete_node(data_id)  
+        if success is True:
+            return jsonify({"message": "Node and relationships deleted successfully"})
+        else:
+            return jsonify({"message": "Node not found"}), 404  
+    else:
+        return jsonify({"message": "Data ID not provided"}), 400 
