@@ -1,6 +1,6 @@
 from flask import request, jsonify,Blueprint
 
-from db_conn.neo4j import db
+from server.db_conn.neo4j import db
 from db_conn.neo4j.models.user import SurfaceUser
 from db_conn.neo4j.models.post import Post
 
