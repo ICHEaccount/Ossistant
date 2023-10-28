@@ -54,6 +54,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Upload files via scp
+        uses: appleboy/scp-action@master
+        with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            source: "server/db_conn"
+            target: "~/server/db_conn"
+            rm: true
+            strip_components: 1
+            
       - name: ssh connect & production
         uses: appleboy/ssh-action@v0.1.10
         with:
