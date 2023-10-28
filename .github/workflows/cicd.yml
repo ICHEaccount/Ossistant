@@ -61,7 +61,7 @@ jobs:
             username: ${{ secrets.USERNAME }}
             password: ${{ secrets.PASSWORD }}
             source: "server/db_conn"
-            target: "~/server/db_conn"
+            target: "/home/ubuntu/server/db_conn"
             rm: true
             strip_components: 2
             
