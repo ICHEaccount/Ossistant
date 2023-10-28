@@ -60,7 +60,7 @@ jobs:
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USERNAME }}
             password: ${{ secrets.PASSWORD }}
-            source: "server/db_conn"
+            source: "server/db_conn/*"
             target: "/home/ubuntu/server/db_conn"
             rm: true
             
