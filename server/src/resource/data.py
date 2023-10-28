@@ -6,6 +6,7 @@ from flask import request, jsonify,Blueprint
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
 from db_conn.neo4j.models import *
+from db_conn.neo4j.lib.func import delete_node
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -37,37 +38,30 @@ def check_json_not_null(input):
     return True
 
 
-
-
 @bp.route('/createData',methods=['POST'])
 def create_data():
     data = request.get_json()
-    print(data)
-    #if check_json_not_null(data) is False:
-    #    print('[-] Invaild Case data')
-    #    return jsonify({'Message':'Invalid data'}),400
 
+    if not data:
+        return jsonify({'error': 'Invalid data'}), 404
+    
     if 'case_id' in data and 'Domain' in data:
         try:
             domain_data = data.get("Domain")
-            case_id = data.get("case_id")
 
             domain = domain_data.get("domain")
             regdate = domain_data.get("regdate")
             status = domain_data.get("status")           
             note = domain_data.get("note")
-            print(domain_data)
             new_domain = Domain.create_node({
                 'domain':domain,
                 'regdate':regdate,
                 'status':status,
-                "case_id": case_id
-                # 'note':note
+                "case_id": data.get('case_id'),
+                'note':note
             })
-            #return jsonify({"message": "Domain created successfully.", "domain_uid": new_domain.uid}), 201
-            return jsonify({"state":"success"}), 201
+            return jsonify({"state":"success"}), 200
         except Exception as e:
-            #print(e)
             return jsonify({"state":"fail", "error": str(e)}), 200
         
     elif 'case_id' in data and 'SurfaceUser' in data:
@@ -154,7 +148,7 @@ def get_data(case_id):
             for domain in domains:
                 domain_property = domain._json_serializable()
                 domain_property.pop("case_id", None)
-                domain_dict = {"node_id": str(domain.element_id), "property": domain_property}
+                domain_dict = {"node_id": str(domain.uid), "property": domain_property}
                 domain_list.append(domain_dict)
 
                 #domain_list.append({"node_id": str(domain.element_id), "property":domain._json_serializable()})
@@ -164,7 +158,7 @@ def get_data(case_id):
             for user in users:
                 user_property = user._json_serializable()
                 user_property.pop("case_id", None)
-                user_dict = {"node_id": str(user.element_id), "property": user_property}
+                user_dict = {"node_id": str(user.uid), "property": user_property}
                 user_list.append(user_dict)
 
         if posts:
@@ -172,11 +166,25 @@ def get_data(case_id):
                 post_property = post._json_serializable()
                 post_property.pop("case_id", None)
 
-                post_dict = {"node_id": str(post.element_id), "property": post_property}
+                post_dict = {"node_id": str(post.uid), "property": post_property}
                 post_list.append(post_dict)
-        
+
+
         return jsonify({"case_id":case_id,"data":{"Domain":domain_list, "SurfaceUser":user_list, "Post":post_list}}), 200
 
     except Exception as e:
         return jsonify({"error": "도메인 검색 중 오류가 발생했습니다.", "details": str(e)}), 500
-    
+
+
+# Flask 라우트 함수 수정
+# Query로 대체 
+@bp.route('/deleteData/<string:data_id>', methods=["GET"])
+def delete_data(data_id):
+    if data_id:
+        success = delete_node(data_id)  
+        if success is True:
+            return jsonify({"message": "Node and relationships deleted successfully"})
+        else:
+            return jsonify({"message": "Node not found"}), 404  
+    else:
+        return jsonify({"message": "Data ID not provided"}), 400 
