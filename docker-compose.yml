@@ -1,1 +1,93 @@
+services:
+  neo4j:
+    container_name: neo4j
+    image: neo4j:latest
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.4
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_AUTH=neo4j/icheneo4j 
+    volumes:
+      - ./database/neo4j/plugins:/plugins
+      - ./database/neo4j/data:/data 
+      - ./database/neo4j/import:/import
+      - ./database/neo4j/conf:/var/lib/neo4j/conf
 
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.2
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234 
+      - MONGO_INITDB_DATABASE=ossistant
+    volumes:
+      - ./database/mongodb/data:/data/db
+
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: client.Dockerfile
+    restart: "on-failure"
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.5
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment: 
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mongodb
+      - osint
+
+  osint:
+    container_name: osint
+    build:
+      context: ./server/osint
+      dockerfile: ./osint.Dockerfile
+    volumes:
+      - ./server/osint:/app
+      - ./server/db_conn/mongo:/db_conn/mongo
+      - ./server/db_conn/neo4j:/db_conn/neo4j
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.3
+    ports:
+      - 5005:5000
+  
+  data:
+    container_name: data
+    build:
+      context: ./server/src
+      dockerfile: ./data.Dockerfile
+    volumes:
+      - ./server/src:/app
+      - ./server/db_conn/mongo:/db_conn/mongo
+      - ./server/db_conn/neo4j:/db_conn/neo4j
+    networks:
+      icheTest:
+        ipv4_address: 172.25.0.6
+    ports:
+      - 5000:5000
+
+networks:
+  icheTest:
+    name: icheTest
+    driver: bridge
+    ipam:
+      config: 
+        - subnet : 172.25.0.0/16
