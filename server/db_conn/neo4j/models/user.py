@@ -83,10 +83,8 @@ class DarkUser(StructuredNode):
             "post_num": self.post_num,
             "comment_num": self.comment_num,
             "label": self.label,
-            "case_id": self.case_id,
             "note": self.note
         }
-
 
 @NodeManager
 class Person(StructuredNode):
@@ -96,6 +94,7 @@ class Person(StructuredNode):
     fake = StringProperty()
     label = StringProperty()
     note = StringProperty()
+    case_id = StringProperty()
 
     # Relationship 
     is_surface_user = RelationshipTo(SurfaceUser,'IS')
@@ -134,7 +133,6 @@ class Company(StructuredNode):
             "business_num": self.business_num,
             "phone_num": self.phone_num,
             "label": self.label,
-            "case_id": self.case_id,
             "note": self.note
         }
 

@@ -28,7 +28,6 @@ class Domain(StructuredNode):
         node.save()
         return node
 
-
     @classmethod
     def get_all_domains(cls):
         domains = cls.nodes.all()

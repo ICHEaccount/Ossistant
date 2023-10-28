@@ -3,8 +3,7 @@ import json
 import re
 
 from flask import jsonify
-from db_conn.neo4j.lib.relation_manager import SurfaceUser, Domain
-
+from db_conn.neo4j.models import *
 
 def run_whois(case_id, domain, run):
     # 1. Execute
