@@ -61,8 +61,9 @@ jobs:
             username: ${{ secrets.USERNAME }}
             password: ${{ secrets.PASSWORD }}
             source: "server/db_conn"
-            target: "~"
+            target: "~/server/db_conn"
             rm: true
+            strip_components: 2
             
       - name: ssh connect & production
         uses: appleboy/ssh-action@v0.1.10
