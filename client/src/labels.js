@@ -1,15 +1,47 @@
 const labels = {
     "Post":{
         "title":"title",
-        "properties":["title","writer","url","content","created_date","post_type"]
+        "properties":["title","writer","url","content","created_date","note"]
+    },
+    "Comment":{
+        "title":"name",
+        "properties":["name","content","created_date","url"]
     },
     "SurfaceUser":{
         "title":"username",
-        "properties":["username","fake"]
+        "properties":["username","fake","note"]
+    },
+    "DarkUser":{
+        "title":"username",
+        "properties":["username","rank","regdate","post_num","comment_num","note"]
+    },
+    "Person":{
+        "title":"name",
+        "properties":["name","fake","note"]
+    },
+    "Company":{
+        "title":"name",
+        "properties":["name","fake","business_num","phone_num","note"]
     },
     "Domain":{
         "title":"domain",
-        "properties":["domain","regdate","status"]
+        "properties":["domain","regdate","status","note"]
+    },
+    "Phone":{
+        "title":"number",
+        "properties":["number","note"]
+    },
+    "Message":{
+        "title":"sender",
+        "properties":["sender","content","date","note"]
+    },
+    "Email":{
+        "title":"email",
+        "properties":["email","fake","note"]
+    },
+    "Wallet":{
+        "title":"wallet",
+        "properties":["wallet","wallet_type","note"]
     }
 }
 
