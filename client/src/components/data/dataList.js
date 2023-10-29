@@ -17,7 +17,7 @@ const DataList = (props) => {
     // console.log(caseData);
 
     const dataCardList=labels.map((label)=>{
-        console.log(newData);
+        // console.log(newData);
         // console.log(caseData);
         if (Object.keys(caseData).length!==0){
         const labelData = caseData[label]

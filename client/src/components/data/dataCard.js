@@ -10,8 +10,12 @@ import Container from 'react-bootstrap/esm/Container';
 import lbs from '../../labels';
 import CreateData from './createData';
 import cls from 'classnames'
+import { useSelector, useDispatch } from 'react-redux'
+import {select} from '../../reducers/node'
 
 const DataCard = (props) => {
+    const selected = useSelector(state => state.node.selected)
+    const dispatch = useDispatch()
     const label = props.label
     const nodes = props.nodes
     const newData = props.newData
@@ -26,7 +30,7 @@ const DataCard = (props) => {
 
     const nodeList = nodes?.map((node, idx) => {
         // console.log(newData.some((newNode)=>newNode.node_id===node.node_id));
-        console.log(newData);
+        // console.log(newData);
         return(
         <Card
         className={cls('mt-1',{"tw-bg-blue-200":newData&&newData.some((newNode)=>newNode.node_id===node.node_id)})}
@@ -41,7 +45,8 @@ const DataCard = (props) => {
                 <Col xs="2" className="d-flex align-items-center" >
                     <Button variant="outline-primary" size="sm"
                     onClick={() => {
-                        setSelectedEventKey(`selected-${idx}`);
+                        setSelectedEventKey(`details`);
+                        dispatch(select(node))
                     }}>
                         <ChevronRight/>
                     </Button>
@@ -53,47 +58,51 @@ const DataCard = (props) => {
         </Card>
     )});
 
-    const selectedNode = nodes?.map((node,idx)=>
-        selectedEventKey === `selected-${idx}` ? (
-            <Container>
-            <Card className='mt-1'>
-                <Card.Header className='mb-1'>
-                    <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
-
-                    {node.property[title]}
-                    {onEdit?
-                    <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
-                    :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
-                </Card.Header>
-                <Form onSubmit={editData}>
-                    {lbs[label].properties.map((key) => {
-                        if(key==="note"){
-                            return (<InputGroup className='mb-1 px-1'>
-                            <InputGroup.Text id='note'>note</InputGroup.Text>
-                            <Form.Control
-                            disabled={!onEdit}
-                            placeholder={node.property.note}
-                            as="textarea" />
-                            </InputGroup>)
-                        }
-                        return(
-                            <InputGroup className='mb-1 px-1'>
-                            <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
-                            <Form.Control
-                            placeholder={node.property[key]}
-                            disabled={!onEdit}
-                            />
-                            </InputGroup>
-                        )
+    // const selectedNode = nodes?.map((node,idx)=>{
+    //     if(selectedEventKey === `selected-${idx}`){
+    //         return((
+    //             <Container>
+    //             <Card className='mt-1'>
+    //                 <Card.Header className='mb-1'>
+    //                     <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
+    
+    //                     {node.property[title]}
+    //                     {onEdit?
+    //                     <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
+    //                     :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
+    //                 </Card.Header>
+    //                 <Form onSubmit={editData}>
+    //                     {lbs[label].properties.map((key) => {
+    //                         if(key==="note"){
+    //                             return (<InputGroup className='mb-1 px-1'>
+    //                             <InputGroup.Text id='note'>note</InputGroup.Text>
+    //                             <Form.Control
+    //                             disabled={!onEdit}
+    //                             placeholder={node.property.note}
+    //                             as="textarea" />
+    //                             </InputGroup>)
+    //                         }
+    //                         return(
+    //                             <InputGroup className='mb-1 px-1'>
+    //                             <InputGroup.Text id={`${key}-${idx}`}>{key}</InputGroup.Text>
+    //                             <Form.Control
+    //                             placeholder={node.property[key]}
+    //                             disabled={!onEdit}
+    //                             />
+    //                             </InputGroup>
+    //                         )
+                            
+    //                     }
+    //                     )}
                         
-                    }
-                    )}
-                    
-                </Form>
-            </Card>
-            </Container>
-        ): null
-    )
+    //                 </Form>
+    //             </Card>
+    //             </Container>
+    //         ))}
+    //         else return null
+    //     }
+        
+    // )
 
     const switcher = () =>{
         switch (selectedEventKey) {
@@ -119,7 +128,42 @@ const DataCard = (props) => {
                     </Container>
                 )
             default:
-                return selectedNode
+                return (
+                    <Container>
+                    <Card className='mt-1'>
+                        <Card.Header className='mb-1'>
+                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
+                            {selected.property[title]}
+                            {onEdit?
+                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
+                            :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
+                        </Card.Header>
+                        <Form onSubmit={editData}>
+                            {lbs[label].properties.map((key) => {
+                                if(key==="note"){
+                                    return (<InputGroup className='mb-1 px-1'>
+                                    <InputGroup.Text id='note'>note</InputGroup.Text>
+                                    <Form.Control
+                                    disabled={!onEdit}
+                                    placeholder={selected.property.note}
+                                    as="textarea" />
+                                    </InputGroup>)
+                                }
+                                return(
+                                    <InputGroup className='mb-1 px-1'>
+                                    <InputGroup.Text >{key}</InputGroup.Text>
+                                    <Form.Control
+                                    placeholder={selected.property[key]}
+                                    disabled={!onEdit}
+                                    />
+                                    </InputGroup>
+                                )                         
+                            }
+                            )}                     
+                        </Form>
+                    </Card>
+                    </Container>
+                )
         }
     }
 
