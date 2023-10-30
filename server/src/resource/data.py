@@ -188,3 +188,50 @@ def delete_data(data_id):
             return jsonify({"message": "Node not found"}), 404  
     else:
         return jsonify({"message": "Data ID not provided"}), 400 
+
+
+@bp.route('/editData',methods=['POST'])
+def edit_data():
+    res = request.get_json()
+    if not res:
+        return jsonify({'error':'Invalid request data'}), 404
+
+    if 'Domain' in res:
+        domain_data = res['Domain']
+        node = Domain.update_node_properties(res.get(data_id),**data)
+    elif 'SurfaceUser' in res:
+        domain_data = res['SurfaceUser']
+        node = SurfaceUser.update_node_properties(res.get(data_id),**data)
+    elif 'Post' in res:
+        domain_data = res['Post']
+        node = Post.update_node_properties(res.get(data_id),**data)
+
+    elif 'DarkUser' in res:
+        domain_data = res['DarkUser']
+        node = DarkUser.update_node_properties(res.get(data_id),**data)
+    elif 'Person' in res:
+        domain_data = res['Person']
+        node =Person.update_node_properties(res.get(data_id),**data)
+    elif 'Company' in res:
+        domain_data = res['Company']
+        node = Company.update_node_properties(res.get(data_id),**data)
+    elif 'Comment' in res:
+        domain_data = res['Comment']
+        node = Comment.update_node_properties(res.get(data_id),**data)
+    elif 'Email' in res:
+        domain_data = res['Email']
+        node = Email.update_node_properties(res.get(data_id),**data)
+    elif 'Wallet' in res:
+        domain_data = res['Wallet']
+        node = Wallet.update_node_properties(res.get(data_id),**data)
+    elif 'Phone' in res:
+        domain_data = res['Phone']
+        node = Phone.update_node_properties(res.get(data_id),**data)
+    elif 'Message' in res:
+        domain_data = res['Message']
+        node = Message.update_node_properties(res.get(data_id),**data)
+    else:
+        return jsonify({'error':'Invalid type'}), 500
+    if node is False:
+        return jsonify({'error':'Fail to modify the node'}), 500
+    return jsonify({'msg':'success'}), 200
