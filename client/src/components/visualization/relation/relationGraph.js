@@ -4,9 +4,12 @@ import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
 import NodeInfoCard from './nodeInfoCard';
+import { useSelector, useDispatch } from 'react-redux'
+import {select} from '../../../reducers/node'
 
 function RelationGraph(props) {
   const isDone = props.isDone
+  const dispatch = useDispatch()
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
   useEffect(() => {
@@ -50,9 +53,12 @@ function RelationGraph(props) {
       });
     });
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
-    network.on('selectNode', function (params) {
+    network.on('selectNode', (params) => {
       const { nodes } = params;
       if (nodes.length > 0) {
+        // to use redux, pass the node info and its label to select({node,label})
+        // then datapanel will automatically show user the info of the selected node
+        // dispatch(select(res.data))
         setSelectedNode(nodes[0]);
       } else {
         setSelectedNode(null);
@@ -62,7 +68,9 @@ function RelationGraph(props) {
   }, [isDone,visJSRef]);
 
   return (
-      <><div ref={visJSRef} style={{ height: "400px", width: "900px" }}></div><NodeInfoCard selectedNode={selectedNode} /></>
+      <><div ref={visJSRef} style={{ height: "400px", width: "900px" }}></div>
+      <NodeInfoCard selectedNode={selectedNode} />
+      </>
   );
 }
 
