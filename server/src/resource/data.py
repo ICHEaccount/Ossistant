@@ -198,40 +198,40 @@ def edit_data():
 
     if 'Domain' in res:
         domain_data = res['Domain']
-        node = Domain.update_node_properties(res.get(data_id),**data)
+        node = Domain.update_node_properties(res.get('data_id'),**res)
     elif 'SurfaceUser' in res:
         domain_data = res['SurfaceUser']
-        node = SurfaceUser.update_node_properties(res.get(data_id),**data)
+        node = SurfaceUser.update_node_properties(res.get('data_id'),**res)
     elif 'Post' in res:
         domain_data = res['Post']
-        node = Post.update_node_properties(res.get(data_id),**data)
+        node = Post.update_node_properties(res.get('data_id'),**res)
 
     elif 'DarkUser' in res:
         domain_data = res['DarkUser']
-        node = DarkUser.update_node_properties(res.get(data_id),**data)
+        node = DarkUser.update_node_properties(res.get('data_id'),**res)
     elif 'Person' in res:
         domain_data = res['Person']
-        node =Person.update_node_properties(res.get(data_id),**data)
+        node =Person.update_node_properties(res.get('data_id'),**res)
     elif 'Company' in res:
         domain_data = res['Company']
-        node = Company.update_node_properties(res.get(data_id),**data)
+        node = Company.update_node_properties(res.get('data_id'),**res)
     elif 'Comment' in res:
         domain_data = res['Comment']
-        node = Comment.update_node_properties(res.get(data_id),**data)
+        node = Comment.update_node_properties(res.get('data_id'),**res)
     elif 'Email' in res:
         domain_data = res['Email']
-        node = Email.update_node_properties(res.get(data_id),**data)
+        node = Email.update_node_properties(res.get('data_id'),**res)
     elif 'Wallet' in res:
         domain_data = res['Wallet']
-        node = Wallet.update_node_properties(res.get(data_id),**data)
+        node = Wallet.update_node_properties(res.get('data_id'),**res)
     elif 'Phone' in res:
         domain_data = res['Phone']
-        node = Phone.update_node_properties(res.get(data_id),**data)
+        node = Phone.update_node_properties(res.get('data_id'),**res)
     elif 'Message' in res:
         domain_data = res['Message']
-        node = Message.update_node_properties(res.get(data_id),**data)
+        node = Message.update_node_properties(res.get('data_id'),**res)
     else:
-        return jsonify({'error':'Invalid type'}), 500
+        return jsonify({"state":"fail", "error": str(e)}), 400
     if node is False:
-        return jsonify({'error':'Fail to modify the node'}), 500
-    return jsonify({'msg':'success'}), 200
+        return jsonify({"state":"fail", "error": str(e)}), 400
+    return jsonify({"state":"success"}), 200
