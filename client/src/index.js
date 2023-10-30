@@ -5,11 +5,15 @@ import reportWebVitals from './reportWebVitals';
 import 'vis-network/styles/vis-network.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import { Provider } from 'react-redux'
+import store from './reducers/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <Provider store={store}>
     <App />
+    </Provider>
   </React.StrictMode>
 );
 
