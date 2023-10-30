@@ -1,6 +1,5 @@
 from typing import Any
 
-
 # Node Decorator 
 class NodeManager:
     def __init__(self, cls) -> None:
@@ -34,13 +33,15 @@ class NodeManager:
         else:
             return None
     
+    @classmethod
     def delete_node(self, node_id):
-        node = self.get_node(node_id)
+        node = self.cls.nodes.get_or_none(uid=node_id)
         if node:
+            for rel in node.relationships.all():
+                rel.delete()        
             node.delete()
             return True
-        else:
-            return False
+        return False
     
     def get_all_nodes_list(self):
         nodes = self.cls.nodes.all()

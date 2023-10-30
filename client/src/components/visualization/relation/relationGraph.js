@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Network, DataSet } from 'vis-network/standalone';
 import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import options from './options'; 
+import NodeInfoCard from './nodeInfoCard';
 
 function RelationGraph(props) {
   const isDone = props.isDone
   const visJSRef = useRef(null)
+  const [selectedNode, setSelectedNode] = useState(null); 
   useEffect(() => {
     // const container = document.getElementById('graph-container');
 
@@ -49,11 +50,19 @@ function RelationGraph(props) {
       });
     });
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
+    network.on('selectNode', function (params) {
+      const { nodes } = params;
+      if (nodes.length > 0) {
+        setSelectedNode(nodes[0]);
+      } else {
+        setSelectedNode(null);
+      }
+    });
 
   }, [isDone,visJSRef]);
 
   return (
-      <div ref={visJSRef} style={{height:"400px", width:"900px"}}></div>
+      <><div ref={visJSRef} style={{ height: "400px", width: "900px" }}></div><NodeInfoCard selectedNode={selectedNode} /></>
   );
 }
 

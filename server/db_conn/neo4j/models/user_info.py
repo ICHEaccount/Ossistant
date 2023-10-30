@@ -9,6 +9,7 @@ class Email(StructuredNode):
     fake = StringProperty(default='None')
     email_domain = StringProperty()
     note = StringProperty()
+    case_id = StringProperty()
 
     def to_json(self):
         return {
@@ -19,7 +20,6 @@ class Email(StructuredNode):
             "email_domain": self.email_domain,
             "note": self.note
         }
-
 
 @NodeManager
 class Phone(StructuredNode):
@@ -43,6 +43,7 @@ class Message(StructuredNode):
     date = StringProperty()
     content = StringProperty()
     note = StringProperty()
+    case_id = StringProperty()
 
     def to_json(self):
         return {
@@ -69,5 +70,4 @@ class Wallet(StructuredNode):
             "wallet": self.wallet,
             "wallet_type": self.wallet_type,
             "note": self.note,
-            "case_id": self.case_id
         }
