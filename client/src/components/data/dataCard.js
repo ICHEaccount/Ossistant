@@ -85,7 +85,7 @@ const DataCard = (props) => {
                     <Container>
                     <Card className='mt-1'>
                         <Card.Header className='mb-1'>
-                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'))}}><ChevronLeft/></Button>
+                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}><ChevronLeft/></Button>
                             {selected.property[title]}
                             {onEdit?
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>

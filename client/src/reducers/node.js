@@ -26,6 +26,6 @@ export const nodeSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { select , clear, viewChange} = nodeSlice.actions
+export const { select , clear, viewChange, labelChange} = nodeSlice.actions
 
 export default nodeSlice.reducer

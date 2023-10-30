@@ -5,23 +5,22 @@ import Tabs from 'react-bootstrap/Tabs';
 import DataCard from './dataCard';
 import lbs from '../../labels';
 import { Card } from 'react-bootstrap';
-
+import { useSelector, useDispatch } from 'react-redux'
+import {labelChange} from '../../reducers/node'
 
 
 const DataList = (props) => {
+    const label = useSelector(state => state.node.label)
+    const dispatch = useDispatch()
     const case_id = props.case_id
     const labels = Object.keys(lbs)
     const caseData = props.caseData
     const newData = props.newData
 
-    // console.log(caseData);
-
     const dataCardList=labels.map((label)=>{
-        // console.log(newData);
-        // console.log(caseData);
         if (Object.keys(caseData).length!==0){
         const labelData = caseData[label]
-        // console.log(label,labelData);
+
         return labelData?<Tab eventKey={label} title={label}>
             <DataCard nodes={labelData} label={label} newData={newData[label]}/>
         </Tab>:<Tab eventKey={label} title={label}>
@@ -37,7 +36,7 @@ const DataList = (props) => {
 
     return (
     <div>
-        <Tabs>
+        <Tabs activeKey={label} onSelect={(k)=>dispatch(labelChange(k))}>
         {dataCardList}
         </Tabs>
 
