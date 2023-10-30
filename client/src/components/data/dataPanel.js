@@ -52,7 +52,7 @@ const DataPanel = (props) => {
                 <Tab.Content>
                 <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData} newData={newData}/></Tab.Pane>
                 <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} toolState={toolState} toolrunner={toolrunner}/></Tab.Pane>
-                <Tab.Pane eventKey="run-list"><RunList case_id={case_id} caseData={caseData} toolState={toolState} toolrunner={toolrunner}/></Tab.Pane>
+                <Tab.Pane eventKey="run-list"><RunList case_id={case_id} toolState={toolState} toolrunner={toolrunner}/></Tab.Pane>
                 <Tab.Pane eventKey="report"><Report case_id={case_id} caseData={caseData}/></Tab.Pane>
                 </Tab.Content>
             </Col>
