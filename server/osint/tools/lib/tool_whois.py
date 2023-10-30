@@ -9,7 +9,9 @@ def run_whois(case_id, domain, run):
     try:
         whois_search = whois.whois(domain)
         # whois_result = json.dumps(whois_search, default=str, ensure_ascii=False)
+        run.status = 'running'
     except Exception as e:
+        run.status = 'error'
         message = f'Run whois failed. Domain is {domain}. Return code: {e}'
         return message
 

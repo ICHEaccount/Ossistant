@@ -7,7 +7,7 @@ from db_conn.mongo.models import RunModel, CaseModel
 from flask import request, jsonify,Blueprint
 
 from .lib.tool_whois import run_whois
-from .lib.tool_maigret import run_maigret
+from .lib.tool_maigret import *
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
@@ -85,15 +85,24 @@ def run_tool():
 def tool_state(run_id):
     try:
         run = RunModel.objects.get(_id=run_id)
-        print(run)
-        if run:
-            state = run.status
-            response_data = {
-                "run_id": run_id,
-                "state": state
-            }
-            return jsonify(response_data), 200
-        else:
+        if run is None:
             return jsonify({"error": "Run not found"}, 404)
     except Exception as e:
         return jsonify({"error": str(e)}, 500)
+
+    response = check_maigret(run)
+    if response == 'running' or response == 'error' or response == 'initiate':
+        response_data = {
+            "run_id": run.run_id,
+            "state": run.status
+        }
+        return jsonify(response_data), 200
+    elif response == 'completed':
+        response_data = {
+            "run_id": run.run_id,
+            "state": run.status,
+            "message": "temp"
+        }
+        return jsonify(response_data), 200
+    else:
+        return jsonify({"Message": response}, 200)
