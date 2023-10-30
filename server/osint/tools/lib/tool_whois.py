@@ -1,14 +1,19 @@
 import whois
-import json
 import re
 
-from flask import jsonify
 from db_conn.neo4j.models import *
+
 
 def run_whois(case_id, domain, run):
     # 1. Execute
-    whois_search = whois.whois(domain)
-    # whois_result = json.dumps(whois_search, default=str, ensure_ascii=False)
+    try:
+        whois_search = whois.whois(domain)
+        # whois_result = json.dumps(whois_search, default=str, ensure_ascii=False)
+    except Exception as e:
+        message = f'Run whois failed. Domain is {domain}. Return code: {e}'
+        return message
+
+    run.input_value = domain
 
     whois_response = {
         "run_id": "",

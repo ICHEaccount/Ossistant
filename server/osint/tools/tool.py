@@ -46,24 +46,35 @@ def run_tool():
     if not case:
         return jsonify({'Message': 'Case Not Found'}), 500
 
-    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='running')
+    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='initiate', input_value='query')
     if run is None:
         return jsonify({'Message': 'Run Creation Error'}), 500
 
     # run the requested tool
     if tool_id == '01':  # whois
-        domain = runtools_requested_json['properties'][0]['property'][0]['domain']
-        if domain is None:
-            return jsonify({'Message': 'Invalid domain'}), 400
-        run_id = run_whois(case_id, domain, run)  # Execute Tool(whois)
-    elif tool_id == '03':
-        username = runtools_requested_json['properties'][0]['property'][0]['username']
-        if username is None:
-            return jsonify({'Message': 'Invalid username'}), 400
+        # check input
+        try:
+            domain = runtools_requested_json['properties'][0]['property'][0]['domain']
+            run.input_value = domain
+        except Exception as e:
+            return jsonify({'Message': 'Invalid domain', 'Code': {e}}), 400
+        # Execute Tool(whois)
+        run_id = run_whois(case_id, domain, run)
+
+    elif tool_id == '03':  # maigret
+        # check input
+        try:
+            username = runtools_requested_json['properties'][0]['property'][0]['username']
+            run.input_value = username
+        except Exception as e:
+            return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
+        # Execute Tool(maigret)
         run_id = run_maigret(case_id, username, run)
+
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
+    # Returning run_id
     if isinstance(run_id, int):
         return jsonify({'run_id': run_id}), 200
     else:
