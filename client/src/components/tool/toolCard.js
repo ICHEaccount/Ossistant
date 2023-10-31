@@ -170,7 +170,7 @@ const ToolCard = (props) => {
 
     return (
         <Container>
-            {selectedEventKey === 'list' ? (tools?toolList:<p>no tools yet</p>) : selectedNode}
+            {selectedEventKey === 'list' ? (tools?toolList:<p className='tw-text-center'>no tools yet</p>) : selectedNode}
         </Container>
     );
 };
