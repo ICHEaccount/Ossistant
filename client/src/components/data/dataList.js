@@ -4,9 +4,10 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import DataCard from './dataCard';
 import lbs,{category} from '../../labels';
-import { Accordion, Card } from 'react-bootstrap';
+import { Accordion, Card, Col, Nav, Row } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
 import {labelChange,categoryChange} from '../../reducers/node'
+import { Globe, InfoSquare, Person } from 'react-bootstrap-icons';
 
 
 const DataList = (props) => {
@@ -21,18 +22,15 @@ const DataList = (props) => {
     const categoryList = Object.keys(category).map((tag)=>{
         const list = category[tag]
         const dataCardList = list.map((label)=>{
-            return <Accordion.Item eventKey={label}>
-                <Accordion.Header>{label}</Accordion.Header>
-                <Accordion.Body>
+            return <Tab eventKey={label} title={label} >
                 <DataCard nodes={caseData[label]!==undefined?caseData[label]:null} label={label} newData={newData[label]?newData[label]:null}/>
-                </Accordion.Body>
-                </Accordion.Item>
+                </Tab>
         })
-        return <Tab eventKey={tag} title={tag}>
-            <Accordion activeKey={selcted_label} onSelect={(k)=>dispatch(labelChange(k))} flush>
+        return <Tab.Pane eventKey={tag} title={tag}>
+            <Tabs activeKey={selcted_label} onSelect={(k)=>dispatch(labelChange(k))} justify>
                     {dataCardList}
-            </Accordion>
-        </Tab>
+            </Tabs>
+        </Tab.Pane>
     })
 
     // const dataCardList=labels.map((label)=>{
@@ -54,9 +52,37 @@ const DataList = (props) => {
 
     return (
     <div>
-        <Tabs variant='pills' activeKey={selected_category} justify className='mb-2' onSelect={(k)=>{dispatch(categoryChange(k))}}>
+        <Tab.Container>
+        <Row>
+        <Col sm={2}>
+          <Nav variant="pills" className="flex-column  tw-border tw-rounded-md">
+            <Nav.Item>
+              <Nav.Link eventKey="Subject" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
+                <Person size="20px"/>
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="Site" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
+                <Globe size="20px"/>
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="Info" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
+                <InfoSquare size="20px"/>
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Col>
+        <Col sm={10} className='tw-mx-[-15px]'>
+          <Tab.Content>
+            {categoryList}
+          </Tab.Content>
+        </Col>
+      </Row>
+        </Tab.Container>
+        {/* <Tabs variant='pills' activeKey={selected_category} justify className='mb-2' onSelect={(k)=>{dispatch(categoryChange(k))}}>
         {categoryList}
-        </Tabs>
+        </Tabs> */}
 
     </div>
     )
