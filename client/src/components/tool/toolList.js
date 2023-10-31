@@ -5,6 +5,8 @@ import Tabs from 'react-bootstrap/Tabs';
 import lbs from '../../labels';
 import ToolCard from './toolCard';
 import Loading from '../loading';
+import { useSelector, useDispatch } from 'react-redux'
+import {labelChange} from '../../reducers/node'
 
 const dummy = {
     "Domain":[
@@ -21,6 +23,8 @@ const dummy = {
 }
 
 const ToolList = (props) => {
+    const label = useSelector(state => state.node.label)
+    const dispatch = useDispatch()
     const case_id = props.case_id
     const labels = Object.keys(lbs)
     const caseData = props.caseData
@@ -64,7 +68,7 @@ const ToolList = (props) => {
 
     return (
     <div>
-        <Tabs>
+        <Tabs activeKey={label} onSelect={(k)=>dispatch(labelChange(k))}>
         {toolList}
         </Tabs>
 
