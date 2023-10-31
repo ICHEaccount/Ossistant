@@ -101,8 +101,7 @@ const ToolCard = (props) => {
 
     const selectedNode = tools?.map((tool, idx) => {
         return selectedEventKey === `selected-${idx}` ? (
-            <Container>
-                <Card className="mt-1">
+                <Card className="mt-1 tw-w-full">
                     <Card.Header className="mb-1">
                         <Button
                             variant="light"
@@ -166,13 +165,12 @@ const ToolCard = (props) => {
                         ) : "Unavailable"}
                     </Card.Body>
                 </Card>
-            </Container>
         ) : null;
     });
 
     return (
         <Container>
-            {selectedEventKey === 'list' ? toolList : selectedNode}
+            {selectedEventKey === 'list' ? (tools?toolList:<p className='tw-text-center'>no tools yet</p>) : selectedNode}
         </Container>
     );
 };
