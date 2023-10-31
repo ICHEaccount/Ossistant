@@ -3,41 +3,59 @@ import React, { useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import DataCard from './dataCard';
-import lbs from '../../labels';
-import { Card } from 'react-bootstrap';
+import lbs,{category} from '../../labels';
+import { Accordion, Card } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
-import {labelChange} from '../../reducers/node'
+import {labelChange,categoryChange} from '../../reducers/node'
 
 
 const DataList = (props) => {
-    const label = useSelector(state => state.node.label)
+    const selcted_label = useSelector(state => state.node.label)
+    const selected_category = useSelector(state =>state.node.category)
     const dispatch = useDispatch()
     const case_id = props.case_id
     const labels = Object.keys(lbs)
     const caseData = props.caseData
     const newData = props.newData
 
-    const dataCardList=labels.map((label)=>{
-        if (Object.keys(caseData).length!==0){
-        const labelData = caseData[label]
-
-        return labelData?<Tab eventKey={label} title={label}>
-            <DataCard nodes={labelData} label={label} newData={newData[label]}/>
-        </Tab>:<Tab eventKey={label} title={label}>
-            <DataCard nodes={null} label={label} newData={null}/>
+    const categoryList = Object.keys(category).map((tag)=>{
+        const list = category[tag]
+        const dataCardList = list.map((label)=>{
+            return <Accordion.Item eventKey={label}>
+                <Accordion.Header>{label}</Accordion.Header>
+                <Accordion.Body>
+                <DataCard nodes={caseData[label]!==undefined?caseData[label]:null} label={label} newData={newData[label]?newData[label]:null}/>
+                </Accordion.Body>
+                </Accordion.Item>
+        })
+        return <Tab eventKey={tag} title={tag}>
+            <Accordion activeKey={selcted_label} onSelect={(k)=>dispatch(labelChange(k))} flush>
+                    {dataCardList}
+            </Accordion>
         </Tab>
-        }
-        else{
-        return (<Tab eventKey={label} title={label}>
-            <DataCard nodes={null} label={label} newData={newData}/>
-        </Tab>)}
     })
+
+    // const dataCardList=labels.map((label)=>{
+    //     if (Object.keys(caseData).length!==0){
+    //     const labelData = caseData[label]
+
+    //     return labelData?<Tab eventKey={label} title={label}>
+    //         <DataCard nodes={labelData} label={label} newData={newData[label]}/>
+    //     </Tab>:<Tab eventKey={label} title={label}>
+    //         <DataCard nodes={null} label={label} newData={null}/>
+    //     </Tab>
+    //     }
+    //     else{
+    //     return (<Tab eventKey={label} title={label}>
+    //         <DataCard nodes={null} label={label} newData={newData}/>
+    //     </Tab>)}
+    // })
 
 
     return (
     <div>
-        <Tabs activeKey={label} onSelect={(k)=>dispatch(labelChange(k))}>
-        {dataCardList}
+        <Tabs variant='pills' activeKey={selected_category} justify className='mb-2' onSelect={(k)=>{dispatch(categoryChange(k))}}>
+        {categoryList}
         </Tabs>
 
     </div>
