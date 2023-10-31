@@ -3,9 +3,8 @@ import json
 import subprocess
 
 
-def run_maigret(case_id, username, run):
-    print("Current working directory:", os.getcwd())
-
+def run_maigret(run):
+    # print("Current working directory:", os.getcwd())
     try:
         subprocess.Popen(['maigret', run.input_value, '--json', 'simple'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         run.status = 'running'
@@ -14,31 +13,39 @@ def run_maigret(case_id, username, run):
         run.status = 'error'
         return message
 
+    run.save()
     return run.run_id
 
 
-def check_maigret(run):  # unfinished
+def check_maigret(run):
+    if run.status == 'initiate':
+        message = 'Run the tool first.'
+        return message
+    elif run.status == 'error':
+        message = 'Failed run.'
+        return message
+
+    # Status 'completed' or 'running' can pass this line
     try:
         username = run.input_value
         with open(f'./reports/report_{username}_simple.json', 'r') as report:
             maigret_search = json.load(report)
     except FileNotFoundError as e:
-        # print(f"'report_{username}_simple.json' not exist or can't be found.")
-        # status = run.status
-        message = f'Error: {e}. cd: {os.getcwd()}.'
+        message = f'FileNotFoundError: {e}.'
         return message
 
     run.status = 'completed'
+    run.save()
+
+    # ADD maigret_search filtering code HERE
 
     maigret_response = {
         "run_id": run.run_id,
-        "state": run.status,
+        "status": run.status,
         "result": [
             {
-                "surfaceuser": {
-                    "username": run.input_value,
-                    "url": maigret_search
-                }
+                "To Do": "here"
             }
         ]
     }
+    return maigret_response

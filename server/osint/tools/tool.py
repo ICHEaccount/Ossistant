@@ -69,7 +69,7 @@ def run_tool():
         except Exception as e:
             return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
         # Execute Tool(maigret)
-        run_id = run_maigret(case_id, username, run)
+        run_id = run_maigret(run)
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
@@ -86,23 +86,33 @@ def tool_state(run_id):
     try:
         run = RunModel.objects.get(_id=run_id)
         if run is None:
-            return jsonify({"error": "Run not found"}, 404)
+            return jsonify({"error": "Run not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}, 500)
+        return jsonify({"error": str(e)}), 500
 
-    response = check_maigret(run)
-    if response == 'running' or response == 'error' or response == 'initiate':
-        response_data = {
-            "run_id": run.run_id,
-            "state": run.status
-        }
-        return jsonify(response_data), 200
-    elif response == 'completed':
-        response_data = {
+    # check the tool_id
+    if run.tool_id == '03':
+        message = check_maigret(run)
+    else:
+        message = 'Invalid tool_id.'
+
+    # check the status
+    if run.status == 'completed':
+        response = message
+        return jsonify(response), 200
+    elif run.status == 'running':
+        response = {
             "run_id": run.run_id,
             "state": run.status,
-            "message": "temp"
+            "debug": message
         }
-        return jsonify(response_data), 200
+        return jsonify(response), 200
+    elif run.status == 'initiate' or 'error':
+        response = {
+            "run_id": run.run_id,
+            "state": run.status,
+            "debug": message
+        }
+        return jsonify(response), 200
     else:
-        return jsonify({"Message": response}, 200)
+        return jsonify({"message": "run.status error"}), 400
