@@ -9,36 +9,35 @@ class ResultModel(db.DynamicDocument):
 
     result_id = db.SequenceField(primary_key=True) 
     result = db.DynamicField(required=True)
+    created= db.BooleanField(required=True, default=False)
 
     @classmethod
     def create_result(cls, data, run_id):
         try:
-            if isinstance(data,dict):
-                result_obj = ResultModel(result=[data])
-            elif isinstance(data,list):
-                result_obj = ResultModel(result=data)
-            else:
-                #return status, data
-                return None, "Invalid data type"
-
-            result_obj.save()
             run = RunModel.objects(run_id=run_id).first()
-            if run:
-                run.result = result_obj
-                run.save()
-                return True, result_obj.result_id
+            if not run:
+                return None, 'Run data did not exist'
+            
+            if isinstance(data,dict):
+                result_obj = ResultModel(result=data)
+                result_obj.save()
+
+                run.results.append(result_obj)
+            elif isinstance(data,list):
+                    for item in data:
+                        result_obj = ResultModel(result=item)
+                        result_obj.save()
+                        run.results.append(result_obj)
+            else:
+                return None, "Invalid data type"
+            
+            run.save()
+            return True, 'Success'
         except Exception as e:
             return None, f'{cls.col_name} : Result Creation Error: {e}'
 
-    @classmethod
-    def get_result_list(cls, result_id):
-        result = ResultModel.objects(result_id=result_id).first()
-        if result:
-            return True, result.result
-        else:
-            return None, 'Result did not exist'
 
-
+    
 class RunModel(db.DynamicDocument):
     col_name = 'Run'
     meta = {'collection':col_name}
@@ -47,14 +46,29 @@ class RunModel(db.DynamicDocument):
     status = db.StringField(required=True)
     runtime = db.StringField(required=True)
     tool_id = db.StringField(required=True)
-    result_id = db.ReferenceField('ResultModel')
-    input_value = db.StringField(required=True)
+    results = db.ListField(db.ReferenceField('ResultModel'))
 
-
+    @classmethod
+    def get_all_results(cls, run_id):
+        runs_list = []
+        run_obj = RunModel.objects(run_id=run_id).first()
+        if not run_obj:
+            return None, 'Run data did not exist'
+        
+        for result_ref in run_obj.results:
+            result = ResultModel.objects(result_id=result_ref.result_id).first()
+            if result:
+                runs_list.append({
+                    "result_id": result.result_id,
+                    "result": result.result,
+                    "created": result.created
+                })
+        return True, runs_list
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
     meta = {'collection':col_name}
+
     tool_id = db.StringField(required=True)
     tool = db.StringField(required=True)
     created_date = db.StringField(required=True)
@@ -119,13 +133,14 @@ class CaseModel(db.DynamicDocument):
             print(f'{cls.col_name} : Modification Error: {e}')
             return False
 
+    
     @classmethod
-    def create_runs(cls, case_id, tool_id, status='ready', input_value='query'):
+    def create_runs(cls, case_id, tool_id, status='ready'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id, runtime=runtime, status=status, input_value=input_value)
+                run = RunModel(tool_id=tool_id,runtime=runtime, status=status)
                 run.save()
                 case.runs.append(run)
                 case.save()
