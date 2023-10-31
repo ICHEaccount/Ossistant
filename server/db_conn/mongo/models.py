@@ -18,6 +18,7 @@ class ResultModel(db.DynamicDocument):
             elif isinstance(data,list):
                 result_obj = ResultModel(result=data)
             else:
+                #return status, data
                 return None, "Invalid data type"
 
             result_obj.save()
@@ -30,7 +31,7 @@ class ResultModel(db.DynamicDocument):
             return None, f'{cls.col_name} : Result Creation Error: {e}'
 
     @classmethod
-    def result_list(cls, result_id):
+    def get_result_list(cls, result_id):
         result = ResultModel.objects(result_id=result_id).first()
         if result:
             return True, result.result
