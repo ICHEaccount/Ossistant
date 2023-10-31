@@ -15,11 +15,8 @@ class NodeManager:
         else:
             return None
     
-    def create_node(self , data, primary):
+    def create_node(self , data):
         node = self.cls(**data)
-        if not primary:
-            return None 
-        node.label = primary
         node.save()
         return node 
     

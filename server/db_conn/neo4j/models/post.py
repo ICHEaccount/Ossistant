@@ -12,7 +12,6 @@ class Post(StructuredNode):
     # created_date = StringProperty()
     created_date = DateTimeProperty()
     post_type = StringProperty()
-    label = StringProperty()
     case_id = StringProperty()
 
     def __init__(self, *args, **kwargs):
@@ -76,7 +75,6 @@ class Comment(StructuredNode):
     content = StringProperty()
     created_date = StringProperty()
     case_id = StringProperty()
-    label = StringProperty()
     note = StringProperty()
 
 def to_json(self):
@@ -87,6 +85,5 @@ def to_json(self):
         "content": self.content,
         "created_date": self.created_date,
         "case_id": self.case_id,
-        "label": self.label,
         "note": self.note
     }
