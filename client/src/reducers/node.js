@@ -26,13 +26,16 @@ export const nodeSlice = createSlice({
         },
         labelChange: (state,action) =>{
             state.label = action.payload
+            state.view = "list"
         },
         panelChange: (state,action) =>{
             state.panel = action.payload
+            state.view = "list"
         },
         categoryChange: (state,action) =>{
             state.category = action.payload
             state.label = category[action.payload][0]
+            state.view = "list"
         }
     }
 })
