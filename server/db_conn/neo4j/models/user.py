@@ -2,7 +2,7 @@ from neomodel import StructuredNode, IntegerProperty, RelationshipTo, UniqueIdPr
 
 from .domain import Domain
 from .post import Post
-from .relationship import Posting, Register
+from .manager.relationship import Posting, Register
 from .manager.model_manager import NodeManager
 
 
@@ -12,6 +12,7 @@ class SurfaceUser(StructuredNode):
     url = StringProperty()
     fake = StringProperty(default="None")
     case_id = StringProperty()
+    registered = StringProperty()
     note = StringProperty()
 
     # Relation
@@ -23,7 +24,9 @@ class SurfaceUser(StructuredNode):
             "username": self.username,
             "url": self.url,
             "fake": self.fake,
-            "case_id": self.case_id
+            "case_id": self.case_id,
+            "registered": self.registered,
+            "note": self.note
         }
     
     @classmethod
@@ -69,8 +72,8 @@ class DarkUser(StructuredNode):
     regdate = StringProperty()
     post_num = IntegerProperty()
     comment_num = IntegerProperty()
-    label = StringProperty()
     case_id = StringProperty()
+    registered = StringProperty()
     note = StringProperty()
 
     def to_json(self):
@@ -82,7 +85,7 @@ class DarkUser(StructuredNode):
             "regdate": self.regdate,
             "post_num": self.post_num,
             "comment_num": self.comment_num,
-            "label": self.label,
+            "registered": self.registered,
             "note": self.note
         }
 
@@ -92,7 +95,6 @@ class Person(StructuredNode):
     uid = UniqueIdProperty()
     username = StringProperty()
     fake = StringProperty()
-    label = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
 
@@ -105,7 +107,6 @@ class Person(StructuredNode):
             "uid": self.uid,
             "username": self.username,
             "fake": self.fake,
-            "label": self.label,
             "note": self.note
         }
 
@@ -118,7 +119,6 @@ class Company(StructuredNode):
     fake = StringProperty()
     business_num = StringProperty()
     phone_num = StringProperty()
-    label = StringProperty()
     case_id = StringProperty()
     note = StringProperty()
 
@@ -132,7 +132,6 @@ class Company(StructuredNode):
             "fake": self.fake,
             "business_num": self.business_num,
             "phone_num": self.phone_num,
-            "label": self.label,
             "note": self.note
         }
 

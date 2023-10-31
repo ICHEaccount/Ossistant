@@ -18,7 +18,8 @@ class Domain(StructuredNode):
             "domain": self.domain,
             "regdate": self.regdate,
             "status": self.status,
-            "case_id": self.case_id
+            "case_id": self.case_id,
+            "note": self.note
         }
 
 
