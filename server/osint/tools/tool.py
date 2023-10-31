@@ -1,10 +1,6 @@
-import json
-import re
-import whois 
-
 from db_conn.mongo.models import RunModel, CaseModel
 
-from flask import request, jsonify,Blueprint
+from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import run_whois
 from .lib.tool_maigret import *
@@ -12,8 +8,8 @@ from .lib.tool_maigret import *
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
 
-def check_json_not_null(input):
-    for value in input.values():
+def check_json_not_null(input_json):
+    for value in input_json.values():
         if value is None:
             return False
         elif isinstance(value, dict):
@@ -46,43 +42,43 @@ def run_tool():
     if not case:
         return jsonify({'Message': 'Case Not Found'}), 500
 
+    # creating run
     run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='ready', input_value='query')
     if run is None:
         return jsonify({'Message': 'Run Creation Error'}), 500
 
     # run the requested tool
     if tool_id == '01':  # whois
-        # check input
         try:
             domain = runtools_requested_json['properties'][0]['property'][0]['domain']
             run.input_value = domain
         except Exception as e:
             return jsonify({'Message': 'Invalid domain', 'Code': {e}}), 400
-        # Execute Tool(whois)
+
         run_id = run_whois(case_id, domain, run)
 
     elif tool_id == '03':  # maigret
-        # check input
         try:
             username = runtools_requested_json['properties'][0]['property'][0]['username']
             run.input_value = username
         except Exception as e:
             return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
-        # Execute Tool(maigret)
+
         run_id = run_maigret(run)
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
-    # Returning run_id
+    # Responding run_id
     if isinstance(run_id, int):
         return jsonify({'run_id': run_id}), 200
     else:
         return jsonify({'Message': run_id}), 400
     
 
-@bp.route('/getToolState/<int:run_id>',methods=["GET"])
+@bp.route('/getToolState/<int:run_id>', methods=["GET"])
 def tool_state(run_id):
+    # finding run
     try:
         run = RunModel.objects.get(_id=run_id)
         if run is None:
@@ -90,13 +86,13 @@ def tool_state(run_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    # check the tool_id
+    # check the tool_id and check the tool
     if run.tool_id == '03':
         message = check_maigret(run)
     else:
         message = 'Invalid tool_id.'
 
-    # check the status
+    # check the status with message
     if run.status == 'completed':
         response = message
         return jsonify(response), 200
