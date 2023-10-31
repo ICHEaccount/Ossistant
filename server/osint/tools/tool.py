@@ -46,7 +46,7 @@ def run_tool():
     if not case:
         return jsonify({'Message': 'Case Not Found'}), 500
 
-    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='initiate', input_value='query')
+    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='ready', input_value='query')
     if run is None:
         return jsonify({'Message': 'Run Creation Error'}), 500
 
@@ -107,7 +107,7 @@ def tool_state(run_id):
             "debug": message
         }
         return jsonify(response), 200
-    elif run.status == 'initiate' or 'error':
+    elif run.status == 'ready' or 'error':
         response = {
             "run_id": run.run_id,
             "state": run.status,

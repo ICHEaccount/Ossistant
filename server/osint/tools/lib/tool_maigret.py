@@ -18,7 +18,7 @@ def run_maigret(run):
 
 
 def check_maigret(run):
-    if run.status == 'initiate':
+    if run.status == 'ready':
         message = 'Run the tool first.'
         return message
     elif run.status == 'error':
