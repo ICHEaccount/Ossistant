@@ -3,6 +3,41 @@ from .init import db
 import uuid
 import datetime
 
+class ResultModel(db.DynamicDocument):
+    col_name = 'Result'
+    meta = {'collection':col_name}
+
+    result_id = db.SequenceField(primary_key=True) 
+    result = db.DynamicField(required=True)
+
+    @classmethod
+    def create_result(cls, data, run_id):
+        try:
+            if isinstance(data,dict):
+                result_obj = ResultModel(result=[data])
+            elif isinstance(data,list):
+                result_obj = ResultModel(result=data)
+            else:
+                return None, "Invalid data type"
+
+            result_obj.save()
+            run = RunModel.objects(run_id=run_id).first()
+            if run:
+                run.result = result_obj
+                run.save()
+                return True, result_obj.result_id
+        except Exception as e:
+            return None, f'{cls.col_name} : Result Creation Error: {e}'
+
+    @classmethod
+    def result_list(cls, result_id):
+        result = ResultModel.objects(result_id=result_id).first()
+        if result:
+            return True, result.result
+        else:
+            return None, 'Result did not exist'
+
+
 class RunModel(db.DynamicDocument):
     col_name = 'Run'
     meta = {'collection':col_name}
@@ -11,10 +46,12 @@ class RunModel(db.DynamicDocument):
     status = db.StringField(required=True)
     runtime = db.StringField(required=True)
     tool_id = db.StringField(required=True)
+    result_id = db.ReferenceField('ResultModel')
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
     meta = {'collection':col_name}
+
     tool_id = db.StringField(required=True)
     tool = db.StringField(required=True)
     created_date = db.StringField(required=True)
