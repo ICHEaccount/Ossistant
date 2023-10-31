@@ -9,6 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from db_conn.mongo.init import init_mongo
 from tools.tool import bp as tool_bp
+# from core.setup import setup_tool
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +26,7 @@ init_mongo(app)
 
 
 app.register_blueprint(tool_bp)
+# setup_tool()
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', debug=True)

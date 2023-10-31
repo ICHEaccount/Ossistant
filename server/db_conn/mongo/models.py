@@ -3,6 +3,7 @@ from .init import db
 import uuid
 import datetime
 
+
 class RunModel(db.DynamicDocument):
     col_name = 'Run'
     meta = {'collection':col_name}
@@ -11,6 +12,8 @@ class RunModel(db.DynamicDocument):
     status = db.StringField(required=True)
     runtime = db.StringField(required=True)
     tool_id = db.StringField(required=True)
+    input_value = db.StringField(required=True)
+
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
@@ -79,14 +82,13 @@ class CaseModel(db.DynamicDocument):
             print(f'{cls.col_name} : Modification Error: {e}')
             return False
 
-    
     @classmethod
-    def create_runs(cls, case_id, tool_id, status='ready'):
+    def create_runs(cls, case_id, tool_id, status='ready', input_value='query'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id,runtime=runtime, status=status)
+                run = RunModel(tool_id=tool_id, runtime=runtime, status=status, input_value=input_value)
                 run.save()
                 case.runs.append(run)
                 case.save()
