@@ -1,3 +1,4 @@
+
 from neomodel import StructuredRel,UniqueIdProperty, Relationship,StringProperty
 
 class Posting(StructuredRel):
@@ -6,9 +7,9 @@ class Posting(StructuredRel):
 class Register(StructuredRel):
     uid = UniqueIdProperty()
 
-class UserDefinedRelations:
-    user_defined = Relationship('UserDefineRelationship', 'USER_DEFINED')
+class Relation:
+    relation = Relationship('UserDefineRelationship', 'USER_DEFINED')
 
 class UserDefineRelationship(StructuredRel):
-    uid = UniqueIdProperty()
+    uid = UniqueIdProperty() 
     label = StringProperty()
