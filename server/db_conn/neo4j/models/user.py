@@ -118,7 +118,6 @@ class Company(StructuredNode):
     name = StringProperty()
     fake = StringProperty()
     business_num = StringProperty()
-    phone_num = StringProperty()
     case_id = StringProperty()
     note = StringProperty()
 
@@ -131,7 +130,6 @@ class Company(StructuredNode):
             "name": self.name,
             "fake": self.fake,
             "business_num": self.business_num,
-            "phone_num": self.phone_num,
             "note": self.note
         }
 
