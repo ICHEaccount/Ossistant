@@ -7,7 +7,7 @@ export const nodeSlice = createSlice({
         selected: null,
         category:"Subject",
         view: "list",
-        label: "Post",
+        label: "SurfaceUser",
         panel:"data-list"
     },
     reducers: {

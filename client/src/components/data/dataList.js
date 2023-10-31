@@ -23,7 +23,7 @@ const DataList = (props) => {
         const dataCardList = list.map((label)=>{
             return <Accordion.Item eventKey={label}>
                 <Accordion.Header>{label}</Accordion.Header>
-                <Accordion.Body>
+                <Accordion.Body className='tw-mx-[-25px] tw-my-[-10px]'>
                 <DataCard nodes={caseData[label]!==undefined?caseData[label]:null} label={label} newData={newData[label]?newData[label]:null}/>
                 </Accordion.Body>
                 </Accordion.Item>
@@ -35,21 +35,6 @@ const DataList = (props) => {
         </Tab>
     })
 
-    // const dataCardList=labels.map((label)=>{
-    //     if (Object.keys(caseData).length!==0){
-    //     const labelData = caseData[label]
-
-    //     return labelData?<Tab eventKey={label} title={label}>
-    //         <DataCard nodes={labelData} label={label} newData={newData[label]}/>
-    //     </Tab>:<Tab eventKey={label} title={label}>
-    //         <DataCard nodes={null} label={label} newData={null}/>
-    //     </Tab>
-    //     }
-    //     else{
-    //     return (<Tab eventKey={label} title={label}>
-    //         <DataCard nodes={null} label={label} newData={newData}/>
-    //     </Tab>)}
-    // })
 
 
     return (
