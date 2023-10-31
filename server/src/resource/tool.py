@@ -1,7 +1,7 @@
 from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 
-from db_conn.mongo.models import CaseModel, ResultModel
+from db_conn.mongo.models import CaseModel, RunModel
 
 
 bp = Blueprint('tool', __name__, url_prefix='/tool')
