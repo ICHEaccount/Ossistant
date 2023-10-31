@@ -11,10 +11,39 @@ class ResultModel(db.DynamicDocument):
     result = db.DynamicField(required=True)
     created= db.BooleanField(required=True, default=False)
 
+    
+class RunModel(db.DynamicDocument):
+    col_name = 'Run'
+    meta = {'collection':col_name}
+    
+    run_id = db.SequenceField(primary_key=True) 
+    status = db.StringField(required=True)
+    runtime = db.StringField(required=True)
+    tool_id = db.StringField(required=True)
+    input_value = db.StringField(required=True)
+    results = db.ListField(db.ReferenceField('ResultModel'))
+
+    @classmethod
+    def get_all_results(cls, run_id):
+        result_list = []
+        run_obj = cls.objects(run_id=run_id).first()
+        if not run_obj:
+            return None, 'Run data did not exist'
+        
+        for result_ref in run_obj.results:
+            result = ResultModel.objects(result_id=result_ref.result_id).first()
+            if result:
+                result_list.append({
+                    "result_id": result.result_id,
+                    "result": result.result,
+                    "created": result.created
+                })
+        return True, result_list # Return run_list 
+
     @classmethod
     def create_result(cls, data, run_id):
         try:
-            run = RunModel.objects(run_id=run_id).first()
+            run = cls.objects(run_id=run_id).first()
             if not run:
                 return None, 'Run data did not exist'
             
@@ -35,35 +64,6 @@ class ResultModel(db.DynamicDocument):
             return True, 'Success'
         except Exception as e:
             return None, f'{cls.col_name} : Result Creation Error: {e}'
-
-
-    
-class RunModel(db.DynamicDocument):
-    col_name = 'Run'
-    meta = {'collection':col_name}
-    
-    run_id = db.SequenceField(primary_key=True) 
-    status = db.StringField(required=True)
-    runtime = db.StringField(required=True)
-    tool_id = db.StringField(required=True)
-    results = db.ListField(db.ReferenceField('ResultModel'))
-
-    @classmethod
-    def get_all_results(cls, run_id):
-        runs_list = []
-        run_obj = RunModel.objects(run_id=run_id).first()
-        if not run_obj:
-            return None, 'Run data did not exist'
-        
-        for result_ref in run_obj.results:
-            result = ResultModel.objects(result_id=result_ref.result_id).first()
-            if result:
-                runs_list.append({
-                    "result_id": result.result_id,
-                    "result": result.result,
-                    "created": result.created
-                })
-        return True, runs_list
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
@@ -135,12 +135,12 @@ class CaseModel(db.DynamicDocument):
 
     
     @classmethod
-    def create_runs(cls, case_id, tool_id, status='ready'):
+    def create_runs(cls, case_id, tool_id, input_value,status='ready'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id,runtime=runtime, status=status)
+                run = RunModel(tool_id=tool_id,runtime=runtime, status=status, input_value=input_value)
                 run.save()
                 case.runs.append(run)
                 case.save()
@@ -152,4 +152,3 @@ class CaseModel(db.DynamicDocument):
             print(f'{cls.col_name} : Run Creation Error: {e}')
             return False
               
-
