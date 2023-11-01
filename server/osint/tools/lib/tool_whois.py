@@ -39,7 +39,7 @@ def check_whois(case_id, run):
 
     whois_response = {
         "run_id": run.run_id,
-        "state": "completed",
+        "state": run.status,
         "result": [
             {
                 "domain": {
@@ -52,17 +52,29 @@ def check_whois(case_id, run):
     }
 
     # 2. Save to DB
-    regdate = whois_response['result'][0]['domain']['regdate']
-    if regdate:
-        regdate = regdate.strftime('%Y-%m-%d')
-        #  AttributeError: 'str' object has no attribute 'strftime'
+    try:
+        regdate = whois_response['result'][0]['domain']['regdate']
+        if regdate:
+            regdate = datetime.strptime(regdate, '%Y-%m-%d %H:%M:%S')
+    except TypeError as e:
+        regdate = whois_response['result'][0]['domain']['regdate'][0]
+        if regdate:
+            regdate = datetime.strptime(regdate, '%Y-%m-%d %H:%M:%S')
 
-    # 1차 email to username
-    regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
-    pattern = re.compile(regex)
-    email = whois_response['result'][0]['domain']['email']
-    # Node
-    match = re.match(pattern, email)
+    if whois_response['result'][0]['domain']['email']:
+        # 1차 email to username
+        regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
+        pattern = re.compile(regex)
+        # Node
+        try:
+            email = whois_response['result'][0]['domain']['email']
+            match = re.match(pattern, email)
+        except TypeError as e1:
+            email = whois_response['result'][0]['domain']['email'][0]
+            match = re.match(pattern, email)
+    else:
+        match = None
+
     if match:
         username = match.group(1)
         user = SurfaceUser.nodes.first_or_none(username=username)
@@ -80,7 +92,6 @@ def check_whois(case_id, run):
         if not user.register.is_connected(domain_obj):
             user.register.connect(domain_obj)
 
-        run.status = 'completed'
-        run.save()
+    run.save()
 
-        return run.run_id
+    return whois_response

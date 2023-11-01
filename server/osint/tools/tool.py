@@ -114,7 +114,7 @@ def tool_state():
         response = {
             "run_id": run.run_id,
             "state": run.status,
-            "debug": message
+            # "debug": message
         }
         return jsonify(response), 200
     elif run.status == 'ready' or 'error':
