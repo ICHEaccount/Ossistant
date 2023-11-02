@@ -104,3 +104,4 @@ def modify_node():
     if node is False:
         return jsonify({'error':'Fail to modify the node'}), 500
     return jsonify({'msg':'success'}), 200
+

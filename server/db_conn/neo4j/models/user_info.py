@@ -58,7 +58,8 @@ class Wallet(StructuredNode):
     wallet_type = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
-
+    url = StringProperty()
+    
     def to_json(self):
         return {
             "uid": self.uid,
