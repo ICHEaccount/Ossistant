@@ -13,7 +13,7 @@ const RunCard = (props) => {
 		return(<Card className="mt-1" key={run.run_id}>
 		<Card.Body>
 			<Row>
-				<Col xs="10">{run.tool_name}</Col>
+				<Col xs="10">{`#${run.run_id} ${run.tool_name}`}</Col>
 				<Col xs="2" className="d-flex align-items-center">
 					<Button
 						variant="outline-primary"
@@ -44,6 +44,18 @@ const RunCard = (props) => {
 		</Card.Header>
 		<Form>
             {Object.keys(selectedRun).map((key) => {
+				if(key==="results"){
+					return (selectedRun.results.map((result)=>{
+						const type = Object.keys(result.result)[0]
+						return (<InputGroup className='mb-1 px-1'>
+                    	<InputGroup.Text >{type}</InputGroup.Text>
+                    	<Form.Control
+                    	placeholder={result.result[type]}
+                    	disabled
+                    	/>
+                    	</InputGroup>)
+					}))
+				}
                 return(
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text >{key}</InputGroup.Text>
