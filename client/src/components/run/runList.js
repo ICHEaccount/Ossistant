@@ -4,10 +4,37 @@ import { Tab } from 'react-bootstrap';
 import Tabs from 'react-bootstrap/Tabs';
 import RunCard from './runCard';
 
+const dummy = {
+    "running":[
+        {
+            run_id:"123",
+            runtime:"23-09-05",
+            tool_id:"1",
+            tool_name:"whois",
+            input_value:"puritipo.co.kr",
+            results:[]
+        }
+    ],
+    "completed":[
+        {
+            run_id:"456",
+            runtime:"23-09-05",
+            tool_id:"1",
+            tool_name:"whois",
+            input_value:"google.com",
+            results:[{
+                result_id:"000",
+                result:{"registant":"John"},
+                created:false
+            }]
+        }
+    ]
+}
+
 const RunList = (props) => {
     const case_id = props.case_id
-    const states = ['running',"completed","error"]
-    const [runList, setrunList] = useState([])
+    const status = ['running',"completed","error"]
+    const [runList, setrunList] = useState(dummy)
 
     // useEffect(() => {
     //     axios.get(`/tool/getRunList/${case_id}`)
@@ -20,18 +47,18 @@ const RunList = (props) => {
     // }, [])
     
 
-    // const runCards = states.map((state)=>{
-    //     if(runList[state]){
-    //         return <RunCard runList = {runList[state]}/>
-    //     } else {
-    //         return <RunCard runList = {null} />
-    //     }
-    // })
+    const runCards = status.map((status)=>{
+        if(runList[status]){
+            return <Tab eventKey={status} title={status}><RunCard runList = {runList[status]} status={status}/></Tab>
+        } else {
+            return <Tab eventKey={status} title={status}><RunCard runList = {null} status={status} /></Tab>
+        }
+    })
 
     return (
     <div>
     <Tabs >
-        {/* {runCards} */}
+        {runCards}
     </Tabs>
     </div>
     )
