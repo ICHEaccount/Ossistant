@@ -7,7 +7,7 @@ import RunCard from './runCard';
 const dummy = {
     "running":[
         {
-            run_id:"123",
+            run_id:"003",
             runtime:"23-09-05",
             tool_id:"1",
             tool_name:"whois",
@@ -17,7 +17,7 @@ const dummy = {
     ],
     "completed":[
         {
-            run_id:"456",
+            run_id:"001",
             runtime:"23-09-05",
             tool_id:"1",
             tool_name:"whois",
@@ -25,6 +25,20 @@ const dummy = {
             results:[{
                 result_id:"000",
                 result:{"registant":"John"},
+                created:false
+            }]
+        }
+    ],
+    "error":[
+        {
+            run_id:"002",
+            runtime:"23-09-05",
+            tool_id:"1",
+            tool_name:"whois",
+            input_value:"example.com",
+            results:[{
+                result_id:"000",
+                result:{"error":"Something Went Wrong:("},
                 created:false
             }]
         }

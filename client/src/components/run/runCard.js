@@ -56,6 +56,7 @@ const RunCard = (props) => {
                     	</InputGroup>)
 					}))
 				}
+				if(key==="tool_id") return null
                 return(
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text >{key}</InputGroup.Text>
