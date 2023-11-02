@@ -37,14 +37,33 @@ def check_whois(case_id, run):
         message = f'FileNotFoundError: {e}.'
         return message
 
+    if isinstance(whois_search.get("domain_name"), list):
+        is_upper = any(char.isupper() for char in whois_search.get("domain_name")[0])
+        if is_upper:
+            domain_response = whois_search.get("domain_name")[1]
+        else:
+            domain_response = whois_search.get("domain_name")[0]
+    else:
+        domain_response = whois_search.get("domain_name")
+
+    if isinstance(whois_search.get("creation_date"), list):
+        one = whois_search.get("creation_date")[0]
+        two = whois_search.get("creation_date")[1]
+        if one < two:
+            regdate_response = two
+        else:  # one > two
+            regdate_response = one
+    else:
+        regdate_response = whois_search.get("creation_date")
+
     whois_response = {
         "run_id": run.run_id,
         "state": run.status,
         "result": [
             {
                 "domain": {
-                    "domain": whois_search.get("domain_name"),
-                    "regdate": whois_search.get("creation_date"),
+                    "domain": domain_response,
+                    "regdate": regdate_response,
                     "email": whois_search.get("admin_email")
                 }
             }
@@ -52,26 +71,17 @@ def check_whois(case_id, run):
     }
 
     # 2. Save to DB
-    try:
-        regdate = whois_response['result'][0]['domain']['regdate']
-        if regdate:
-            regdate = datetime.strptime(regdate, '%Y-%m-%d %H:%M:%S')
-    except TypeError as e:
-        regdate = whois_response['result'][0]['domain']['regdate'][0]
-        if regdate:
-            regdate = datetime.strptime(regdate, '%Y-%m-%d %H:%M:%S')
+    regdate = whois_response['result'][0]['domain']['regdate']
+    if regdate:
+        regdate = datetime.strptime(regdate, '%Y-%m-%d %H:%M:%S')
 
     if whois_response['result'][0]['domain']['email']:
         # 1차 email to username
         regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
         pattern = re.compile(regex)
         # Node
-        try:
-            email = whois_response['result'][0]['domain']['email']
-            match = re.match(pattern, email)
-        except TypeError as e1:
-            email = whois_response['result'][0]['domain']['email'][0]
-            match = re.match(pattern, email)
+        email = whois_response['result'][0]['domain']['email']
+        match = re.match(pattern, email)
     else:
         match = None
 
