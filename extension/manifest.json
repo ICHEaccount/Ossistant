@@ -16,10 +16,10 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["activeTab", "contextMenus", "storage"],
+    "permissions": ["activeTab", "contextMenus", "storage", "downloads"],
     "host_permissions": ["http://127.0.0.1:5000/*"],
     "content_scripts": [{
         "matches": ["<all_urls>"],
-        "js": ["content_script.js"]
+        "js": ["content.js"]
       }]      
 }
