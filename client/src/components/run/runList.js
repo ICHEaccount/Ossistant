@@ -5,6 +5,16 @@ import Tabs from 'react-bootstrap/Tabs';
 import RunCard from './runCard';
 
 const dummy = {
+    "ready":[
+        {
+            run_id:"004",
+            runtime:"23-09-05",
+            tool_id:"1",
+            tool_name:"whois",
+            input_value:"naver.com",
+            results:[]
+        }
+    ],
     "running":[
         {
             run_id:"003",
@@ -47,7 +57,7 @@ const dummy = {
 
 const RunList = (props) => {
     const case_id = props.case_id
-    const status = ['running',"completed","error"]
+    const status = ['ready','running',"completed","error"]
     const [runList, setrunList] = useState(dummy)
 
     // useEffect(() => {
@@ -71,7 +81,7 @@ const RunList = (props) => {
 
     return (
     <div>
-    <Tabs >
+    <Tabs variant='pills' justify >
         {runCards}
     </Tabs>
     </div>

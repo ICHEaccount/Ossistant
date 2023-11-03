@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Card, Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
+import cls from 'classnames'
 
 const RunCard = (props) => {
 	const list = props.runList
@@ -47,13 +48,14 @@ const RunCard = (props) => {
 				if(key==="results"){
 					return (selectedRun.results.map((result)=>{
 						const type = Object.keys(result.result)[0]
-						return (<InputGroup className='mb-1 px-1'>
-                    	<InputGroup.Text >{type}</InputGroup.Text>
-                    	<Form.Control
-                    	placeholder={result.result[type]}
-                    	disabled
-                    	/>
-                    	</InputGroup>)
+						return (
+						<InputGroup className='mb-1 px-1'>
+						<InputGroup.Text className={cls('',{'tw-text-red-500':type==="error"})} >{type}</InputGroup.Text>
+						<Form.Control
+						placeholder={result.result[type]}
+						disabled
+						/>
+						</InputGroup>)
 					}))
 				}
 				if(key==="tool_id") return null
