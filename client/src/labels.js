@@ -1,16 +1,65 @@
 const labels = {
     "Post":{
         "title":"title",
-        "properties":["title","writer","url","content","created_date","post_type"]
+        "category":"Site",
+        "properties":["title","writer","url","content","created_date","note"]
+    },
+    "Comment":{
+        "title":"name",
+        "category":"Site",
+        "properties":["name","content","created_date","url"]
     },
     "SurfaceUser":{
         "title":"username",
-        "properties":["username","fake"]
+        "category":"Subject",
+        "properties":["username","fake","note"]
+    },
+    "DarkUser":{
+        "title":"username",
+        "category":"Subject",
+        "properties":["username","rank","regdate","post_num","comment_num","note"]
+    },
+    "Person":{
+        "title":"name",
+        "category":"Subject",
+        "properties":["name","fake","note"]
+    },
+    "Company":{
+        "title":"name",
+        "category":"Subject",
+        "properties":["name","fake","business_num","phone_num","note"]
     },
     "Domain":{
         "title":"domain",
-        "properties":["domain","regdate","status"]
+        "category":"Site",
+        "properties":["domain","regdate","status","note"]
+    },
+    "Phone":{
+        "title":"number",
+        "category":"Info",
+        "properties":["number","note"]
+    },
+    "Message":{
+        "title":"sender",
+        "category":"Info",
+        "properties":["sender","content","date","note"]
+    },
+    "Email":{
+        "title":"email",
+        "category":"Info",
+        "properties":["email","fake","note"]
+    },
+    "Wallet":{
+        "title":"wallet",
+        "category":"Info",
+        "properties":["wallet","wallet_type","note"]
     }
+}
+
+export const category = {
+    "Subject":["SurfaceUser","DarkUser","Company","Person"],
+    "Site":["Domain","Post","Comment"],
+    "Info":["Email","Phone","Message","Wallet"]
 }
 
 export default labels
