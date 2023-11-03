@@ -70,6 +70,7 @@ def run_tool():
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
+
     # Responding run_id
     if isinstance(run_id, int):
         return jsonify({'run_id': run_id}), 200
@@ -126,3 +127,4 @@ def tool_state():
         return jsonify(response), 200
     else:
         return jsonify({"message": "run.status error"}), 400
+

@@ -1,7 +1,7 @@
 from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 
-from db_conn.mongo.models import CaseModel
+from db_conn.mongo.models import CaseModel, RunModel
 
 
 bp = Blueprint('tool', __name__, url_prefix='/tool')
@@ -24,3 +24,5 @@ def create_run():
         return jsonify({'msg':'good'}), 200
     else:
         return jsonify({'msg':'error'}), 400
+
+

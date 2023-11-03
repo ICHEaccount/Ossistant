@@ -4,7 +4,6 @@ from .manager.model_manager import NodeManager
 @NodeManager
 class Email(StructuredNode):
     uid = UniqueIdProperty()
-    label = StringProperty()
     email = StringProperty(unique_index=True)
     fake = StringProperty(default='None')
     email_domain = StringProperty()
@@ -14,7 +13,6 @@ class Email(StructuredNode):
     def to_json(self):
         return {
             "uid": self.uid,
-            "label": self.label,
             "email": self.email,
             "fake": self.fake,
             "email_domain": self.email_domain,
@@ -24,9 +22,9 @@ class Email(StructuredNode):
 @NodeManager
 class Phone(StructuredNode):
     uid = UniqueIdProperty()
-    label = StringProperty()
     number = StringProperty()
     note = StringProperty()
+    case_id = StringProperty()
 
     def to_json(self):
         return {
@@ -38,7 +36,6 @@ class Phone(StructuredNode):
 @NodeManager
 class Message(StructuredNode):
     uid = UniqueIdProperty()
-    label = StringProperty()
     sender = StringProperty(required=True)
     date = StringProperty()
     content = StringProperty()
@@ -57,16 +54,15 @@ class Message(StructuredNode):
 @NodeManager
 class Wallet(StructuredNode):
     uid = UniqueIdProperty()
-    label = StringProperty()
     wallet = StringProperty(required=True)
     wallet_type = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
-
+    url = StringProperty()
+    
     def to_json(self):
         return {
             "uid": self.uid,
-            "label": self.label,
             "wallet": self.wallet,
             "wallet_type": self.wallet_type,
             "note": self.note,
