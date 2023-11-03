@@ -8,7 +8,7 @@ class NodeManager:
 
     def check_node(self, data):
         node = self.cls.nodes.get_or_none(**data)
-        if node:
+        if node is not None:
             return True, node
         return False, None
 
@@ -82,6 +82,12 @@ class NodeManager:
         except Exception as e:
             return False, str(e)
 
+    def node_exists_url(self,case_id, url):
+        try:
+            node = self.cls.nodes.filter(case_id=case_id, url=url).first()
+            return True, node.uid 
+        except self.cls.DoesNotExist as e:
+            return False, str(e)
     
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         setattr(self.cls, 'create_node', self.create_node)
@@ -92,5 +98,6 @@ class NodeManager:
         setattr(self.cls, 'delete_node', self.delete_node)
         setattr(self.cls, 'get_all_nodes_list', self.get_all_nodes_list)
         setattr(self.cls, 'check_node',self.check_node)
+        setattr(self.cls, 'node_exists_url',self.node_exists_url)
         return self.cls 
     

@@ -1,10 +1,11 @@
-from neomodel import StructuredNode, UniqueIdProperty,StringProperty, DateTimeProperty, IntegerProperty
+from neomodel import StringProperty, UniqueIdProperty, DateTimeProperty, IntegerProperty
 
 from ..init import db
 from .manager.model_manager import NodeManager
+from .base import BaseNode
 
 @NodeManager
-class Post(StructuredNode):
+class Post(BaseNode):
     uid = UniqueIdProperty()
     url = StringProperty()
     title = StringProperty()
@@ -29,7 +30,7 @@ class Post(StructuredNode):
 
 
 @NodeManager
-class Comment(StructuredNode):
+class Comment(BaseNode):
     uid = UniqueIdProperty()
     url = StringProperty()
     name = StringProperty()
