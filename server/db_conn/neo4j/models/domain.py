@@ -3,9 +3,10 @@ from neomodel import StructuredNode, UniqueIdProperty,StringProperty, BooleanPro
 from ..init import db
 
 from .manager.model_manager import NodeManager
+from .base import BaseNode
 
 @NodeManager
-class Domain(StructuredNode):
+class Domain(BaseNode):
     uid = UniqueIdProperty()
     url = StringProperty()
     domain = StringProperty(unique_index=True)

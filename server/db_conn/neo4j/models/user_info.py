@@ -1,8 +1,9 @@
-from neomodel import StructuredNode, RelationshipTo, UniqueIdProperty,StringProperty
+from neomodel import StringProperty, UniqueIdProperty
 from .manager.model_manager import NodeManager
+from .base import BaseNode
 
 @NodeManager
-class Email(StructuredNode):
+class Email(BaseNode):
     uid = UniqueIdProperty()
     email = StringProperty(unique_index=True)
     fake = StringProperty(default='None')
@@ -20,7 +21,7 @@ class Email(StructuredNode):
         }
 
 @NodeManager
-class Phone(StructuredNode):
+class Phone(BaseNode):
     uid = UniqueIdProperty()
     number = StringProperty()
     note = StringProperty()
@@ -34,7 +35,7 @@ class Phone(StructuredNode):
         }
 
 @NodeManager
-class Message(StructuredNode):
+class Message(BaseNode):
     uid = UniqueIdProperty()
     sender = StringProperty(required=True)
     date = StringProperty()
@@ -52,7 +53,7 @@ class Message(StructuredNode):
         }
 
 @NodeManager
-class Wallet(StructuredNode):
+class Wallet(BaseNode):
     uid = UniqueIdProperty()
     wallet = StringProperty(required=True)
     wallet_type = StringProperty()

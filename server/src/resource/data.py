@@ -8,7 +8,7 @@ from db_conn.mongo.models import CaseModel
 from db_conn.neo4j.models import *
 from db_conn.neo4j.lib.func import delete_node
 
-from db_conn.neo4j.node_config import NODE_LIST
+from db_conn.neo4j.node_config import NODE_LIST, RELATIONS
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -35,14 +35,57 @@ def create_data():
             node1 = existed_node 
         else: 
             node1 = NODE_LIST[node_label].create_node(node_data)
-        if node1:
-            return jsonify({"state": "success"}), 200
-        else:
-            return jsonify({"Error": "Creation Error"}), 500
+
+        if node1 is not None and node_label in RELATIONS:
+            rels_list = RELATIONS[node_label]
+            for rel_info in rels_list:
+                pos_flag = TO
+                rel_data = rel_info['data']
+
+                pos_key = list(rel_info.keys())[0]
+                if pos_key == 'to':
+                    node2 = rel_info['to'].get_node({rel_data[1]:getattr(node1, rel_data[0])})
+                elif pos_key == 'from':
+                    node2 = rel_info['from'].get_node({rel_data[1]:getattr(node1, rel_data[0])})
+                    pos_flag = FROM 
+                else:
+                    return jsonify({'Error':'Invalid node_config'}), 404
+                
+                if pos_flag is TO and node2 is not None:
+                    node1.rel_to.connect(node2,{'label':node_label})
+                elif pos_flag is FROM and node2 is not None:
+                    node2.rel_to.connect(node1,{'label':node_label})
+                else:
+                    return jsonify({"state": "No Relationship"}), 200
+        return jsonify({"state": "success"}), 200
+            
     except Exception as e:
         return jsonify({"Error": str(e)}), 400
 
 
+def create_relationship(node1, node_label):
+    if node1 is not None and node_label in RELATIONS:
+        rels_list = RELATIONS[node_label]
+        for rel_info in rels_list:
+            pos_flag = TO
+            rel_data = rel_info['data']
+
+            pos_key = list(rel_info.keys())[0]
+            if pos_key == 'to':
+                node2 = rel_info['to'].get_node({rel_data[1]:getattr(node1, rel_data[0])})
+            elif pos_key == 'from':
+                node2 = rel_info['from'].get_node({rel_data[1]:getattr(node1, rel_data[0])})
+                pos_flag = FROM 
+            else:
+                return False,'Invalid node_config'
+                
+            if pos_flag is TO:
+                node1.rel_to.connect(node2,{'label':node_label})
+            else:
+                node2.rel_to.connect(node1,{'label':node_label})
+        return True, 'Success'
+    else:
+        return False, 'Node does not exist'
 
 @bp.route('/getData/<string:case_id>',methods=["GET"])
 def get_data(case_id):

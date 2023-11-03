@@ -4,17 +4,17 @@ from .domain import Domain
 from .post import Post
 from .manager.relationship import Posting, Register
 from .manager.model_manager import NodeManager
+from .base import BaseNode
 
 @NodeManager
-class SurfaceUser(StructuredNode):
-    uid = UniqueIdProperty()
+class SurfaceUser(BaseNode):
+    uid= UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
     fake = StringProperty(default="None")
     case_id = StringProperty()
     registered = ArrayProperty()
     note = StringProperty()
-
 
     # Relation
     register = RelationshipTo(Domain, 'REGISTER', model=Register)
@@ -30,8 +30,8 @@ class SurfaceUser(StructuredNode):
         }
 
 @NodeManager    
-class DarkUser(StructuredNode):
-    uid = UniqueIdProperty()
+class DarkUser(BaseNode):
+    uid= UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
     rank = StringProperty()
@@ -55,9 +55,8 @@ class DarkUser(StructuredNode):
         }
 
 @NodeManager
-class Person(StructuredNode):
-    #Property
-    uid = UniqueIdProperty()
+class Person(BaseNode):
+    uid= UniqueIdProperty()
     username = StringProperty()
     fake = StringProperty()
     note = StringProperty()
@@ -79,8 +78,8 @@ class Person(StructuredNode):
 
 
 @NodeManager
-class Company(StructuredNode):
-    uid = UniqueIdProperty()
+class Company(BaseNode):
+    uid= UniqueIdProperty()
     name = StringProperty()
     fake = StringProperty()
     business_num = StringProperty()
