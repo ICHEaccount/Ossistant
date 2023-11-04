@@ -26,28 +26,29 @@ const DataCard = (props) => {
     const [formData, setformData] = useState(selected?selected.property:{})
 
     const editData = (e)=>{
-        e.preventDefault();
+        e.preventDefault()
         const postData={
             "data_id":selected.node_id,
             [label]:formData
         }
-        console.log(postData);
         Axios.post(`/data/editData`,postData)
         .then((res)=>{
             console.log(res);
+            dispatch(select({node:{...selected,
+                "property":formData
+            },label:label}))
+            setonEdit(false);
         })
         .catch((err)=>{
             console.log(err);
         })
-        dispatch(select({node:{...selected,
-            "property":formData
-        },label:label}))
+
     }
 
     const onChange = (key,value) =>{
-        console.log(formData);
+        // console.log(formData);
         setformData({
-            ...selected.property,
+            ...formData,
             [key]:value
         })
     }
@@ -125,12 +126,22 @@ const DataCard = (props) => {
                     <Card className='mt-1'>
                         <Form onSubmit={editData}>
                         <Card.Header className='mb-1'>
+                            <Row>
+                            <Col xs="9">
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}><ChevronLeft/></Button>
                             {selected.property[title]}
+                            </Col>
+                            <Col xs="1">
                             {onEdit?
-                            <Button variant="light"  size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
-                            :<Button variant="light" type='submit' size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
+                            <Button variant="light" type='submit' size='sm' className='tw-mr-2'><Check/></Button>
+                            :<Button variant="light" type='button' size='sm' className='tw-mr-2' onClick={(e)=>{e.preventDefault(); setonEdit(true)}}><PencilSquare/></Button>
+                            }
+                            </Col>
+                            <Col xs="1">   
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={onDelete}><Trash/></Button>
+                            </Col>
+                            </Row>
+                            
                         </Card.Header>
                         
                             {lbs[label].properties.map((key) => {
@@ -148,9 +159,10 @@ const DataCard = (props) => {
                                     <InputGroup className='mb-1 px-1'>
                                     <InputGroup.Text >{key}</InputGroup.Text>
                                     <Form.Control
-                                    value={formData[key]}
+                                    value={formData[key]|| ""}
                                     onChange={(e)=>onChange(key,e.target.value)}
                                     disabled={!onEdit}
+                                    required={title===key}
                                     />
                                     </InputGroup>
                                 )                         
