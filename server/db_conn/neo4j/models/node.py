@@ -202,7 +202,6 @@ class Person(BaseNode):
         }
 
 
-
 @NodeManager
 class Company(BaseNode):
     uid= UniqueIdProperty()
