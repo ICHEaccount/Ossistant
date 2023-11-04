@@ -5,11 +5,11 @@ import CaseCard from '../components/case/caseCards';
 import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
 import IntroCard from '../components/introCard';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Spinner } from 'react-bootstrap';
 
 
 const Main = () => {
-    const [isload, setisload] = useState(true)
+    const [isload, setisload] = useState(false)
     const [cases, setcases] = useState([])
 
     useEffect(() => {
@@ -23,16 +23,19 @@ const Main = () => {
                 alert('Backend Connection Failed')
             }
             })
-        }, [])
+        }, [isload])
 
-    const deleteCase = async (caseId) =>{
-        try {
-            const res= await Axios.get(`/case/deleteCase/${caseId}`)
+    const deleteCase = (caseId) =>{
+        console.log(caseId);
+        console.log(cases);
+        Axios.get(`/case/deleteCase/${caseId}`)
+        .then((res)=>{
             console.log('res',res);
-            setcases((prevCases) => prevCases.filter((caseData) => caseData.case_id !== caseId));
-        } catch (error) {
-            console.error(error);
-        }
+            setisload(false)
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
     }
 
     const caseList = cases.map((caseData,idx)=>{
@@ -48,7 +51,7 @@ const Main = () => {
             </Col>
             <Col lg={6}>
                 <Stack gap={3} className='m-3'>
-                    {isload?caseList:<Loading/>}
+                    {isload?caseList:null}
                 </Stack>
                 
                 
