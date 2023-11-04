@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Card from 'react-bootstrap/Card';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import { ChevronRight, ChevronLeft, PlusCircle , PencilSquare, Check} from 'react-bootstrap-icons';
+import { ChevronRight, ChevronLeft, PlusCircle , PencilSquare, Check, Trash} from 'react-bootstrap-icons';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Button from 'react-bootstrap/esm/Button';
@@ -12,19 +12,34 @@ import CreateData from './createData';
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import {select,clear,viewChange} from '../../reducers/node'
+import  Axios  from 'axios';
 
 const DataCard = (props) => {
     const selected = useSelector(state => state.node.selected)
     const view = useSelector(state => state.node.view)
     const dispatch = useDispatch()
     const label = props.label
-    const nodes = props.nodes
     const newData = props.newData
     const title = lbs[label].title
     const [onEdit, setonEdit] = useState(false)
+    const [nodes, setnodes] = useState(props.nodes)
 
     const editData = ()=>{
         
+    }
+
+    const onDelete = () =>{
+        console.log(selected);
+        Axios.get(`/data/deleteData/${selected.node_id}`)
+        .then((res)=>{
+            console.log(res);
+            setnodes(nodes.filter((n)=>{return n.node_id!==selected.node_id}))
+            dispatch(clear());
+            console.log(nodes);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
     }
 
 
@@ -90,6 +105,7 @@ const DataCard = (props) => {
                             {onEdit?
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
                             :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
+                            <Button variant="light" size='sm' className='tw-mr-2' onClick={onDelete}><Trash/></Button>
                         </Card.Header>
                         <Form onSubmit={editData}>
                             {lbs[label].properties.map((key) => {
