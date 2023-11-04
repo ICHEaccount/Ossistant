@@ -58,7 +58,7 @@ const CreateCase = () => {
                 placeholder="Case name"
                 aria-label="Case name"
                 aria-describedby="basic-addon1"
-                
+                required
                 />
             </InputGroup>
 

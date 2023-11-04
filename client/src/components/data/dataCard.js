@@ -23,13 +23,37 @@ const DataCard = (props) => {
     const title = lbs[label].title
     const [onEdit, setonEdit] = useState(false)
     const [nodes, setnodes] = useState(props.nodes)
+    const [formData, setformData] = useState(selected?selected.property:{})
 
-    const editData = ()=>{
-        
+    const editData = (e)=>{
+        e.preventDefault();
+        const postData={
+            "data_id":selected.node_id,
+            [label]:formData
+        }
+        console.log(postData);
+        Axios.post(`/data/editData`,postData)
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+        dispatch(select({node:{...selected,
+            "property":formData
+        },label:label}))
+    }
+
+    const onChange = (key,value) =>{
+        console.log(formData);
+        setformData({
+            ...selected.property,
+            [key]:value
+        })
     }
 
     const onDelete = () =>{
-        console.log(selected);
+        // console.log(selected);
         Axios.get(`/data/deleteData/${selected.node_id}`)
         .then((res)=>{
             console.log(res);
@@ -99,22 +123,24 @@ const DataCard = (props) => {
                 return (
                     <Container>
                     <Card className='mt-1'>
+                        <Form onSubmit={editData}>
                         <Card.Header className='mb-1'>
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}><ChevronLeft/></Button>
                             {selected.property[title]}
                             {onEdit?
-                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
-                            :<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
+                            <Button variant="light"  size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
+                            :<Button variant="light" type='submit' size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>}
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={onDelete}><Trash/></Button>
                         </Card.Header>
-                        <Form onSubmit={editData}>
+                        
                             {lbs[label].properties.map((key) => {
                                 if(key==="note"){
                                     return (<InputGroup className='mb-1 px-1'>
                                     <InputGroup.Text id='note'>note</InputGroup.Text>
                                     <Form.Control
+                                    value={formData.note}
                                     disabled={!onEdit}
-                                    placeholder={selected.property.note}
+                                    onChange={(e)=>onChange(key,e.target.value)}
                                     as="textarea" />
                                     </InputGroup>)
                                 }
@@ -122,7 +148,8 @@ const DataCard = (props) => {
                                     <InputGroup className='mb-1 px-1'>
                                     <InputGroup.Text >{key}</InputGroup.Text>
                                     <Form.Control
-                                    placeholder={selected.property[key]}
+                                    value={formData[key]}
+                                    onChange={(e)=>onChange(key,e.target.value)}
                                     disabled={!onEdit}
                                     />
                                     </InputGroup>
