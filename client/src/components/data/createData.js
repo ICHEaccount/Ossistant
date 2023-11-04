@@ -10,8 +10,9 @@ import { useParams } from 'react-router-dom';
 
 const CreateData = (props) => {
     const {case_id} = useParams()
-    // const [label, setlabel] = useState("")
     const label = props.label
+    const title = lbs[label].title
+    // const [label, setlabel] = useState("")
     const properties = lbs[label].properties
     const initialFormData = {};
     properties.forEach(property => {
@@ -54,8 +55,9 @@ const CreateData = (props) => {
                 <Form.Control as={property==="note"?"textarea":"input"}
                 value={formData[label][property]||""}
                 onChange={(e)=>{updateFormValue(property,e.target.value)}}
+                required={title===property}
                 />
-                </InputGroup>
+        </InputGroup>
     ))
     return (
             <Form className='m-1' onSubmit={submitData}>
