@@ -29,40 +29,38 @@ def run_whois(run):
 
 
 def check_whois(case_id, run):
-    try:
-        with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
-            whois_search = json.load(report)
-        run.status = 'completed'
-        run.save()
-    except FileNotFoundError as e:
-        message = f'FileNotFoundError: {e}.'
-        return message
+    if not run.status == 'completed':
+        try:
+            with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
+                whois_search = json.load(report)
+            run.status = 'completed'
+            run.save()
+        except FileNotFoundError as e:
+            message = f'FileNotFoundError: {e}.'
+            return message
 
-    if isinstance(whois_search.get("domain_name"), list):
-        is_upper = any(char.isupper() for char in whois_search.get("domain_name")[0])
-        if is_upper:
-            domain_response = whois_search.get("domain_name")[1]
+        if isinstance(whois_search.get("domain_name"), list):
+            is_upper = any(char.isupper() for char in whois_search.get("domain_name")[0])
+            if is_upper:
+                domain_response = whois_search.get("domain_name")[1]
+            else:
+                domain_response = whois_search.get("domain_name")[0]
         else:
-            domain_response = whois_search.get("domain_name")[0]
-    else:
-        domain_response = whois_search.get("domain_name")
+            domain_response = whois_search.get("domain_name")
 
-    if isinstance(whois_search.get("creation_date"), list):
-        one = whois_search.get("creation_date")[0]
-        two = whois_search.get("creation_date")[1]
-        if one < two:
-            regdate_response = two
-        else:  # one > two
-            regdate_response = one
-    else:
-        regdate_response = whois_search.get("creation_date")
+        if isinstance(whois_search.get("creation_date"), list):
+            one = whois_search.get("creation_date")[0]
+            two = whois_search.get("creation_date")[1]
+            if one < two:
+                regdate_response = two
+            else:  # one > two
+                regdate_response = one
+        else:
+            regdate_response = whois_search.get("creation_date")
 
-    created = False
+        created = False
 
-    whois_response = {
-        "run_id": run.run_id,
-        "state": run.status,
-        "results": [
+        results_data = [
             {
                 "result_id": "01",
                 "result": {
@@ -73,12 +71,16 @@ def check_whois(case_id, run):
                 "created": created
             }
         ]
-    }
-    # if RunModel.get_all_results(run_id=run.run_id)[0] is None:
-    results_data = whois_response['results'][0]['result']
-    RunModel.create_result(data=results_data, run_id=run.run_id)
-    run.save()
+        RunModel.create_result(data=results_data, run_id=run.run_id)
+        run.save()
+
     final = RunModel.get_all_results(run_id=run.run_id)[1]
+    whois_response = {
+        "run_id": run.run_id,
+        "state": run.status,
+        "results": final
+    }
+
     # [
     #     {
     #         "created": false,
@@ -127,5 +129,5 @@ def check_whois(case_id, run):
 
     run.save()
 
-    # return whois_response
-    return final
+    return whois_response
+    # return final
