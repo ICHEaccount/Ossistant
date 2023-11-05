@@ -1,46 +1,116 @@
 from .node import *
+from ..init import db
 
 TO = True
 FROM = False
 
-NODE_LIST = {
-    'Domain': Domain,
-    'SurfaceUser': SurfaceUser,
-    'Post': Post,
-    'DarkUser': DarkUser,
-    'Person': Person,
-    'Company': Company,
-    'Comment': Comment,
-    'Email': Email,
-    'Wallet': Wallet,
-    'Phone': Phone,
-    'Message': Message
-}
-
-RELATIONS = {
+AUTO_RELATIONS = {
     "SurfaceUser":[
         {
             "to": Post,
             "data" : ["username","writer"],
             "label" : "POST"
-        }
+        },
+        {
+            "from": Comment,
+            "data" : ['username','name'],
+            "label":"LEAVE_COMMENT"
+        },
+        
+    ],
+    "DarkUser":[
+        {
+            "to": Post,
+            "data" : ["username","writer"],
+            "label" : "POST"
+        },
+        {
+            "from": Comment,
+            "data" : ['username','name'],
+            "label":"LEAVE_COMMENT"
+        },
     ],
     "Post": [
         {
             "from": SurfaceUser,
             "data" : ["writer","username"],
             "label" : "POST"
-
+        },
+        {
+            "from": DarkUser,
+            "data" : ["writer","username"],
+            "label" : "POST"
+        },
+        {
+            "to": Comment,
+            "data" : ["url","url"],
+            "label" : "HAS_COMMENT"
+        }
+    ],
+    "Comment":[
+        {
+            "from": Post,
+            "data" : ["url","url"],
+            "label" : "HAS_COMMENT"
+        },
+        {
+            "to":SurfaceUser,
+            "data" : ['name','username'],
+            "label":"LEAVE_COMMENT"
+        },
+        {
+            "to":DarkUser,
+            "data" : ['name','username'],
+            "label":"LEAVE_COMMENT"
         }
     ]
-       
 }
+
+EXTENSION_RELATIONS = {
+    "surface":{
+        "Post":{
+            "SurfaceUser":{
+                "pos":"from",
+                "label":"CONTAIN"
+            },
+            "Email": {
+                "post":"to",
+                "label":"HAS"
+            },
+            "Phone": {
+                "post":"to",
+                "label":"HAS"
+            }
+        }
+    },
+    "dark":{
+        "Post":{
+            "DarkUser":{
+                "pos":"from",
+                "label":"CONTAIN"
+            },
+            "Email": {
+                "post":"to",
+                "label":"HAS"
+            },
+            "Phone": {
+                "post":"to",
+                "label":"HAS"
+            }
+        }
+    }
+}
+
 
 class Relationship:
     @classmethod
-    def create_relationship(cls, node, node_label):
+    def create_extension_relationship(cls, from_node, to_node,):
+        pass
+
+    @classmethod
+    def create_auto_relationship(cls, node, node_label):
         if node is not None:
-            rels_list = RELATIONS[node_label]
+            rels_list = AUTO_RELATIONS[node_label]
             for rel_info in rels_list:
                 pos_flag = TO
                 rel_data = rel_info['data']
@@ -66,3 +136,27 @@ class Relationship:
         else:
             return False, 'Node does not exist'
 
+    @classmethod
+    def delete_relationship(cls, uid):
+        if not uid:
+            return False, 'Relation uid did not exist'
+        query = "MATCH ()-[r]-() WHERE r.uid = $uid DELETE r"
+        try:
+            results, meta = db.cypher_query(query, {'uid': uid})
+            if results:
+                return True, f"Success"
+        except Exception as e:
+            return False, f"An error occurred: {e}"
+        return True, 'Relationship deleted successfully'
+
+    @classmethod
+    def modify_relationship(cls, uid, new_label):
+        if not uid:
+            return False, 'Relation uid did not exist'
+        query = "MATCH ()-[r]-() WHERE r.uid = $uid SET r.label = $new_label RETURN r"
+        try:
+            results, meta = db.cypher_query(query, {'uid': uid, 'new_label': new_label})
+            if results:
+                return True, f"Success"
+        except Exception as e:
+            return False, f"An error occurred: {e}"

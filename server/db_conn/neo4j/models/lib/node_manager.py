@@ -89,6 +89,9 @@ class NodeManager:
         except self.cls.DoesNotExist as e:
             return False, str(e)
     
+    def get_node_name(self):
+        return self.cls.__name__
+    
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         setattr(self.cls, 'create_node', self.create_node)
         setattr(self.cls, 'get_uid', self.get_uid)
@@ -99,5 +102,6 @@ class NodeManager:
         setattr(self.cls, 'get_all_nodes_list', self.get_all_nodes_list)
         setattr(self.cls, 'check_node',self.check_node)
         setattr(self.cls, 'node_exists_url',self.node_exists_url)
+        setattr(self.cls, 'get_node_name', self.get_node_name)
         return self.cls 
     

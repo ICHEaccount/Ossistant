@@ -4,7 +4,6 @@ from ..init import db
 from .lib.node_manager import NodeManager
 from .base import BaseNode
 
-
 @NodeManager
 class Domain(BaseNode):
     uid = UniqueIdProperty()
@@ -186,17 +185,16 @@ class DarkUser(BaseNode):
 @NodeManager
 class Person(BaseNode):
     uid= UniqueIdProperty()
-    username = StringProperty()
+    name = StringProperty()
     fake = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
 
-
     def to_json(self):
         return  {
             "uid": self.uid,
-            "username": self.username,
+            "name": self.name,
             "fake": self.fake,
             "note": self.note
         }
@@ -220,3 +218,18 @@ class Company(BaseNode):
             "business_num": self.business_num,
             "note": self.note
         }
+
+
+NODE_LIST = {
+    'Domain': Domain,
+    'SurfaceUser': SurfaceUser,
+    'Post': Post,
+    'DarkUser': DarkUser,
+    'Person': Person,
+    'Company': Company,
+    'Comment': Comment,
+    'Email': Email,
+    'Wallet': Wallet,
+    'Phone': Phone,
+    'Message': Message
+}
