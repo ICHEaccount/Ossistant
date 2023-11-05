@@ -1,7 +1,6 @@
 import os
 
 from db_conn.mongo.models import RunModel, CaseModel
-
 from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import *
@@ -12,6 +11,7 @@ bp = Blueprint('tool', __name__, url_prefix='/tools')
 report_dir = './reports/'
 if not os.path.exists(report_dir):
     os.makedirs(report_dir)
+
 
 def check_json_not_null(input_json):
     for value in input_json.values():
@@ -69,7 +69,6 @@ def run_tool():
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
-
 
     # Responding run_id
     if isinstance(run_id, int):

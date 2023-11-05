@@ -1,7 +1,5 @@
 import whois
 import json
-import re
-from datetime import datetime
 
 from db_conn.mongo.models import RunModel
 from db_conn.neo4j.models import *
@@ -81,18 +79,6 @@ def check_whois(case_id, run):
         "results": final
     }
 
-    # [
-    #     {
-    #         "created": false,
-    #         "result": {
-    #             "domain": "proton.me",
-    #             "email": null,
-    #             "regdate": "2010-10-10 21:20:51"
-    #         },
-    #         "result_id": 11
-    #     }
-    # ]
-
     # # 2. Save to DB
     # regdate = regdate_response
     # # regdate = whois_response['result'][0]['domain']['regdate']
@@ -128,6 +114,4 @@ def check_whois(case_id, run):
     #     user.rel_to.connect(domain_obj,{'label':'REGISTER'})
 
     run.save()
-
     return whois_response
-    # return final

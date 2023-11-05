@@ -3,6 +3,7 @@ from .init import db
 import uuid
 import datetime
 
+
 class ResultModel(db.DynamicDocument):
     col_name = 'Result'
     meta = {'collection':col_name}
@@ -38,7 +39,7 @@ class RunModel(db.DynamicDocument):
                     "result": result.result,
                     "created": result.created
                 })
-        return True, result_list # Return run_list 
+        return True, result_list  # Return run_list
 
     @classmethod
     def create_result(cls, data, run_id):
@@ -64,6 +65,7 @@ class RunModel(db.DynamicDocument):
             return True, 'Success'
         except Exception as e:
             return None, f'{cls.col_name} : Result Creation Error: {e}'
+
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
