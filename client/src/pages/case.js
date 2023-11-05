@@ -7,9 +7,11 @@ import Container from 'react-bootstrap/esm/Container';
 import DataPanel from '../components/data/dataPanel';
 import ToolResultBanner from '../components/tool/toolResultBanner';
 import VisualPanel from '../components/visualPanel';
+import { useSelector } from 'react-redux';
 
 
     const Case = () => {
+        const selected = useSelector(state => state.node.selected)
         const params = useParams();
         const case_id = params.case_id;
         const [case_data, setcase_data] = useState({})
@@ -51,7 +53,7 @@ import VisualPanel from '../components/visualPanel';
                 }
                 })
             
-        }, [case_id,isDone])
+        }, [case_id,isDone,selected])
 
         const toolrunner = (run_id) =>{
             const interval = setInterval(() => {

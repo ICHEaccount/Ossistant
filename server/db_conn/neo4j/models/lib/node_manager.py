@@ -13,7 +13,7 @@ class NodeManager:
         return False, None
 
     def get_node(self, data):
-        node = self.cls.nodes.first_or_none(**data)    
+        node = self.cls.nodes.first_or_none(**data)
         if node:
             return node
         else:

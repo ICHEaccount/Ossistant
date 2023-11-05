@@ -20,6 +20,7 @@ export const nodeSlice = createSlice({
         },
         clear: (state,action) =>{
             state.selected = null
+            state.view = "list"
         },
         viewChange: (state,action) =>{
             state.view = action.payload

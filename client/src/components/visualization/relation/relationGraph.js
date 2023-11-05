@@ -13,6 +13,7 @@ function RelationGraph(props) {
   const case_id = params.case_id;
   const isDone = props.isDone
   const dispatch = useDispatch()
+  const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
   useEffect(() => {
@@ -68,7 +69,7 @@ function RelationGraph(props) {
       }
     });
 
-  }, [isDone,visJSRef]);
+  }, [isDone,visJSRef,selected]);
 
   return (
       <><div ref={visJSRef} style={{ height: "400px", width: "900px" }}></div>
