@@ -60,7 +60,7 @@ function CaseCard(props) {
                 <Form  onSubmit={onUpdate} className='tw-pr-2'>
                     <Row>
                         <Col sm={11}>
-                            <Form.Control className="m-1 pr-2" size="sm"  value={caseName} defaultValue={data.case_name} onChange={(e)=> {setCaseName(e.target.value);}} placeholder='case name' />
+                            <Form.Control required className="m-1 pr-2" size="sm"  value={caseName} defaultValue={data.case_name} onChange={(e)=> {setCaseName(e.target.value);}} placeholder='case name' />
                         </Col>
                         <Col  className="d-flex align-items-center" sm={1}>
                             <Button type='submit' variant='light' size="sm"><Check/></Button>
@@ -69,7 +69,7 @@ function CaseCard(props) {
                     
                     <Row>
                         <Col className="m-1">
-                        <Form.Control size="sm" value={caseNumber} defaultValue={data.case_num} onChange={(e)=> {setCaseNumber(e.target.value);}} placeholder='case number' />
+                        <Form.Control size="sm"  value={caseNumber} defaultValue={data.case_num} onChange={(e)=> {setCaseNumber(e.target.value);}} placeholder='case number' />
                         </Col>
                         <Col className="m-1">
                         <Form.Control size="sm" type="text" value={investigator} defaultValue={data.investigator} onChange={(e)=> {setInvestigator(e.target.value);}} placeholder='investigator' />
