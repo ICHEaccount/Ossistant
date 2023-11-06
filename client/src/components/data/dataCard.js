@@ -162,10 +162,11 @@ const DataCard = (props) => {
                                     return(<Form.Group className="mb-1 px-1">
                                     <Form.Label className='ml-1'>{key+" "}
                                     <Button
-                                        disabled={!onEdit}
+                                        // disabled={!onEdit}
                                         variant="outline-secondary"
                                         onClick={(e) => {
                                         setlistProperty([...listProperty, '']);
+                                        setonEdit(true)
                                         }}
                                         >
                                         +
@@ -187,7 +188,7 @@ const DataCard = (props) => {
                                         />
                                         <Button
                                             variant="outline-danger"
-                                            disabled={!onEdit}
+                                            // disabled={!onEdit}
                                             onClick={(e) => {
                                             const newProperty = listProperty.filter((_, index) => index !== idx);
                                             setlistProperty(newProperty);
