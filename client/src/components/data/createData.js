@@ -12,7 +12,7 @@ const CreateData = (props) => {
     const {case_id} = useParams()
     const label = props.label
     const title = lbs[label].title
-    const [listProperty, setlistProperty] = useState([" "])
+    const [listProperty, setlistProperty] = useState([""])
     // const [label, setlabel] = useState("")
     const properties = lbs[label].properties
     const initialFormData = {};
@@ -74,7 +74,7 @@ const CreateData = (props) => {
                         const newProperty = [...listProperty];
                         newProperty[idx] = e.target.value;
                         setlistProperty(newProperty);
-                        updateFormValue(property, listProperty);
+                        updateFormValue(property, newProperty);
                         }}
                         />
                         

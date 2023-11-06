@@ -195,6 +195,7 @@ const DataCard = (props) => {
                                             const newProperty = listProperty.filter((_, index) => index !== idx);
                                             setlistProperty(newProperty);
                                             onChange(key, newProperty);
+                                            setonEdit(true)
                                             }}
                                         >
                                             -
