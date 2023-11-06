@@ -35,14 +35,17 @@ class NodeManager:
         node.save()
         return node
     
-    def update_node_properties(self, node_id, **kwargs):
+    def update_node_properties(self, node_id, return_node=False, **kwargs):
         try:
             node = self.cls.nodes.first_or_none(uid=node_id)
             if node:
                 for key, value in kwargs.items():
                     setattr(node, key, value)
                 node.save()
-                return True, "Success"
+                if return_node is True:
+                    return True, node
+                else: 
+                    return True, "Success"
             else:
                 return False, f"{self.cls.__name__} node did not exist"
         except Exception as e:
