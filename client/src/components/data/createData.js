@@ -53,10 +53,11 @@ const CreateData = (props) => {
     const formList = properties.map((property)=>{
         if(lbs[label].list.includes(property)){
             return(
-                <Form.Group className="mb-3" controlId={`${property}`}>
+                <Form.Group className="mb-1" controlId={`${property}`}>
                     <Form.Label>{property+" "}
                     <Button
-                        variant="secondary"
+                        size='sm'   
+                        variant="outline-success"
                         onClick={(e) => {
                         setlistProperty([...listProperty, '']);
                         }}
