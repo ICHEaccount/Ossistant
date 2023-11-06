@@ -163,7 +163,7 @@ const DataCard = (props) => {
                                     <Form.Label className='ml-1'>{key+" "}
                                     <Button
                                         // disabled={!onEdit}
-                                        variant="outline-secondary"
+                                        variant="outline-success"
                                         onClick={(e) => {
                                         setlistProperty([...listProperty, '']);
                                         setonEdit(true)
@@ -176,7 +176,7 @@ const DataCard = (props) => {
                                     {listProperty?.map((item, idx) => (
                                     <div key={idx} className="d-flex mb-1">
                                         <Form.Control
-                                        className='pr-1'
+                                        className='tw-rounded-r-none'
                                         value={item}
                                         disabled={!onEdit}
                                         onChange={(e) => {
@@ -187,6 +187,7 @@ const DataCard = (props) => {
                                         }}
                                         />
                                         <Button
+                                            className='tw-rounded-l-none'
                                             variant="outline-danger"
                                             // disabled={!onEdit}
                                             onClick={(e) => {
