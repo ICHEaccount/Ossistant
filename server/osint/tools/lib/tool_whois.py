@@ -74,6 +74,9 @@ def check_whois(case_id, run):
         ]
         RunModel.create_result(data=results_data, run_id=run.run_id)
         run.save()
+    elif run.status == 'completed':
+        with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
+            whois_search = json.load(report)
 
     final = RunModel.get_all_results(run_id=run.run_id)[1]
     whois_response = {
