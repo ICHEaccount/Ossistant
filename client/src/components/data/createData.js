@@ -12,6 +12,7 @@ const CreateData = (props) => {
     const {case_id} = useParams()
     const label = props.label
     const title = lbs[label].title
+    const [listProperty, setlistProperty] = useState([" "])
     // const [label, setlabel] = useState("")
     const properties = lbs[label].properties
     const initialFormData = {};
@@ -39,7 +40,7 @@ const CreateData = (props) => {
         await Axios.post('/data/createData',formData)
         .then((res)=>{
             console.log(res);
-            window.location.reload()
+            // window.location.reload()
         })
         .catch((error)=>{
             console.log(error);
@@ -49,7 +50,42 @@ const CreateData = (props) => {
     }
 
 
-    const formList = properties.map((property)=>(
+    const formList = properties.map((property)=>{
+        if(lbs[label].list.includes(property)){
+            return(
+                <Form.Group className="mb-3" controlId={`${property}`}>
+                    <Form.Label>{property+" "}
+                    <Button
+                        variant="secondary"
+                        onClick={(e) => {
+                        setlistProperty([...listProperty, '']);
+                        }}
+                        >
+                        +
+                    </Button>
+                    </Form.Label>
+                    
+                    {listProperty.map((item, idx) => (
+                    <div key={idx} className="d-flex mb-1">
+                        <Form.Control
+                        value={item}
+                        onChange={(e) => {
+                        const newProperty = [...listProperty];
+                        newProperty[idx] = e.target.value;
+                        setlistProperty(newProperty);
+                        updateFormValue(property, listProperty);
+                        }}
+                        />
+                        
+                    </div>
+                    ))}
+                    
+                </Form.Group>
+
+                
+            )
+        }
+        return(
         <InputGroup className='mb-1'>
                 <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
                 <Form.Control as={property==="note"?"textarea":"input"}
@@ -58,7 +94,9 @@ const CreateData = (props) => {
                 required={title===property}
                 />
         </InputGroup>
-    ))
+    )})
+
+
     return (
             <Form className='m-1' onSubmit={submitData}>
             {formList}
