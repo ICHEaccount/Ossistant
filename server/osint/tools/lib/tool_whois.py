@@ -59,20 +59,12 @@ def check_whois(case_id, run):
         else:
             regdate_response = whois_search.get("creation_date")
 
-        created = False
-
-        results_data = [
-            {
-                "result_id": "01",
-                "result": {
-                    "domain": domain_response,
-                    "regdate": regdate_response,
-                    "email": whois_search.get("admin_email")
-                },
-                "created": created
-            }
-        ]
-        RunModel.create_result(data=results_data, run_id=run.run_id)
+        inside = {
+            "domain": domain_response,
+            "regdate": regdate_response,
+            "email": whois_search.get("admin_email")
+        }
+        RunModel.create_result(data=inside, run_id=run.run_id)
         run.save()
     elif run.status == 'completed':
         with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
