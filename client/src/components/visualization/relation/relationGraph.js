@@ -6,8 +6,11 @@ import options from './options';
 import NodeInfoCard from './nodeInfoCard';
 import { useSelector, useDispatch } from 'react-redux'
 import {select} from '../../../reducers/node'
+import { useParams } from 'react-router-dom';
 
 function RelationGraph(props) {
+  const params = useParams();
+  const case_id = params.case_id;
   const isDone = props.isDone
   const dispatch = useDispatch()
   const selected = useSelector(state => state.node.selected)
@@ -21,7 +24,7 @@ function RelationGraph(props) {
       edges: new DataSet(),
     };
 
-    axios.get('/graph/node').then((response) => {
+    axios.get(`/graph/node/${case_id}`).then((response) => {
       const graphData = response.data;
       const addedNodes = new Set();
       const addedEdges = new Set();

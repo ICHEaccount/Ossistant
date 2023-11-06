@@ -13,6 +13,7 @@ import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import {select,clear,viewChange} from '../../reducers/node'
 import  Axios  from 'axios';
+import { ListGroup } from 'react-bootstrap';
 
 const DataCard = (props) => {
     const selected = useSelector(state => state.node.selected)
@@ -24,6 +25,7 @@ const DataCard = (props) => {
     const [onEdit, setonEdit] = useState(false)
     const [nodes, setnodes] = useState(props.nodes)
     const [formData, setformData] = useState(selected?selected.property:{})
+    const [listProperty, setlistProperty] = useState(formData?formData[lbs[label].list]:[])
 
     const editData = (e)=>{
         e.preventDefault()
@@ -154,6 +156,55 @@ const DataCard = (props) => {
                                     onChange={(e)=>onChange(key,e.target.value)}
                                     as="textarea" />
                                     </InputGroup>)
+                                }
+                                if(lbs[label].list.includes(key)){
+                                    // setlistProperty(formData[key])
+                                    return(<Form.Group className="mb-1 px-1">
+                                    <Form.Label className='ml-1'>{key+" "}
+                                    <Button
+                                        size='sm'
+                                        // disabled={!onEdit}
+                                        variant="outline-success"
+                                        onClick={(e) => {
+                                        setlistProperty([...listProperty, '']);
+                                        setonEdit(true)
+                                        }}
+                                        >
+                                        +
+                                    </Button>
+                                    </Form.Label>
+                                    
+                                    {listProperty?.map((item, idx) => (
+                                    <div key={idx} className="d-flex mb-1">
+                                        <Form.Control
+                                        className='tw-rounded-r-none'
+                                        value={item}
+                                        disabled={!onEdit}
+                                        onChange={(e) => {
+                                        const newProperty = [...listProperty];
+                                        newProperty[idx] = e.target.value;
+                                        setlistProperty(newProperty);
+                                        onChange(key, newProperty);
+                                        }}
+                                        />
+                                        <Button
+                                            className='tw-rounded-l-none'
+                                            variant="outline-danger"
+                                            // disabled={!onEdit}
+                                            onClick={(e) => {
+                                            const newProperty = listProperty.filter((_, index) => index !== idx);
+                                            setlistProperty(newProperty);
+                                            onChange(key, newProperty);
+                                            setonEdit(true)
+                                            }}
+                                        >
+                                            -
+                                        </Button>
+                                    </div>
+                                    ))}
+                                    
+                                </Form.Group>)
+                                    
                                 }
                                 return(
                                     <InputGroup className='mb-1 px-1'>
