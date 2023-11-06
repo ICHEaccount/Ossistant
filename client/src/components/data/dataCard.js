@@ -25,6 +25,7 @@ const DataCard = (props) => {
     const [onEdit, setonEdit] = useState(false)
     const [nodes, setnodes] = useState(props.nodes)
     const [formData, setformData] = useState(selected?selected.property:{})
+    const [listProperty, setlistProperty] = useState(formData?formData[lbs[label].list]:[])
 
     const editData = (e)=>{
         e.preventDefault()
@@ -157,16 +158,48 @@ const DataCard = (props) => {
                                     </InputGroup>)
                                 }
                                 if(lbs[label].list.includes(key)){
-                                    return(<InputGroup>
-                                        <InputGroup.Text id='note'>{key}</InputGroup.Text>
-                                        <ListGroup className='mb-1 px-1'>
-                                        {
-                                            formData[key].map((item)=>{
-                                                return(<ListGroup.Item>{item}</ListGroup.Item>)
-                                            })
-                                        }
-                                        </ListGroup>
-                                    </InputGroup>)
+                                    // setlistProperty(formData[key])
+                                    return(<Form.Group className="mb-1 px-1">
+                                    <Form.Label className='ml-1'>{key+" "}
+                                    <Button
+                                        disabled={!onEdit}
+                                        variant="outline-secondary"
+                                        onClick={(e) => {
+                                        setlistProperty([...listProperty, '']);
+                                        }}
+                                        >
+                                        +
+                                    </Button>
+                                    </Form.Label>
+                                    
+                                    {listProperty?.map((item, idx) => (
+                                    <div key={idx} className="d-flex mb-1">
+                                        <Form.Control
+                                        className='pr-1'
+                                        value={item}
+                                        disabled={!onEdit}
+                                        onChange={(e) => {
+                                        const newProperty = [...listProperty];
+                                        newProperty[idx] = e.target.value;
+                                        setlistProperty(newProperty);
+                                        onChange(key, newProperty);
+                                        }}
+                                        />
+                                        <Button
+                                            variant="outline-danger"
+                                            disabled={!onEdit}
+                                            onClick={(e) => {
+                                            const newProperty = listProperty.filter((_, index) => index !== idx);
+                                            setlistProperty(newProperty);
+                                            onChange(key, newProperty);
+                                            }}
+                                        >
+                                            -
+                                        </Button>
+                                    </div>
+                                    ))}
+                                    
+                                </Form.Group>)
                                     
                                 }
                                 return(
