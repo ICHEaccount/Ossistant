@@ -13,6 +13,7 @@ import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import {select,clear,viewChange} from '../../reducers/node'
 import  Axios  from 'axios';
+import { ListGroup } from 'react-bootstrap';
 
 const DataCard = (props) => {
     const selected = useSelector(state => state.node.selected)
@@ -154,6 +155,19 @@ const DataCard = (props) => {
                                     onChange={(e)=>onChange(key,e.target.value)}
                                     as="textarea" />
                                     </InputGroup>)
+                                }
+                                if(lbs[label].list.includes(key)){
+                                    return(<InputGroup>
+                                        <InputGroup.Text id='note'>{key}</InputGroup.Text>
+                                        <ListGroup className='mb-1 px-1'>
+                                        {
+                                            formData[key].map((item)=>{
+                                                return(<ListGroup.Item>{item}</ListGroup.Item>)
+                                            })
+                                        }
+                                        </ListGroup>
+                                    </InputGroup>)
+                                    
                                 }
                                 return(
                                     <InputGroup className='mb-1 px-1'>
