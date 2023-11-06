@@ -7,7 +7,7 @@ class NodeManager:
         self.cls = cls
 
     def check_node(self, data):
-        node = self.cls.nodes.get_or_none(**data)
+        node = self.cls.nodes.first_or_none(**data)
         if node is not None:
             return True, node
         return False, None
@@ -24,7 +24,7 @@ class NodeManager:
         return nodes
     
     def get_uid(self, data):
-        node = self.cls.nodes.get_or_none(**data)
+        node = self.cls.nodes.first_or_none(**data)
         if node:
             return node.uid
         else:
@@ -37,7 +37,7 @@ class NodeManager:
     
     def update_node_properties(self, node_id, **kwargs):
         try:
-            node = self.cls.nodes.get_or_none(uid=node_id)
+            node = self.cls.nodes.first_or_none(uid=node_id)
             if node:
                 for key, value in kwargs.items():
                     setattr(node, key, value)
@@ -50,7 +50,7 @@ class NodeManager:
     
 
     def delete_node(self, node_id):
-        node = self.cls.nodes.get_or_none(uid=node_id)
+        node = self.cls.nodes.first_or_none(uid=node_id)
         if node:
             for rel in node.relationships.all():
                 rel.delete()        
@@ -89,6 +89,9 @@ class NodeManager:
         except self.cls.DoesNotExist as e:
             return False, str(e)
     
+    def get_node_name(self):
+        return self.cls.__name__
+    
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         setattr(self.cls, 'create_node', self.create_node)
         setattr(self.cls, 'get_uid', self.get_uid)
@@ -99,5 +102,6 @@ class NodeManager:
         setattr(self.cls, 'get_all_nodes_list', self.get_all_nodes_list)
         setattr(self.cls, 'check_node',self.check_node)
         setattr(self.cls, 'node_exists_url',self.node_exists_url)
+        setattr(self.cls, 'get_node_name', self.get_node_name)
         return self.cls 
     
