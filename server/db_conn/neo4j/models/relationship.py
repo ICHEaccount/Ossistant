@@ -87,9 +87,31 @@ EXTENSION_RELATIONS = {
 
 
 class Relationship:
+
     @classmethod
-    def create_extension_relationship(cls, from_node, to_node,):
-        pass
+    def create_relationship_by_uid(cls, from_uid, to_uid):
+        if not from_uid or not to_uid:
+            return False, 'uid did not exist'
+        
+        query = "MATCH (n)-[]-(m) WHERE n.uid = $from_uid SET m.uid = $to_uid RETURN labels(n), labels(m)"
+        try:
+            results, meta = db.cypher_query(query,{'from_uid':from_uid,'to_uid':to_uid})
+            if results:
+                from_label = results[0][0][0]
+                to_label = results[0][1][0]
+                if not from_label or not to_label:
+                    return False, 'Node did not Exist'
+                # get node 
+                from_node = NODE_LIST[from_label].get_node({"uid":from_uid})
+                to_node = NODE_LIST[to_label].get_node({"uid":to_uid})
+                if from_node and to_node:
+                    from_node.rel_to.connect(to_node,{'label':'NONE'})
+                else:
+                    return False, 'Node did not Exist'
+                return True, 'Success'
+        except Exception as e:
+            return False, f"An error occurred: {e}"
+        
 
     @classmethod
     def create_auto_relationship(cls, node, node_label):

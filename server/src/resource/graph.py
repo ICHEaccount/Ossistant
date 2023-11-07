@@ -48,13 +48,6 @@ def get_node_properties_by_uid(uid):
     else:
         return None
 
-# {"node_id":"1111", 
-        # "property": {
-        # //"property":"value" 형식. value 존재하지 않는 property는 안 보내도 됨
-        # "domain":"puritipo.com",
-        # "regDate": "2023-09-05",
-        # }
-
 
 @bp.route("/node/<string:uid>",methods=["GET"])
 def test(uid):
@@ -117,3 +110,15 @@ def modify_node():
         return jsonify({'error':'Fail to modify the node'}), 500
     return jsonify({'msg':'success'}), 200
 
+
+@bp.route('/rel/create', methods=["POST"])
+def create_relationship():
+    res = request.get_json()
+    if not res:
+        return jsonify({'error':'Invalid request data'}), 404
+    
+    status,msg = Relationship.create_relationship_by_uid(res.get("from"),res.get("to"))
+    if status is True:
+        return jsonify({'Msg':msg}),200
+    else:
+        return jsonify({'Error':msg}),500

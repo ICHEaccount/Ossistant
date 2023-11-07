@@ -3,11 +3,9 @@ import { Network, DataSet } from 'vis-network/standalone';
 import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
-import NodeInfoCard from './nodeInfoCard';
 import { useSelector, useDispatch } from 'react-redux'
 import node, {select} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
-import EdgeInfoCard from './EdgeInfoCard';
 
 function RelationGraph(props) {
   const params = useParams();
@@ -18,7 +16,7 @@ function RelationGraph(props) {
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
   const [selectedEdge, setSelectedEdge] = useState(null);
-
+  
   useEffect(() => {
     const data = {
       nodes: new DataSet(),
@@ -58,19 +56,43 @@ function RelationGraph(props) {
       });
     });
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
+    const controlNodeDragEndHandler = function (dragInfo) {
+      // console.log(dragInfo);
+      const from_uid = dragInfo.controlEdge.from;
+      const to_uid = dragInfo.controlEdge.to;
+    
+      if (from_uid && to_uid) {
+        const formData = {
+          "from":from_uid,
+          "to":to_uid
+        }
+        console.log(formData);
+        axios.post("/graph/rel/create",formData).then((response) => {
+          const res = response.data;
+          console.log(res);
+        })
+        console.log("finish");
+        network.off("controlNodeDragEnd", controlNodeDragEndHandler); 
+      }
+    
+    };
+    
     network.on('selectNode', (params) => {
       const { nodes } = params;
       if (nodes.length > 0) {
         axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
-          const resData = response.data;
-          console.log(resData);
-        })
-        setSelectedNode(nodes[0]);
-      } else {
-        setSelectedNode(null);
-      }
+            const resData = response.data;
+            console.log(resData);
+          });
+            setSelectedNode(nodes[0]);
+          } else {
+            setSelectedNode(null);
+          }
+      network.addEdgeMode();
+      network.on("controlNodeDragEnd", controlNodeDragEndHandler);
     });
 
+    
   }, [isDone,visJSRef,selected]);
 
   return (
