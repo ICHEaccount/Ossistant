@@ -9,7 +9,7 @@ const options = {
     addEdge: true,
     editNode: false,
     editEdge: true,
-    deleteNode: true,
+    deleteNode: false,
     deleteEdge: true
   },
   groups: {

@@ -5,7 +5,7 @@ from db_conn.neo4j.models import *
 
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
-@bp.route("/node/<string:case_id>", methods=["GET"])
+@bp.route("/nodes/<string:case_id>", methods=["GET"])
 def get_neo4j_data(case_id):
     if not case_id:
         jsonify({'Error':'case_id did not exist'}), 404
@@ -41,29 +41,38 @@ def get_node_properties_by_uid(uid):
     query = f"MATCH (n) WHERE n.uid = '{uid}' RETURN labels(n), properties(n)"
     results, _ = db.cypher_query(query)
     preprocessed_data = dict()
-    preprocessed_data['type'] = results[0][0][0] if results[0][0] else None
+    preprocessed_data['label'] = results[0][0][0] if results[0][0] else None
     preprocessed_data.update(results[0][1])
     if results:
         return preprocessed_data
     else:
         return None
 
-@bp.route("/node/<string:uid>", methods=["GET"])
-def get_node_properties(uid):
+# {"node_id":"1111", 
+        # "property": {
+        # //"property":"value" 형식. value 존재하지 않는 property는 안 보내도 됨
+        # "domain":"puritipo.com",
+        # "regDate": "2023-09-05",
+        # }
+
+
+@bp.route("/node/<string:uid>",methods=["GET"])
+def test(uid):
     if uid:
         result = get_node_properties_by_uid(uid)
-        # Delete unnecessary value 
-        if 'case_id' in result:
-            del(result['case_id'])
-        if 'label' in result:
-            del(result['label'])
-        if result != None:
-            return jsonify(result)
-        else:
-            return jsonify({'error': result}), 404
-    else:
-        return jsonify({'error': 'UID parameter is missing.'}), 400
+        if result:
+            keys_to_remove = ['case_id', 'label', 'uid', 'url']
+            for key in keys_to_remove:
+                if key in result:
+                    del result[key]
 
+            if result:
+                data = {'node_id': uid, 'property': result}
+                return jsonify(data), 200
+        else:
+            return jsonify({'Error':'Node did not exist'}), 500
+    else:
+        return jsonify({'Error': f'{uid} did not exist'}), 404
 
 @bp.route("/node/modify", methods=['POST'])
 def modify_node():
