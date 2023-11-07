@@ -154,4 +154,23 @@ class CaseModel(db.DynamicDocument):
         except Exception as e:
             print(f'{cls.col_name} : Run Creation Error: {e}')
             return False
-              
+
+    @classmethod
+    def get_all_runs(cls, case_id):
+        run_list = []
+        case_obj = cls.objects(case_id=case_id).first()
+        if not case_obj:
+            return None, 'Case not exist'
+
+        for run_ref in case_obj.runs:
+            run = RunModel.objects(run_id=run_ref.run_id).first()
+            if run:
+                run_list.append({
+                    "run_id": run.run_id,
+                    "status": run.status,
+                    "runtime": run.runtime,
+                    "tool_id": run.tool_id,
+                    "input_value": run.input_value,
+                    "results": RunModel.get_all_results(run_id=run.run_id)[1]
+                })
+        return True, run_list

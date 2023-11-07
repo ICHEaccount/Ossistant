@@ -28,8 +28,9 @@ def run_whois(run):
         return message
 
 
-def check_whois(case_id, run):
+def check_whois(case_id, run_id):
     regdate_response = None
+    run = RunModel.objects.get(_id=run_id)
     if not run.status == 'completed':
         try:
             with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
