@@ -3,6 +3,15 @@ import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
 
 const options = {
+  manipulation: {
+    enabled: true,
+    addNode: false,
+    addEdge: true,
+    editNode: false,
+    editEdge: true,
+    deleteNode: true,
+    deleteEdge: true
+  },
   groups: {
     SurfaceUser: {
       shape: 'image',
@@ -16,7 +25,7 @@ const options = {
         drawThreshold: 1,
       },
       font: {
-        size: 12, // Adjust font size as needed
+        size: 12, 
       },
     },
     Post: {
