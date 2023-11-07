@@ -20,7 +20,7 @@ def create_node():
     
     keys = list(req['keyword'].keys())
     req_arg = {keys[0]: req['keyword'][keys[0]]}
-    req_arg['case_id'] = 'e28507d2-7ada-11ee-8aef-0242ac190006' # Hardcoded
+    req_arg['case_id'] = req['case_id']
     req_arg['url'] = req['url']
 
     # create node 
