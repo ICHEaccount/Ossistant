@@ -8,6 +8,8 @@ import DataPanel from '../components/data/dataPanel';
 import VisualPanel from '../components/visualPanel';
 import { useSelector } from 'react-redux';
 import RunToast from '../components/run/runToast';
+import { Button, Toast, ToastContainer } from 'react-bootstrap';
+import BetaToast from '../components/betaToast';
 
 
     const Case = () => {
@@ -107,7 +109,7 @@ import RunToast from '../components/run/runToast';
                 </Col>
             </Row>
             </Container>}
-            
+            <BetaToast/>
             
         </div>
         )
