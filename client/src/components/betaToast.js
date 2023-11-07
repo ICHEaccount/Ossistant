@@ -14,7 +14,7 @@ const BetaToast = () => {
         Axios.get(`/case/deleteCase/${case_id}`)
         .then((res)=>{
             console.log('res',res);
-            navigate(`/`)
+            window.location.href = "/"
         })
         .catch((err)=>{
             console.log(err);
