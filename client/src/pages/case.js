@@ -5,9 +5,9 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
 import DataPanel from '../components/data/dataPanel';
-import ToolResultBanner from '../components/tool/toolResultBanner';
 import VisualPanel from '../components/visualPanel';
 import { useSelector } from 'react-redux';
+import RunToast from '../components/run/runToast';
 
 
     const Case = () => {
@@ -16,18 +16,19 @@ import { useSelector } from 'react-redux';
         const case_id = params.case_id;
         const [case_data, setcase_data] = useState({})
         const [isLoad, setisLoad] = useState(false)
-        const [toolState, settoolState] = useState("none")
-        // const [toolResult, settoolResult] = useState([])
-        const [toolError, settoolError] = useState({})
+        const [toolResult, settoolResult] = useState({})
+        const [newResult, setnewResult] = useState({})
         const [isDone, setisDone] = useState(false)
         const [newData, setnewData] = useState([])
+        const [isnewRun, setisnewRun] = useState(false)
 
         useEffect(() => {
             Axios.get(`/data/getData/${case_id}`)
                 .then((res)=>{
                 if(res.data){
                     // console.log(res.data);
-                    if(isDone){const newDataList = {};
+                    if(isDone){
+                    const newDataList = {};
                     Object.keys(res.data.data).forEach((label) => {
                         if(case_data[label]){
                             res.data.data[label].forEach((item) => {
@@ -55,30 +56,42 @@ import { useSelector } from 'react-redux';
             
         }, [case_id,isDone,selected])
 
-        const toolrunner = (run_id) =>{
+        useEffect(() => {
             const interval = setInterval(() => {
-                Axios.get(`/tools/getToolState/${run_id}`)
-                    .then(response => {
-                    if (response.data.state === 'completed') {
-                        clearInterval(interval); // 작업이 완료되면 인터벌 해제
-                        // settoolResult(response.data.result);
-                        settoolState('completed');
-                        setisDone(true);
-                    } else if (response.data.state === 'running') {
-                        settoolState('running');
-                    } else {
-                        clearInterval(interval);
-                        settoolState('unknown');
-                    }
+                Axios.get(`/tools/getToolState/${case_id}`)
+                    .then((res) => {
+                        const newResultList={}
+                        Object.keys(res.data).forEach((status)=>{
+                            const statusData = res.data[status]
+                            if(toolResult[status]){  
+                                statusData.forEach((item) => {
+                                    newResultList[status]=[]
+                                    const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
+                                    if (!isOldData) {
+                                        newResultList[status].push(item);
+                                    }
+                                })
+                            } else {
+                                newResultList[status]=res.data.data[status]
+                            }
+                        })
+                        setnewResult(newResultList)
+                        settoolResult(res.data)
+                        //new completed run exists
+                        if(newResultList.completed.length){
+                            setisDone(true);
+                        }
+                        if(newResultList.ready.length===0 && newResultList.running.length===0){
+                            clearInterval(interval);
+                        }
                     })
                     .catch(error => {
-                    clearInterval(interval);
-                    settoolState('error');
-                    setisDone(true);
-                    settoolError(error)
+                        clearInterval(interval);
                     });
             }, 1000); // 1초마다 확인
-        }
+
+        }, [isnewRun])
+        
 
 
         return (
@@ -86,8 +99,8 @@ import { useSelector } from 'react-redux';
             {isLoad&&<Container className='mt-3 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
-                    <ToolResultBanner toolState={toolState} error={toolError}/>
-                    <DataPanel case_id={case_id} caseData={case_data} toolrunner={toolrunner} newData={newData}/>
+                    <RunToast newResult={newResult.length?newResult:null}/>
+                    <DataPanel case_id={case_id} caseData={case_data} toolResult={toolResult} newData={newData} newRun={setisnewRun}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
                     <VisualPanel isDone={isDone}/>

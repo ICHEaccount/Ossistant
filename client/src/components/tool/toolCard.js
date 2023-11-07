@@ -8,7 +8,6 @@ import Axios from 'axios';
 const ToolCard = (props) => {
     const tools = props.labelTools;
     const labelData = props.labelData;
-    const toolState = props.toolState;
     const case_id = props.case_id;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [selectedItems, setSelectedItems] = useState({});
@@ -30,10 +29,6 @@ const ToolCard = (props) => {
 
     const runTool = (e) => {
         e.preventDefault();
-        if(toolState==="running"){
-            setshow(!show)
-            return
-        }
 
         if (Object.keys(selectedItems).length === 0) {
             setshow(!show)
@@ -68,7 +63,7 @@ const ToolCard = (props) => {
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {
                 console.log(response.data);
-                props.toolrunner(response.data.run_id)
+                props.newRun(true)
             })
             .catch((error) => {
                 console.error(error);
@@ -137,18 +132,7 @@ const ToolCard = (props) => {
                                         })}
                                     </Form.Group>
                                 ))}
-                                {toolState==="running"?(<Col md={{ span: 3, offset: 9 }}>
-                                    <Button variant="outline-dark" ref={runButton} type="submit">
-                                        <Play />
-                                    </Button>
-                                    <Overlay target={runButton.current} show={show} placement="right">
-                                    {(props) => (
-                                        <Tooltip id="overlay-example" {...props}>
-                                        Tool Is Already Running
-                                        </Tooltip>
-                                    )}
-                                    </Overlay>
-                                </Col>):(<Col md={{ span: 3, offset: 9 }}>
+                                <Col md={{ span: 3, offset: 9 }}>
                                     <Button variant="outline-dark" ref={runButton} type="submit" >
                                         <Play />
                                     </Button>
@@ -159,7 +143,7 @@ const ToolCard = (props) => {
                                         </Tooltip>
                                     )}
                                     </Overlay>):null}
-                                </Col>)}
+                                </Col>
                                 
                             </Form>
                         ) : "Unavailable"}
