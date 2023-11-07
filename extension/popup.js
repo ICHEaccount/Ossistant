@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let createButton = document.getElementById('createCaseBtn');
 
     createButton.addEventListener('click', function(event) {
-        event.preventDefault();  // 폼의 기본 제출 동작을 막음
+        event.preventDefault();  
 
         let caseData = {
             case_name: document.getElementById('caseName').value,
@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
             description: document.getElementById('description').value
         };
 
-        // 새 사례 생성을 위한 POST 요청
         fetch('http://127.0.0.1:5000/case/createCase', {
             method: 'POST',
             headers: {
@@ -20,24 +19,22 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(caseData),
         })
-        .then(response => {
-            if(response.ok) { 
-                console.info("Case created successfully");
-                return response.json();
-            } else {
-                console.error('Failed to create case: ', response.status);
-                return Promise.reject('Server responded with an error: ' + response.status);
-            }
-        })
+        .then(response => response.json())  
         .then(data => {
-            console.log('Created Case:', data);
+            if(data && data.case_id) {  
+                console.info("Case created successfully, ID:", data.case_id);
+                chrome.runtime.sendMessage({ caseId: data.case_id }, function(response) {
+                    console.log(response); 
+                });
+                window.open(`http://127.0.0.1:3000/casepage/${data.case_id}`, '_blank');  
+            } else {
+                throw new Error('Case ID not returned from server');
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
         });
-
-        // 필요에 따라 새 창을 열거나, 다른 작업을 수행
-        window.open('http://127.0.0.1:3000', '_blank');
+        
     });
 
     // 'Search Case' 입력 
@@ -74,6 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         let selectedCaseId = searchInput.dataset.caseId;
         if (selectedCaseId) {
+            chrome.runtime.sendMessage({ caseId: selectedCaseId }, function(response) {
+                console.log(selectedCaseId); 
+            });
             window.open('http://127.0.0.1:3000/casepage/' + selectedCaseId, '_blank');
         } else {
             alert('케이스를 선택해주세요.');
