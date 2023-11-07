@@ -31,6 +31,17 @@ def check_json_not_null(input_json):
     return True
 
 
+@bp.route('/getToolList', methods=['GET'])
+def tool_list():
+    try:
+        with open('./tools/tool_list.json') as data:
+            response = json.load(data)
+    except FileNotFoundError as e:
+        response = f'{e}. File cannot be found.'
+        return jsonify({'Message': response}), 500
+    return jsonify(response), 200
+
+
 @bp.route('/runTools', methods=['POST'])
 def run_tool():
     # check requested json
