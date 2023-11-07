@@ -74,7 +74,7 @@ const Toolbar = () => {
 
 
     return (
-    <Navbar expand="lg" className="tw-bg-white justify-content-between">
+    <Navbar expand="lg" className="tw-bg-bright-peach tw-border-b-peach justify-content-between">
         <Container>
         <Navbar.Brand href="/" className='tw-font-bold'>
             <img
