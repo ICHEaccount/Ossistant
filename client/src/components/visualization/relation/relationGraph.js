@@ -3,11 +3,9 @@ import { Network, DataSet } from 'vis-network/standalone';
 import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
-import NodeInfoCard from './nodeInfoCard';
 import { useSelector, useDispatch } from 'react-redux'
 import node, {select} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
-import EdgeInfoCard from './EdgeInfoCard';
 
 function RelationGraph(props) {
   const params = useParams();
