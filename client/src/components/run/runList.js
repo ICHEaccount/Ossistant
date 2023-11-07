@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { Axios } from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Tab } from 'react-bootstrap';
 import Tabs from 'react-bootstrap/Tabs';
@@ -59,16 +59,12 @@ const RunList = (props) => {
     const case_id = props.case_id
     const status = ['ready','running',"completed","error"]
     const [runList, setrunList] = useState(dummy)
-
-    // useEffect(() => {
-    //     axios.get(`/tool/getRunList/${case_id}`)
-    //     .then((res)=>{
-    //         setrunList(res.data)
-    //     })
-    //     .catch((err)=>{
-    //         console.log(err);
-    //     })
-    // }, [])
+    const [oldResults, setoldResults] = useState({
+        "ready":[],
+        "running":[],
+        "completed":[],
+        "error":[]
+    })
     
 
     const runCards = status.map((status)=>{

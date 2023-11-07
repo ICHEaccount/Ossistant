@@ -54,7 +54,7 @@ const ToolList = (props) => {
             return <Accordion.Item eventKey={label}>
                 <Accordion.Header>{label}</Accordion.Header>
                 <Accordion.Body className='tw-mx-[-25px] tw-my-[-10px]'>
-                <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
+                <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} newRun={props.newRun}/>
                 </Accordion.Body>
                 </Accordion.Item>
         })
@@ -65,25 +65,6 @@ const ToolList = (props) => {
         </Tab>
     })
     
-
-    // const toolList=labels.map((label)=>{
-    //     if(Object.keys(caseData).length===0) return (
-    //         <Tab eventKey={label} title={label}>
-    //             <p className='tw-text-center tw-text-lg'>No Data Yet</p>
-    //         {/* <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/> */}
-    //         </Tab>
-    //         )
-    //     const labelTools = tools[label]
-    //     // console.log(labelTools);
-    //     // if(labelTools!==undefined) console.log(labelTools);
-    //     return (
-    //         <Tab eventKey={label} title={label}>
-    //         <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
-    //         </Tab>
-    //         )
-            
-    
-    // })
 
 
     return (
