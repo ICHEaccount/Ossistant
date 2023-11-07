@@ -5,8 +5,9 @@ import axios from 'axios';
 import options from './options'; 
 import NodeInfoCard from './nodeInfoCard';
 import { useSelector, useDispatch } from 'react-redux'
-import {select} from '../../../reducers/node'
+import node, {select} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
+import EdgeInfoCard from './EdgeInfoCard';
 
 function RelationGraph(props) {
   const params = useParams();
@@ -16,15 +17,15 @@ function RelationGraph(props) {
   const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
-  useEffect(() => {
-    // const container = document.getElementById('graph-container');
+  const [selectedEdge, setSelectedEdge] = useState(null);
 
+  useEffect(() => {
     const data = {
       nodes: new DataSet(),
       edges: new DataSet(),
     };
 
-    axios.get(`/graph/node/${case_id}`).then((response) => {
+    axios.get(`/graph/nodes/${case_id}`).then((response) => {
       const graphData = response.data;
       const addedNodes = new Set();
       const addedEdges = new Set();
@@ -49,7 +50,7 @@ function RelationGraph(props) {
               id: relationshipId,
               from: fromNodeId,
               to: toNodeId,
-              label: item.r.type,
+              label: item.r.properties.label,
             });
             addedEdges.add(relationshipId);
           }
@@ -60,9 +61,10 @@ function RelationGraph(props) {
     network.on('selectNode', (params) => {
       const { nodes } = params;
       if (nodes.length > 0) {
-        // to use redux, pass the node info and its label to select({node,label})
-        // then datapanel will automatically show user the info of the selected node
-        // dispatch(select(res.data))
+        axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
+          const resData = response.data;
+          console.log(resData);
+        })
         setSelectedNode(nodes[0]);
       } else {
         setSelectedNode(null);
@@ -72,8 +74,8 @@ function RelationGraph(props) {
   }, [isDone,visJSRef,selected]);
 
   return (
-      <><div ref={visJSRef} style={{ height: "400px", width: "900px" }}></div>
-      <NodeInfoCard selectedNode={selectedNode} />
+      <><div ref={visJSRef} style={{ height: "400px", width: "900px", position: 'relative'}}></div>
+
       </>
   );
 }

@@ -47,5 +47,46 @@ def create_node():
     
     
 
+@bp.route('/snapshot', methods=['POST'])
+def take_snapshot():
+    req = request.get_json()
+    if not req:
+        return jsonify({'Error':'Invalid request'}), 404
+    
+    try:
+        url = req.get('url')
+        case_id = req.get('case_id')
+        data = req.get('data')
 
+        node_dict = dict()
+
+        # Create Node 
+        for data_node in data:
+            req_label = data_node['label']
+            keyword = data_node.get('keyword')
+            if keyword:
+                keyword['url'] = url
+                keyword['case_id'] = case_id
+                node = NODE_LIST[req_label].create_node(keyword)
+                node_dict[NODE_LIST[req_label].get_node_name()] = node
+
+        # Create Relationship 
+        if 'Post' in node_dict:
+            post_node = node_dict['Post']
+
+            for key, rels in EXTENSION_RELATIONS.items():
+                if key in node_dict:
+                    pos = rels['pos']
+                    if pos == "to":
+                        post_node.rel_to.connect(node_dict[key], {'label': rels['label']})
+                    else:
+                        node_dict[key].rel_to.connect(post_node, {'label': rels['label']})
+
+        return jsonify({'Message': 'Success'}), 200
+    except KeyError as e:
+        return jsonify({'Error': f'KeyError: {str(e)}'}), 400
+
+    except Exception as e:
+        return jsonify({'Error': f'Error: {str(e)}'}), 500
+    
 

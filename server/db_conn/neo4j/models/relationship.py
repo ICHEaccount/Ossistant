@@ -67,37 +67,21 @@ AUTO_RELATIONS = {
 }
 
 EXTENSION_RELATIONS = {
-    "surface":{
-        "Post":{
-            "SurfaceUser":{
-                "pos":"from",
-                "label":"CONTAIN"
-            },
-            "Email": {
-                "post":"to",
-                "label":"HAS"
-            },
-            "Phone": {
-                "post":"to",
-                "label":"HAS"
-            }
-        }
+    "SurfaceUser":{
+        "pos":"from",
+        "label":"CONTAIN"
     },
-    "dark":{
-        "Post":{
-            "DarkUser":{
-                "pos":"from",
-                "label":"CONTAIN"
-            },
-            "Email": {
-                "post":"to",
-                "label":"HAS"
-            },
-            "Phone": {
-                "post":"to",
-                "label":"HAS"
-            }
-        }
+    "Email": {
+        "post":"to",
+        "label":"HAS"
+    },
+    "Phone": {
+        "post":"to",
+        "label":"HAS"
+    },
+    "DarkUser":{
+        "pos":"from",
+        "label":"CONTAIN"
     }
 }
 
