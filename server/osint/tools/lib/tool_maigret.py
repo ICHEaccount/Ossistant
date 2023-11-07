@@ -59,7 +59,8 @@ def report_maigret(run):  # status is COMPLETED
     return maigret_response
 
 
-def check_maigret(run):
+def check_maigret(run_id):
+    run = RunModel.objects.get(_id=run_id)
     if run.status == 'ready':
         message = 'Run the tool first.'
         return message
