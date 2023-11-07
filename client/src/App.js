@@ -4,6 +4,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Toolbar from './components/toolbar';
 import Main from './pages/main.js';
 import Case from './pages/case';
+import Footer from './components/footer.js';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Main/>}/>
           <Route path="/casepage/:case_id" element={<Case/>}/>
         </Routes>
+        <Footer/>
       </BrowserRouter>
       
     </div>
