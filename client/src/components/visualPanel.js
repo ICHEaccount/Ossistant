@@ -1,7 +1,8 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import RelationGraph from './visualization/relation/relationGraph'
-import Timeline from './visualization/timeline/timeline'
+import Timeline from './visualization/timeline/domainTimeline'
+//import Timeline from './visualization/timeline/timeline'
 
 const VisualPanel = (props) => {
     const isDone = props.isDone
