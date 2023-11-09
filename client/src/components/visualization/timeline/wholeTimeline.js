@@ -1,13 +1,3 @@
-//import React from 'react'
-//
-//const WholeTimeline = () => {
-//  return (
-//    <div>WholeTimeline</div>
-//  )
-//}
-//
-//export default WholeTimeline
-
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
@@ -143,7 +133,8 @@ const WholeTimeline = (props) => {
     }, [isDone]);
 
     const options = {
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
+        aspectRatio: 3,
         showLine: false,
         scales: {
             x: {
@@ -185,17 +176,10 @@ const WholeTimeline = (props) => {
                 },
             },
         },
-        layout: {
-            padding: {
-            bottom: 0 // 그래프 아래에 여유 공간 추가
-            }
-        }
     };
 
     return (
-        <div>
-            <Line options={options} data={{ datasets }} style={{ height: "200px", width: "840px" }} />
-        </div>
+            <Line options={options} data={{ datasets }} height={null} width={null} />
     );
 }
 

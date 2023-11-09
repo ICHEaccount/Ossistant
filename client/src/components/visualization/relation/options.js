@@ -3,15 +3,15 @@ import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
 
 const options = {
-  manipulation: {
-    enabled: true,
-    addNode: false,
-    addEdge: true,
-    editNode: false,
-    editEdge: true,
-    deleteNode: false,
-    deleteEdge: true
-  },
+  // manipulation: {
+  //   enabled: true,
+  //   addNode: false,
+  //   addEdge: true,
+  //   editNode: false,
+  //   editEdge: true,
+  //   deleteNode: false,
+  //   deleteEdge: true
+  // },
   groups: {
     SurfaceUser: {
       shape: 'image',

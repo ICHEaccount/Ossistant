@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import RelationGraph from './visualization/relation/relationGraph'
-import Timeline from './visualization/timeline/domainTimeline'
-//import Timeline from './visualization/timeline/timeline'
+// import Timeline from './visualization/timeline/domainTimeline'
+import Timeline from './visualization/timeline/timeline'
 
 const VisualPanel = (props) => {
     const isDone = props.isDone
@@ -11,7 +11,7 @@ const VisualPanel = (props) => {
         <div className="tw-flex tw-border tw-rounded-md mb-2">
             <RelationGraph isDone={isDone}/>
         </div>
-        <div className="tw-flex tw-border tw-rounded-md tw-flex-grow tw-justify-center">
+        <div className="tw-border tw-rounded-md tw-flex-grow tw-justify-start tw-mb-2">
             <Timeline isDone={isDone}/>
         </div>
         </Container>
