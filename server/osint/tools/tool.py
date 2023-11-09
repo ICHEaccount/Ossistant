@@ -1,6 +1,7 @@
 import os
 
 from db_conn.mongo.models import RunModel, CaseModel
+from db_conn.neo4j.models import *
 from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import *
@@ -28,6 +29,17 @@ def check_json_not_null(input_json):
                 elif item is None:
                     return False
     return True
+
+
+@bp.route('/getToolList', methods=['GET'])
+def tool_list():
+    try:
+        with open('./tools/tool_list.json') as data:
+            response = json.load(data)
+    except FileNotFoundError as e:
+        response = f'{e}. File cannot be found.'
+        return jsonify({'Message': response}), 500
+    return jsonify(response), 200
 
 
 @bp.route('/runTools', methods=['POST'])
@@ -77,53 +89,44 @@ def run_tool():
         return jsonify({'Message': run_id}), 400
     
 
-@bp.route('/getToolState', methods=["POST"])
-def tool_state():
-    # check requested json
-    gettoolstate_requested_json = request.get_json()
-    if check_json_not_null(gettoolstate_requested_json) is False:
-        print('[-] Invalid Request')
-        return jsonify({'Message': 'Invalid request'}), 400
+@bp.route('/getToolState/<string:case_id>', methods=["GET"])
+def tool_state(case_id):
+    all_run = CaseModel.get_all_runs(case_id=case_id)[1]
 
-    # parse basic infos from requested json
-    case_id = gettoolstate_requested_json['case_id']
-    run_id = gettoolstate_requested_json['run_id']
-    print(f'run_id is run_id')
+    # checking results
+    for run in all_run:
+        if run['tool_id'] == '01':
+            check_whois(case_id, run['run_id'])
+        elif run['tool_id'] == '03':
+            check_maigret(case_id, run['run_id'])
 
-    # finding run
-    try:
-        run = RunModel.objects.get(_id=int(run_id))
-        if run is None:
-            return jsonify({"error": "Run not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # making response
+    ready = []
+    running = []
+    completed = []
+    error = []
 
-    # check the tool_id and check the tool
-    if run.tool_id == '01':
-        message = check_whois(case_id, run)
-    elif run.tool_id == '03':
-        message = check_maigret(run)
-    else:
-        message = 'Invalid tool_id.'
+    for run in all_run:
+        # adding 'tool_name'
+        if run['tool_id'] == '01':
+            run['tool_name'] = 'whois'
+        elif run['tool_id'] == '03':
+            run['tool_name'] = 'maigret'
+        # sorting by status
+        if run['status'] == 'ready':
+            ready.append(run)
+        elif run['status'] == 'running':
+            running.append(run)
+        elif run['status'] == 'completed':
+            completed.append(run)
+        elif run['status'] == 'error':
+            error.append(run)
 
-    # check the status with message
-    if run.status == 'completed':
-        response = message
-        return jsonify(response), 200
-    elif run.status == 'running':
-        response = {
-            "run_id": run.run_id,
-            "state": run.status,
-            # "debug": message
-        }
-        return jsonify(response), 200
-    elif run.status == 'ready' or 'error':
-        response = {
-            "run_id": run.run_id,
-            "state": run.status,
-            "debug": message
-        }
-        return jsonify(response), 200
-    else:
-        return jsonify({"message": "run.status error"}), 400
+    response = {
+        "ready": ready,
+        "running": running,
+        "completed": completed,
+        "error": error
+    }
 
+    return jsonify(response), 200

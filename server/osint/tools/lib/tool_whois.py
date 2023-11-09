@@ -28,8 +28,9 @@ def run_whois(run):
         return message
 
 
-def check_whois(case_id, run):
+def check_whois(case_id, run_id):
     regdate_response = None
+    run = RunModel.objects.get(_id=run_id)
     if not run.status == 'completed':
         try:
             with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
@@ -62,7 +63,9 @@ def check_whois(case_id, run):
         inside = {
             "domain": domain_response,
             "regdate": regdate_response,
-            "email": whois_search.get("admin_email")
+            "email": whois_search.get("admin_email"),
+            "admin": whois_search.get("admin_name"),
+            "registrant": whois_search.get("registrant_name")
         }
         RunModel.create_result(data=inside, run_id=run.run_id)
         run.save()
@@ -79,7 +82,6 @@ def check_whois(case_id, run):
 
     # 2. Save to DB
     regdate = regdate_response
-    # regdate = whois_response['result'][0]['domain']['regdate']
     if regdate:
         regdate = datetime.strptime(regdate, '%Y-%m-%d %H:%M:%S')
     
@@ -110,9 +112,14 @@ def check_whois(case_id, run):
             status, domain_obj = Domain.update_node_properties(node_id=domain_obj.uid, return_node=True, **inp_data)
             if status is False:
                 return "Domain update error"
+
+        email_obj = Email.get_node({'email': whois_search.get("admin_email"), 'case_id': case_id})
+        if not email_obj:
+            email_obj = Email.create_node({'email': whois_search.get("admin_email"), 'case_id': case_id})
                     
         # user -(REGISTER)-> domain
         user.rel_to.connect(domain_obj,{'label':'REGISTER'})
+        user.rel_to.connect(email_obj, {'label':'HAS'})
 
     run.save()
     return whois_response

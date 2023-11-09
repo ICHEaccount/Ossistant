@@ -6,14 +6,16 @@ import options from './options';
 import { useSelector, useDispatch } from 'react-redux'
 import node, {select} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
+
 import { debounce } from "lodash";
+
 
 function RelationGraph(props) {
   const params = useParams();
   const case_id = params.case_id;
   const isDone = props.isDone
   const dispatch = useDispatch()
-  const selected = useSelector(state => state.node.selected)
+  // const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
   const [selectedEdge, setSelectedEdge] = useState(null);
@@ -98,8 +100,12 @@ function RelationGraph(props) {
       console.log(nodes);
       if (nodes.length > 0) {
         axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
+
             const resData = response.data;
+            const label = resData.property.label;
+            delete resData.property.label;
             console.log(resData);
+            dispatch(select({node:resData,label:label}))
           });
             setSelectedNode(nodes[0]);
             network.addEdgeMode();
@@ -160,11 +166,11 @@ function RelationGraph(props) {
         });
       }
     });
-  }, [isDone,visJSRef,selected]);
+
+  }, [isDone,visJSRef]);
 
   return (
-      <><div ref={visJSRef} style={{ height: "400px", width: "1000px", position: 'relative'}}>
-      </div>
+      <><div ref={visJSRef} style={{ height: "370px", width: "900px", position: 'relative'}}></div>
       </>
   );
 }

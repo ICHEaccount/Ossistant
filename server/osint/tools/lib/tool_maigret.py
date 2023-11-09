@@ -3,6 +3,8 @@ import os.path
 import subprocess
 
 from db_conn.mongo.models import RunModel
+from db_conn.neo4j.models import SurfaceUser
+
 
 def run_maigret(run):
     # print("Current working directory:", os.getcwd())
@@ -18,7 +20,7 @@ def run_maigret(run):
     return run.run_id
 
 
-def report_maigret(run):  # status is COMPLETED
+def report_maigret(case_id, run):  # status is COMPLETED
     try:
         with open(f'./reports/report_{run.input_value}_simple.json', 'r') as f:
             report = json.load(f)
@@ -56,10 +58,22 @@ def report_maigret(run):  # status is COMPLETED
         "state": run.status,
         "results": result_list
     }
+
+    # node
+    s_user = SurfaceUser.get_node({'username': run.input_value, 'case_id': case_id})
+    if not s_user:
+        s_user = SurfaceUser.create_node({'username': run.input_value, 'case_id': case_id})
+    # inside the node
+    inp_data = {'registered': result_site}
+    status, s_user = SurfaceUser.update_node_properties(node_id=s_user.uid, return_node=True, **inp_data)
+    if status is False:
+        return "SurfaceUser registered update error"
+
     return maigret_response
 
 
-def check_maigret(run):
+def check_maigret(case_id, run_id):
+    run = RunModel.objects.get(_id=run_id)
     if run.status == 'ready':
         message = 'Run the tool first.'
         return message
@@ -75,5 +89,5 @@ def check_maigret(run):
         message = 'File not exists.(yet)'
         return message
 
-    maigret_response = report_maigret(run)
+    maigret_response = report_maigret(case_id, run)
     return maigret_response

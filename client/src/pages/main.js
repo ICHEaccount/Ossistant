@@ -5,7 +5,7 @@ import CaseCard from '../components/case/caseCards';
 import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
 import IntroCard from '../components/introCard';
-import { Container, Row, Spinner } from 'react-bootstrap';
+import { Button, Container, Row, Spinner, Toast, ToastContainer } from 'react-bootstrap';
 
 
 const Main = () => {
@@ -53,10 +53,9 @@ const Main = () => {
                 <Stack gap={3} className='m-3'>
                     {isload?caseList:null}
                 </Stack>
-                
-                
             </Col>
         </Row>
+        
 
         </Container>
     </div>
