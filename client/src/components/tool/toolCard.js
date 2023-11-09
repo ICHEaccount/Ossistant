@@ -4,8 +4,12 @@ import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
 import Axios from 'axios';
+import { useDispatch } from 'react-redux';
+import {viewChange} from '../../reducers/node'
+
 
 const ToolCard = (props) => {
+    const dispatch = useDispatch()
     const tools = props.labelTools;
     const labelData = props.labelData;
     const case_id = props.case_id;
@@ -65,6 +69,7 @@ const ToolCard = (props) => {
             .then((response) => {
                 console.log(response.data);
                 props.newRun(true)
+                dispatch(viewChange('list'))
             })
             .catch((error) => {
                 console.error(error);
