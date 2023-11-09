@@ -93,22 +93,30 @@ class Relationship:
         if not from_uid or not to_uid:
             return False, 'uid did not exist'
         
-        query = "MATCH (n)-[]-(m) WHERE n.uid = $from_uid SET m.uid = $to_uid RETURN labels(n), labels(m)"
         try:
-            results, meta = db.cypher_query(query,{'from_uid':from_uid,'to_uid':to_uid})
-            if results:
-                from_label = results[0][0][0]
-                to_label = results[0][1][0]
-                if not from_label or not to_label:
-                    return False, 'Node did not Exist'
+            query = "MATCH (n) WHERE n.uid IN [$from_uid, $to_uid] RETURN n.uid, labels(n)"
+            results, _ = db.cypher_query(query, {'from_uid': from_uid, 'to_uid': to_uid})
+
+            from_label = None
+            to_label = None
+
+            for row in results:
+                uid, label = row[0], row[1]
+                if uid == from_uid:
+                    from_label = label[0]
+                elif uid == to_uid:
+                    to_label = label[0]
+            if from_label is not None and to_label is not None:
                 # get node 
                 from_node = NODE_LIST[from_label].get_node({"uid":from_uid})
                 to_node = NODE_LIST[to_label].get_node({"uid":to_uid})
                 if from_node and to_node:
                     from_node.rel_to.connect(to_node,{'label':'NONE'})
+                    return True, 'Success'
                 else:
-                    return False, 'Node did not Exist'
-                return True, 'Success'
+                    return False, 'Relation connection error'
+            else:
+                return False, 'Node did not Exist'
         except Exception as e:
             return False, f"An error occurred: {e}"
         
@@ -163,6 +171,23 @@ class Relationship:
         try:
             results, meta = db.cypher_query(query, {'uid': uid, 'new_label': new_label})
             if results:
-                return True, f"Success"
+                return True, "Success"
+            else:
+                return False, "Modify did not exist"
         except Exception as e:
             return False, f"An error occurred: {e}"
+    
+    @classmethod
+    def check_relationship(cls,from_uid, to_uid):
+        if not from_uid or not to_uid:
+            return False, 'Node uid did not exist'
+        try:
+            query = "MATCH (n)-[r]-(m) WHERE n.uid = $from_uid AND m.uid = $to_uid RETURN r"
+            results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
+            if results:
+                return True, True
+            else:
+                return True, False
+        except Exception as e:
+            return False, f"An error occurred: {e}"
+    
