@@ -51,6 +51,7 @@ import BetaToast from '../components/betaToast';
                     setnewData(newDataList)}
                     setcase_data(res.data.data)
                     setisLoad(true)
+                    setisDone(false)
                 }else{
                     console.error(res.error);
                     setisLoad(false)
