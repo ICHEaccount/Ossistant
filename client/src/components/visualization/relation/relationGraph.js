@@ -12,7 +12,7 @@ function RelationGraph(props) {
   const case_id = params.case_id;
   const isDone = props.isDone
   const dispatch = useDispatch()
-  const selected = useSelector(state => state.node.selected)
+  // const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
   const [selectedEdge, setSelectedEdge] = useState(null);
@@ -61,7 +61,10 @@ function RelationGraph(props) {
       if (nodes.length > 0) {
         axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
           const resData = response.data;
+          const label = resData.property.label;
+          delete resData.property.label;
           console.log(resData);
+          dispatch(select({node:resData,label:label}))
         })
         setSelectedNode(nodes[0]);
       } else {
@@ -69,7 +72,7 @@ function RelationGraph(props) {
       }
     });
 
-  }, [isDone,visJSRef,selected]);
+  }, [isDone,visJSRef]);
 
   return (
       <><div ref={visJSRef} style={{ height: "400px", width: "900px", position: 'relative'}}></div>
