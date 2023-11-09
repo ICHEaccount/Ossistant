@@ -173,7 +173,7 @@ const DataCard = (props) => {
                                         +
                                     </Button>
                                     </Form.Label>
-                                    <div className='tw-h-32 tw-overflow-y-auto'>
+                                    <div className={cls("",{"tw-h-32 tw-overflow-y-auto":listProperty})}>
                                     {listProperty?.map((item, idx) => (
                                     <div key={idx} className="d-flex mb-1">
                                         <Form.Control
