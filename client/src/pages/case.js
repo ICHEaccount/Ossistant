@@ -59,38 +59,42 @@ import BetaToast from '../components/betaToast';
         }, [case_id,isDone,selected])
 
         useEffect(() => {
-            const interval = setInterval(() => {
-                Axios.get(`/tools/getToolState/${case_id}`)
-                    .then((res) => {
-                        const newResultList={}
-                        Object.keys(res.data).forEach((status)=>{
-                            const statusData = res.data[status]
-                            if(toolResult[status]){  
-                                statusData.forEach((item) => {
-                                    newResultList[status]=[]
-                                    const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
-                                    if (!isOldData) {
-                                        newResultList[status].push(item);
-                                    }
-                                })
-                            } else {
-                                newResultList[status]=res.data.data[status]
+            if(isnewRun){
+                const interval = setInterval(() => {
+                    Axios.get(`/tools/getToolState/${case_id}`)
+                        .then((res) => {
+                            const newResultList={}
+                            Object.keys(res.data).forEach((status)=>{
+                                const statusData = res.data[status]
+                                if(toolResult[status]){  
+                                    statusData.forEach((item) => {
+                                        newResultList[status]=[]
+                                        const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
+                                        if (!isOldData) {
+                                            newResultList[status].push(item);
+                                        }
+                                    })
+                                } else {
+                                    newResultList[status]=res.data.data[status]
+                                }
+                            })
+                            setnewResult(newResultList)
+                            settoolResult(res.data)
+                            //new completed run exists
+                            if(newResultList.completed.length){
+                                setisDone(true);
+                            }
+                            if(newResultList.ready.length===0 && newResultList.running.length===0){
+                                clearInterval(interval);
+                                setisnewRun(false);
                             }
                         })
-                        setnewResult(newResultList)
-                        settoolResult(res.data)
-                        //new completed run exists
-                        if(newResultList.completed.length){
-                            setisDone(true);
-                        }
-                        if(newResultList.ready.length===0 && newResultList.running.length===0){
+                        .catch(error => {
                             clearInterval(interval);
-                        }
-                    })
-                    .catch(error => {
-                        clearInterval(interval);
-                    });
-            }, 1000); // 1초마다 확인
+                        });
+                }, 10000); // 10초마다 확인
+            }
+            
 
         }, [isnewRun])
         

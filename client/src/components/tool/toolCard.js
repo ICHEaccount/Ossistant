@@ -117,7 +117,7 @@ const ToolCard = (props) => {
                                     <Form.Group key={idx}>
                                         <Form.Label>{p}</Form.Label>
                                         {labelData.map((node, idx) => {
-                                            console.log(labelData);
+                                            // console.log(labelData);
                                             if (p in node.property) {
                                                 return (
                                                     <Form.Check
