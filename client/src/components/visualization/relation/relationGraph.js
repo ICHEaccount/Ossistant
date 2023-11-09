@@ -75,7 +75,7 @@ function RelationGraph(props) {
   }, [isDone,visJSRef]);
 
   return (
-      <><div ref={visJSRef} style={{ height: "400px", width: "900px", position: 'relative'}}></div>
+      <><div ref={visJSRef} style={{ height: "370px", width: "900px", position: 'relative'}}></div>
 
       </>
   );
