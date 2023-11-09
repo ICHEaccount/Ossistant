@@ -9,8 +9,8 @@ const RunToast = (props) => {
     const toastList = newResult?.completed?.map((result)=> {
         return(
         <Toast>
-            <Toast.Header>
-                <img src={logo} className="rounded me-2" alt="" width={30}/>
+            <Toast.Header className="tw-bg-bright-peach">
+                <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>
                 <strong className="me-auto">{`#${result.run_id} ${result.tool_name} Completed`}</strong> 
                 <small>{result.run_time}</small>
             </Toast.Header>
@@ -21,7 +21,7 @@ const RunToast = (props) => {
         )
     })
     return (
-        <ToastContainer position='bottom-end'>
+        <ToastContainer position='bottom-end' className='p-2'>
             {toastList}
         </ToastContainer>
     
