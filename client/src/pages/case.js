@@ -98,7 +98,7 @@ import BetaToast from '../components/betaToast';
 
         return (
         <div>
-            {isLoad&&<Container className='mt-3 mb-3 pb-2 pt-2' fluid>
+            {isLoad&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
                     <RunToast newResult={newResult.length?newResult:null}/>

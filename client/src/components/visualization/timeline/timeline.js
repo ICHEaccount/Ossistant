@@ -14,17 +14,17 @@ const Timeline = (props) => {
             <Nav variant="pills" fill justify className="flex-column p-1">
                 <Nav.Item>
                 <Nav.Link eventKey="whole" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                        <Archive size="30px" />
+                        <Archive size="30px" className='tw-mr-2'/> Whole
                 </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link eventKey="suspect" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                        <PersonCircle size="30px"/>
+                        <PersonCircle size="30px" className='tw-mr-2'/> Suspect
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link eventKey="domain" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                        <Globe2 size="30px"/>
+                        <Globe2 size="30px" className='tw-mr-2'/> Domain
                     </Nav.Link>
                 </Nav.Item>
             </Nav>
