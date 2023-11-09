@@ -22,7 +22,7 @@ const BetaToast = () => {
     }
 
     return (
-    <ToastContainer position='bottom-end' className='p-2'>
+    <ToastContainer position='bottom-start' className='p-2'>
         <Toast>
             <Toast.Header className="tw-bg-bright-peach">
             <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>

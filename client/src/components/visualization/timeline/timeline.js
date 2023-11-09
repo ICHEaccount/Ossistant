@@ -10,27 +10,27 @@ const Timeline = (props) => {
     return (
     <Tab.Container defaultActiveKey="whole">
         <Row>
-        <Col sm={3} className=''>
-            <Nav variant="pills" fill justify className="flex-column p-1 tw-border tw-rounded-md">
+        <Col md={2} className=''>
+            <Nav variant="pills" fill justify className="flex-column p-1">
                 <Nav.Item>
                 <Nav.Link eventKey="whole" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                        <Archive size="30px" /> Whole
-                    </Nav.Link>
+                        <Archive size="30px" />
+                </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link eventKey="suspect" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                        <PersonCircle size="30px"/> Suspect
+                        <PersonCircle size="30px"/>
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link eventKey="domain" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                        <Globe2 size="30px"/> Domain
+                        <Globe2 size="30px"/>
                     </Nav.Link>
                 </Nav.Item>
             </Nav>
-        </Col>
-        <Col sm={9}>
-            <Tab.Content>
+        </Col >
+        <Col md={10} className='flex tw-border-l tw-mx-[-10px]'>
+            <Tab.Content className='tw-grow tw-pr-5 tw-pb-1 tw-pt-2'>
             <Tab.Pane eventKey="whole"><WholeTimeline isDone={isDone}/></Tab.Pane>
             <Tab.Pane eventKey="suspect"><SuspectTimeline isDone={isDone}/></Tab.Pane>
             <Tab.Pane eventKey="domain"><DomainTimeline isDone={isDone}/></Tab.Pane>

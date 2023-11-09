@@ -116,8 +116,9 @@ const DomainTimeline = (props) => {
 
 
     const options = {
-        maintainAspectRatio: false,
-        showLine: true,
+        maintainAspectRatio: true,
+        aspectRatio: 3,
+        showLine: false,
         scales: {
         x: {
             grid: {
@@ -158,9 +159,7 @@ const DomainTimeline = (props) => {
     };
 
     return (
-        <div>
-            <Line options={options} data={{datasets}} style={{height:"200px",width:"840px"}}/>
-        </div>
+            <Line options={options} data={{datasets}} height={null} width={null}/>
     );
 }
 

@@ -99,7 +99,8 @@ const SuspectTimeline = (props) => {
     }, [isDone]);
 
     const options = {
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
+        aspectRatio: 3,
         showLine: false,
         scales: {
             x: {
@@ -146,9 +147,7 @@ const SuspectTimeline = (props) => {
     };
 
     return (
-        <div>
-            <Line options={options} data={{ datasets }} style={{ height: "200px", width: "840px" }} />
-        </div>
+        <Line options={options} data={{ datasets }} height={null} width={null}/>
     );
 }
 

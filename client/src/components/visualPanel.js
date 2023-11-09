@@ -11,7 +11,7 @@ const VisualPanel = (props) => {
         <div className="tw-flex tw-border tw-rounded-md mb-2">
             <RelationGraph isDone={isDone}/>
         </div>
-        <div className="tw-flex tw-border tw-rounded-md tw-flex-grow tw-justify-start">
+        <div className="tw-border tw-rounded-md tw-flex-grow tw-justify-start tw-mb-2">
             <Timeline isDone={isDone}/>
         </div>
         </Container>
