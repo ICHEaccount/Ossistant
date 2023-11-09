@@ -47,7 +47,7 @@ import BetaToast from '../components/betaToast';
                         }
                     );
                     
-                    console.log(newDataList);
+                    // console.log(newDataList);
                     setnewData(newDataList)}
                     setcase_data(res.data.data)
                     setisLoad(true)
@@ -65,7 +65,7 @@ import BetaToast from '../components/betaToast';
                 const interval = setInterval(() => {
                     Axios.get(`/tools/getToolState/${case_id}`)
                         .then((res) => {
-                            console.log(res.data);
+                            // console.log(res.data);
                             const newResultList={
                                 'completed':[],
                                 'ready':[],
@@ -88,6 +88,7 @@ import BetaToast from '../components/betaToast';
                             })
                             setnewResult(newResultList)
                             settoolResult(res.data)
+                            console.log(newResultList);
                             //new completed run exists
                             if(newResultList.completed.length){
                                 setisDone(true);
@@ -116,7 +117,6 @@ import BetaToast from '../components/betaToast';
             {(isLoad&&isLoaded)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
-                    <RunToast newResult={newResult.length?newResult:null}/>
                     <DataPanel case_id={case_id} caseData={case_data} toolResult={toolResult} newData={newData} newRun={setisnewRun}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
@@ -124,6 +124,7 @@ import BetaToast from '../components/betaToast';
                 </Col>
             </Row>
             </Container>}
+            {isLoaded&&<RunToast newResult={newResult}/>}
             <BetaToast/>
             
         </div>

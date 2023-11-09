@@ -5,6 +5,7 @@ import logo from '../../images/logo_textless.png';
 
 const RunToast = (props) => {
     const newResult = props.newResult
+    // console.log(newResult);
     const toastList = newResult?.completed?.map((result)=> {
         return(
         <Toast>
