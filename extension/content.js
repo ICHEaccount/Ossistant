@@ -1,5 +1,9 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
+    const krphoneRegex = /01[016789]-\d{3,4}-\d{4}/g;
+    const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+
+    
     if (request.command === "getForumInfo") {
         // Post
         const writer = document.querySelector('.message-name .username') ? document.querySelector('.message-name .username').innerText : '';
@@ -26,13 +30,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         sendResponse({ writer, created_date, title, content, username, rank, regdate, post_num, comment_num, registered });
     }else if(request.command === "getNaverBlogInfo"){
-        const writer = document.querySelector('.nick') ? document.querySelector('.nick').innerText : '';
-        const created_date = document.querySelector('.se_publishDate.pcol2') ? document.querySelector('.se_publishDate.pcol2').innerText.trim() : 'why';
+        const writer = document.querySelectorAll('.nick .link .pcol2')? document.querySelectorAll('.nick .link .pcol2').innerText : '';
+        const created_date = document.querySelectorAll('.se_publishDate.pcol2') ? document.querySelectorAll('.se_publishDate.pcol2').innerText.trim() : '';
         const title = document.querySelector('title') ? document.querySelector('title').innerText : '';
-        const content = document.querySelector('.se-main-container') ? document.querySelector('.se-main-container').innerText.trim() : '';
+        const content = document.querySelectorAll('.se-main-container') ? document.querySelectorAll('.se-main-container').innerText.trim() : '';
         const registered = [];
-        const krphoneRegex = /01[016789]-\d{3,4}-\d{4}/g;
-        const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
         
         let match;
         while ((match = krphoneRegex.exec(content)) !== null) {
@@ -43,5 +45,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
 
         sendResponse({writer, created_date, title, content, registered})
+    }else if(request.command === "getNaverCafeInfo"){
+        const writer = document.querySelector('.nick_box') ? document.querySelector('.nick_box').innerText : '';
+        const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
+        const title = document.querySelector('title') ? document.querySelector('title').innerText : '';
+        const content = document.querySelector('.ContentRenderer') ? document.querySelector('.ContentRenderer').innerText.trim() : '';
+        const registered = [];
+        
+        let match;
+        while ((match = krphoneRegex.exec(content)) !== null) {
+            registered.push(match[0]);
+        }
+        while ((match = emailRegex.exec(content)) !== null) {
+            registered.push(match[0]);
+        }
+
+        sendResponse({username, created_date, title, content, registered})
+    }else if(request.command === "getTelegram"){
+        const note = document.querySelectorAll('.bubbles-date-group') ? document.querySelector('.bubbles-date-group').innerText : '';
+        sendResponse({note})
     }
+
+
 }); 
