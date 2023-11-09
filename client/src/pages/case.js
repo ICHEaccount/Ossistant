@@ -23,6 +23,7 @@ import BetaToast from '../components/betaToast';
         const [isDone, setisDone] = useState(false)
         const [newData, setnewData] = useState([])
         const [isnewRun, setisnewRun] = useState(false)
+        const [isLoaded, setisLoaded] = useState(false)
 
         useEffect(() => {
             Axios.get(`/data/getData/${case_id}`)
@@ -59,11 +60,17 @@ import BetaToast from '../components/betaToast';
         }, [case_id,isDone,selected])
 
         useEffect(() => {
-            if(isnewRun){
+            
                 const interval = setInterval(() => {
                     Axios.get(`/tools/getToolState/${case_id}`)
                         .then((res) => {
-                            const newResultList={}
+                            console.log(res.data);
+                            const newResultList={
+                                'completed':[],
+                                'ready':[],
+                                'running':[],
+                                'error':[]
+                            }
                             Object.keys(res.data).forEach((status)=>{
                                 const statusData = res.data[status]
                                 if(toolResult[status]){  
@@ -75,7 +82,7 @@ import BetaToast from '../components/betaToast';
                                         }
                                     })
                                 } else {
-                                    newResultList[status]=res.data.data[status]
+                                    newResultList[status]=res.data[status]
                                 }
                             })
                             setnewResult(newResultList)
@@ -83,17 +90,20 @@ import BetaToast from '../components/betaToast';
                             //new completed run exists
                             if(newResultList.completed.length){
                                 setisDone(true);
+                                
                             }
                             if(newResultList.ready.length===0 && newResultList.running.length===0){
                                 clearInterval(interval);
                                 setisnewRun(false);
                             }
+                            setisLoaded(true)
                         })
                         .catch(error => {
                             clearInterval(interval);
+                            console.log(error);
+                            setisLoaded(true)
                         });
-                }, 10000); // 10초마다 확인
-            }
+                }, 3000); // 3초마다 확인
             
 
         }, [isnewRun])
@@ -102,7 +112,7 @@ import BetaToast from '../components/betaToast';
 
         return (
         <div>
-            {isLoad&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
+            {(isLoad&&isLoaded)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
                     <RunToast newResult={newResult.length?newResult:null}/>

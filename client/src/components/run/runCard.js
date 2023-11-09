@@ -9,6 +9,7 @@ const RunCard = (props) => {
     const [selectedEventKey, setSelectedEventKey] = useState('list');
 	const [selectedRun, setselectedRun] = useState({})
 
+	console.log(list,status);
 
 	const runList = list?.map((run)=>{
 		
@@ -35,7 +36,7 @@ const RunCard = (props) => {
 
 	return (
 	<Container>
-    {selectedEventKey==="list"?(list?runList:null):(
+    {selectedEventKey==="list"?(list?runList:<p className='tw-text-center'>no run yet</p>):(
 		<Card className='mt-1'>
 		<Card.Header className='mb-1'>
 			<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
@@ -68,7 +69,7 @@ const RunCard = (props) => {
 						const type = Object.keys(result.result)[0]
 						return (
 						<InputGroup className='mb-1 px-1'>
-						{type==="error"?null:<InputGroup.Checkbox aria-label="Checkbox for following text input" />}
+						{/* {type==="error"?null:<InputGroup.Checkbox aria-label="Checkbox for following text input" />} */}
 						<InputGroup.Text className={cls('',{'tw-text-red-500':type==="error"})} >{type}</InputGroup.Text>
 						<Form.Control
 						placeholder={result.result[type]}
@@ -78,7 +79,7 @@ const RunCard = (props) => {
 					}))
 				})
 			}
-			{selectedRun.results.length!==0&&status!=="error"?<Col md={{ span: 3, offset: 9 }}><Button type="submit" variant="outline-primary" >{"Add"}</Button></Col>:null}
+			{/* {selectedRun.results.length!==0&&status!=="error"?<Col md={{ span: 3, offset: 9 }}><Button type="submit" variant="outline-primary" >{"Add"}</Button></Col>:null} */}
         </Form>
 	</Card>
 	)}
