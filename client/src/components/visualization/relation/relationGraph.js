@@ -116,58 +116,56 @@ function RelationGraph(props) {
     });
 
 
-    // // Modify relationship 
-    // network.on('selectEdge', (params)=>{
-    //   const {edges} = params;
-    //   const nodes = network.getConnectedNodes(edges[0]);
+    // Modify relationship 
+    network.on('doubleClick', (params)=>{
+      console.log("data : " + params.edges);
+      const edge = params.edges
+      // const nodes = network.getConnectedNodes(edges[0]);
       
-    //   if (edges.length > 0) {
-    //     console.log("edit mode");
-
-    //     network.editEdgeMode();
-    //     network.on('dragEnd',(params) => {
-    //       console.log("Drag End");
-    //     })
-    //     // const inp_data = { 'type': "1", "rel_uid": edges[0] }; 
-    //     // network.on("controlNodeDragEnd", (dragInfo) => controlNodeDragEndHandler(dragInfo, inp_data));
-    //   }
-    // });
-
-    network.on('doubleClick', (nodeInfo)=>{
-      console.log(nodeInfo); 
-      
-      if (nodeInfo.nodes.length > 0) {
-        network.deleteSelected();
-        const reqData = {
-          "type": "node",
-          "uid": nodeInfo.nodes[0]
-        }
-        axios.post('/graph/rel/delete', reqData)
-        .then((response) => {
-          if (response.status === 200) {
-            console.log("Success");
-          }
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
-      } else if (nodeInfo.edges.length > 0 && nodeInfo.nodes.length === 0) {
-        network.deleteSelected();
-        const reqData = {
-          "type": "rel",
-          "uid": nodeInfo.edges[0]
-        }
-        axios.post('/graph/rel/delete', reqData)
-        .then((response) => {
-          if (response.status === 200) {
-            console.log("Success");
-          }
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
+      if (edge) {
+        console.log("edit mode");
+        network.editEdgeMode();
+        console.log("edit " + params);
+        const inp_data = { 'type': "1", "rel_uid": edge }; 
+        network.on("controlNodeDragEnd", (dragInfo) => controlNodeDragEndHandler(dragInfo, inp_data));
       }
     });
+
+    // network.on('doubleClick', (nodeInfo)=>{
+    //   console.log(nodeInfo); 
+      
+    //   if (nodeInfo.nodes.length > 0) {
+    //     network.deleteSelected();
+    //     const reqData = {
+    //       "type": "node",
+    //       "uid": nodeInfo.nodes[0]
+    //     }
+    //     axios.post('/graph/rel/delete', reqData)
+    //     .then((response) => {
+    //       if (response.status === 200) {
+    //         console.log("Success");
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("An error occurred:", error);
+    //     });
+    //   } else if (nodeInfo.edges.length > 0 && nodeInfo.nodes.length === 0) {
+    //     network.deleteSelected();
+    //     const reqData = {
+    //       "type": "rel",
+    //       "uid": nodeInfo.edges[0]
+    //     }
+    //     axios.post('/graph/rel/delete', reqData)
+    //     .then((response) => {
+    //       if (response.status === 200) {
+    //         console.log("Success");
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("An error occurred:", error);
+    //     });
+    //   }
+    // });
   }, [isDone,visJSRef,selected]);
 
   return (
