@@ -85,7 +85,6 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     }
 
-    
 
     // Context menu click listener
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
@@ -154,7 +153,64 @@ chrome.runtime.onInstalled.addListener(() => {
                     console.error('Failed to send data:', error);
                 });
             });
+        } else if(info.menuItemId === "naver cafe"){
+            chrome.tabs.sendMessage(tab.id, { command: "getNaverCafeInfo" }, function(response) {
+                if (chrome.runtime.lastError) {
+                    console.error("Error:", chrome.runtime.lastError.message);
+                    return;
+                }
 
+                let postData = {
+                    label: "Post",
+                    keyword: {
+                        "writer": response.writer,
+                        "created_date": convertDateFormat(response.created_date, 3),
+                        "title": response.title,
+                        "content": response.content,
+                        "registered": response.registered
+                    }
+                };
+
+                datalist.push(postData);
+
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                    console.error("aa", datalist)
+                    console.log('Data has been sent and datalist is now cleared.');
+                }).catch(error => {
+                    console.error('Failed to send data:', error);
+                });
+            });
+        } else if(info.menuItemId === "telegram"){
+            chrome.tabs.sendMessage(tab.id, { command: "getTelegram" }, function(response) {
+                if (chrome.runtime.lastError) {
+                    console.error("Error:", chrome.runtime.lastError.message);
+                    return;
+                }
+
+                //telegram username(@)
+                const atSymbolIndex = tab.url.indexOf('@');
+                const hashSymbolIndex = tab.url.indexOf('/#');
+                let extracted = '';
+                if (atSymbolIndex > hashSymbolIndex) {
+                    extracted = tab.url.substring(atSymbolIndex);
+                  }
+
+                let postData = {
+                    label: "SurfaceUser",
+                    keyword: {
+                        "username": extracted,
+                        "note": response.note
+                    }
+                };
+
+                datalist.push(postData);
+
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                    console.log('Data has been sent and datalist is now cleared.');
+                }).catch(error => {
+                    console.error('Failed to send data:', error);
+                });
+            });
         } else {
             let selectedText = info.selectionText;
             let siteUrl = tab.url;
