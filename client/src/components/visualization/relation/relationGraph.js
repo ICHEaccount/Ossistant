@@ -57,10 +57,9 @@ function RelationGraph(props) {
       });
     });
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
-
+    
     
     const controlNodeDragEndHandler = debounce((dragInfo, data) => {
-      // console.log(dragInfo);
       if (dragInfo && dragInfo.controlEdge && dragInfo.controlEdge.from && dragInfo.controlEdge.to){
         const from_uid = dragInfo.controlEdge.from;
         const to_uid = dragInfo.controlEdge.to;
@@ -85,12 +84,12 @@ function RelationGraph(props) {
                     network.disableEditMode();
                   }
                 }else{
+                  console.log('modify');
+                  network.off("controlNodeDragEnd", controlNodeDragEndHandler);
                   network.disableEditMode();
                 }
               }
             })
-          }else {
-            network.disableEditMode();
           }
         }
       }
@@ -109,63 +108,61 @@ function RelationGraph(props) {
             network.addEdgeMode();
             const inp_data = {'type':"0"}
             network.on("controlNodeDragEnd", (dragInfo) => controlNodeDragEndHandler(dragInfo,inp_data));
-            
           } else {
             setSelectedNode(null);
           }
     });
 
 
-    // Modify relationship 
-    network.on('doubleClick', (params)=>{
-      console.log("data : " + params.edges);
-      const edge = params.edges
-      // const nodes = network.getConnectedNodes(edges[0]);
+    // // Modify relationship 
+    // network.on('doubleClick', (params)=>{
+    //   console.log("data : " + params.edges);
+    //   const edge = params.edges;
+    //   // const nodes = params.nodes;
       
-      if (edge) {
-        console.log("edit mode");
-        network.editEdgeMode();
-        console.log("edit " + params);
-        const inp_data = { 'type': "1", "rel_uid": edge }; 
-        network.on("controlNodeDragEnd", (dragInfo) => controlNodeDragEndHandler(dragInfo, inp_data));
-      }
-    });
-
-    // network.on('doubleClick', (nodeInfo)=>{
-    //   console.log(nodeInfo); 
-      
-    //   if (nodeInfo.nodes.length > 0) {
-    //     network.deleteSelected();
-    //     const reqData = {
-    //       "type": "node",
-    //       "uid": nodeInfo.nodes[0]
-    //     }
-    //     axios.post('/graph/rel/delete', reqData)
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         console.log("Success");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("An error occurred:", error);
-    //     });
-    //   } else if (nodeInfo.edges.length > 0 && nodeInfo.nodes.length === 0) {
-    //     network.deleteSelected();
-    //     const reqData = {
-    //       "type": "rel",
-    //       "uid": nodeInfo.edges[0]
-    //     }
-    //     axios.post('/graph/rel/delete', reqData)
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         console.log("Success");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("An error occurred:", error);
-    //     });
+    //   if (edge) {
+    //     console.log("edit mode : " + edge);
+    //     network.editEdgeMode();
+    //     const inp_data = { 'type': "1", "rel_uid": edge }; 
+    //     network.on("controlNodeDragEnd", (dragInfo) => controlNodeDragEndHandler(dragInfo, inp_data));
     //   }
     // });
+
+    network.on('doubleClick', (nodeInfo)=>{
+      console.log(nodeInfo); 
+      
+      if (nodeInfo.nodes.length > 0) {
+        network.deleteSelected();
+        const reqData = {
+          "type": "node",
+          "uid": nodeInfo.nodes[0]
+        }
+        axios.post('/graph/rel/delete', reqData)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("Success");
+          }
+        })
+        .catch((error) => {
+          console.error("An error occurred:", error);
+        });
+      } else if (nodeInfo.edges.length > 0 && nodeInfo.nodes.length === 0) {
+        network.deleteSelected();
+        const reqData = {
+          "type": "rel",
+          "uid": nodeInfo.edges[0]
+        }
+        axios.post('/graph/rel/delete', reqData)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("Success");
+          }
+        })
+        .catch((error) => {
+          console.error("An error occurred:", error);
+        });
+      }
+    });
   }, [isDone,visJSRef,selected]);
 
   return (
