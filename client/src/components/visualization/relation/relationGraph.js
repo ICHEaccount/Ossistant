@@ -79,15 +79,12 @@ function RelationGraph(props) {
                   if (isRel === false){
                     console.log("finish");
                     network.off("controlNodeDragEnd", controlNodeDragEndHandler);
-                    network.disableEditMode();
-                  }else{
-                    network.disableEditMode();
                   }
                 }else{
                   console.log('modify');
                   network.off("controlNodeDragEnd", controlNodeDragEndHandler);
-                  network.disableEditMode();
                 }
+                network.disableEditMode();
               }
             })
           }
