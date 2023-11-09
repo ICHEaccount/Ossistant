@@ -36,10 +36,11 @@ const ToolCard = (props) => {
         }
 
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
+        console.log(selectedTool);
 
         const selectedNodes = {
             case_id: case_id,
-            tool_id: selectedTool.id,
+            tool_id: selectedTool.tool_id,
             properties: labelData.map((node, nodeIdx) => {
                     if (selectedItems[node.node_id]) {
                         const property_list = Object.keys(node.property).reduce((acc, key) => {
@@ -58,7 +59,7 @@ const ToolCard = (props) => {
                 .filter((node) => node !== null), // null이 아닌 항목만 유지
         };
 
-        // console.log(selectedNodes);
+        console.log(selectedNodes);
 
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {
