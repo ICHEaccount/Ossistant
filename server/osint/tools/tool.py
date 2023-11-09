@@ -98,7 +98,7 @@ def tool_state(case_id):
         if run['tool_id'] == '01':
             check_whois(case_id, run['run_id'])
         elif run['tool_id'] == '03':
-            check_maigret(run['run_id'])
+            check_maigret(case_id, run['run_id'])
 
     # making response
     ready = []
