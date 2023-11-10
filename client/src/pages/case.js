@@ -103,7 +103,7 @@ import BetaToast from '../components/betaToast';
                             console.log(error);
                             setisLoaded(true)
                         });
-                }, 10000); // 3초마다 확인
+                }, 3000); // 3초마다 확인
             
 
         }, [isnewRun])
