@@ -32,7 +32,7 @@ const ToolList = (props) => {
             }
             })
         // settools(dummy)
-    }, [case_id])
+    }, [])
 
     const categoryList = Object.keys(category).map((tag)=>{
         const list = category[tag]

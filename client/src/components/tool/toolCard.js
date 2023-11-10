@@ -117,7 +117,7 @@ const ToolCard = (props) => {
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
-                        {labelData.length ? (
+                        {labelData?.length ? (
                             <Form onSubmit={runTool}>
                                 {tool.apply.map((p, idx) => (
                                     <Form.Group key={idx}>
