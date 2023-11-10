@@ -98,7 +98,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
         let datalist = [];
 
-        function checkUrl(url){//비동기처리해야함
+        function checkUrl(url){//비동기처리 필요
             //proxy 4everproxy
             if(url.startsWith("https://pl.4everproxy.com/")){
                 chrome.tabs.sendMessage(tab.id, { command: "getUrlValue" }, function(response) {
