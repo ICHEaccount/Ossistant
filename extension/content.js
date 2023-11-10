@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         const note = document.querySelectorAll('.bubbles-date-group') ? document.querySelector('.bubbles-date-group').innerText : '';
         sendResponse({note})
     }else if(request.command === "getUrlValue"){
-        //proxy
+        //proxy forever
         torurl = document.getElementById('foreverproxy-u').value;
         sendResponse({torurl})
     }

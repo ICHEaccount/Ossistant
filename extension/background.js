@@ -342,7 +342,7 @@ function convertDateFormat(dateTimeStr, type) {
     }else if(type == 3){
         const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
         
-        //우클릭 막아둔 경우 날짜값을 가져오지 못함, null 반환(ex. naver blog)
+        //우클릭 막아둔 경우 날짜 가져오지 못함, null 반환(ex. naver blog)
         if (parts === null) {
             return parts
         }
