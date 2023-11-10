@@ -17,7 +17,7 @@ chrome.runtime.onInstalled.addListener(() => {
     }
 
     // Under 'collect clue'
-    const keywordMenus = ["Domain", "SurfaceUser", "Post"];
+    const keywordMenus = ["SurfaceUser", "DarkUser", "Company", "Person", "Domain", "Post", "Comment", "Email", "Phone", "Wallet"];
     for (let menu of keywordMenus) {
         chrome.contextMenus.create({
             title: menu,
@@ -48,9 +48,17 @@ chrome.runtime.onInstalled.addListener(() => {
 
     // Under keyword
     const keywordSubMenus = {
-        "Domain": ["domain", "regdate", "status"],
         "SurfaceUser": ["username", "fake"],
-        "Post": ["url", "title", "writer", "content", "creatd_date", "post_type"]
+        "DarkUser": ["username", "rank", "regdate"],
+        "Company": ["name", "fake", "business_num", "phone_num"],
+        "Person": ["name", "fake"],
+        "Domain": ["domain", "regdate", "status"],
+        "Post": ["title", "writer", "content", "created_date", "post_type"],
+        "Comment": ["name", "content", "created_date"],
+        "Email": ["email", "fake"],
+        "Phone": ["number"],
+        "Message": ["sender", "content", "date"],
+        "Wallet": ["wallet", "wallet_type"]
     };
 
     const validIds = keywordMenus.concat(
@@ -63,14 +71,14 @@ chrome.runtime.onInstalled.addListener(() => {
                 title: subMenu,
                 parentId: parentMenu,
                 contexts: ["selection"],
-                id: subMenu
+                id: parentMenu + "-" + subMenu
             });
         }
     }
 
     // Under snapshot
     const snapshotSubMenus = {
-        "all": ["null"],
+        "all": ["To be developed"],
         "layout": ["xss.is", "naver blog", "naver cafe"]
     };
 
@@ -89,6 +97,19 @@ chrome.runtime.onInstalled.addListener(() => {
     // Context menu click listener
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
         let datalist = [];
+
+        function checkUrl(url){//비동기처리 필요
+            //proxy 4everproxy
+            if(url.startsWith("https://pl.4everproxy.com/")){
+                chrome.tabs.sendMessage(tab.id, { command: "getUrlValue" }, function(response) {
+                    console.error("aaa", response.torurl);
+                    return response.torurl;
+                });
+            }else{
+                return url;
+            }
+            
+        }
 
         if (info.menuItemId === "xss.is"){
             chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
@@ -147,7 +168,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -173,7 +194,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
                     console.error("aa", datalist)
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
@@ -205,29 +226,34 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
                 });
             });
         } else {
-            let selectedText = info.selectionText;
-            let siteUrl = tab.url;
-        
+            let selectedText = info.selectionText;        
             let data = { 
                 case_id: globalCaseId,
-                url: siteUrl };
+                url: checkUrl(tab.url) };
 
-            if (keywordMenus.includes(info.menuItemId)) {
-                data.label = info.menuItemId;
-                data.keyword = {};  
-            } else if (validIds.includes(info.menuItemId)) {
-                const parentMenu = Object.keys(keywordSubMenus).find(key => keywordSubMenus[key].includes(info.menuItemId));
+            let parts = info.menuItemId.split('-');
+            let parentMenu = parts[0];
+            let subMenu = parts.slice(1).join('-');
+
+
+            if (keywordMenus.includes(parentMenu)) {
+                // If the parentMenu is one of the top level keywordMenus
                 data.label = parentMenu;
-                data.keyword = {
-                    [info.menuItemId]: selectedText
-                };
+                data.keyword = { [subMenu]: selectedText };
+            } else {
+                // Find the correct parentMenu for subMenus
+                parentMenu = Object.keys(keywordSubMenus).find(key => keywordSubMenus[key].includes(subMenu));
+                if (parentMenu) {
+                    data.label = parentMenu;
+                    data.keyword = { [subMenu]: selectedText };
+                }
             }
 
             if (data.label) {
@@ -316,7 +342,7 @@ function convertDateFormat(dateTimeStr, type) {
     }else if(type == 3){
         const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
         
-        //우클릭 막아둔 경우 날짜값을 가져오지 못함, null 반환(ex. naver blog)
+        //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
         if (parts === null) {
             return parts
         }
@@ -341,3 +367,5 @@ function convertDateFormat(dateTimeStr, type) {
         return formattedDate;
     }
 }
+
+
