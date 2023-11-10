@@ -9,7 +9,7 @@ const RunCard = (props) => {
     const [selectedEventKey, setSelectedEventKey] = useState('list');
 	const [selectedRun, setselectedRun] = useState({})
 
-	console.log(list,status);
+	// console.log(list,status);
 
 	const runList = list?.map((run)=>{
 		

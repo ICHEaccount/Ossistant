@@ -148,7 +148,7 @@ const DataCard = (props) => {
                         
                             {lbs[label].properties.map((key) => {
                                 if(key==="note"){
-                                    return (<InputGroup className='mb-1 px-1'>
+                                    return (<InputGroup className='mb-1 px-1' >
                                     <InputGroup.Text id='note'>note</InputGroup.Text>
                                     <Form.Control
                                     value={formData.note}
@@ -173,7 +173,7 @@ const DataCard = (props) => {
                                         +
                                     </Button>
                                     </Form.Label>
-                                    
+                                    <div className={cls("",{"tw-h-32 tw-overflow-y-auto":listProperty})}>
                                     {listProperty?.map((item, idx) => (
                                     <div key={idx} className="d-flex mb-1">
                                         <Form.Control
@@ -202,6 +202,8 @@ const DataCard = (props) => {
                                         </Button>
                                     </div>
                                     ))}
+                                    </div>
+                                    
                                     
                                 </Form.Group>)
                                     
