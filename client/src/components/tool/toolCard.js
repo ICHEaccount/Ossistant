@@ -4,11 +4,14 @@ import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
 import Axios from 'axios';
+import { useDispatch } from 'react-redux';
+import {viewChange} from '../../reducers/node'
+
 
 const ToolCard = (props) => {
+    const dispatch = useDispatch()
     const tools = props.labelTools;
     const labelData = props.labelData;
-    const toolState = props.toolState;
     const case_id = props.case_id;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     const [selectedItems, setSelectedItems] = useState({});
@@ -30,10 +33,6 @@ const ToolCard = (props) => {
 
     const runTool = (e) => {
         e.preventDefault();
-        if(toolState==="running"){
-            setshow(!show)
-            return
-        }
 
         if (Object.keys(selectedItems).length === 0) {
             setshow(!show)
@@ -41,10 +40,11 @@ const ToolCard = (props) => {
         }
 
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
+        console.log(selectedTool);
 
         const selectedNodes = {
             case_id: case_id,
-            tool_id: selectedTool.id,
+            tool_id: selectedTool.tool_id,
             properties: labelData.map((node, nodeIdx) => {
                     if (selectedItems[node.node_id]) {
                         const property_list = Object.keys(node.property).reduce((acc, key) => {
@@ -63,12 +63,13 @@ const ToolCard = (props) => {
                 .filter((node) => node !== null), // null이 아닌 항목만 유지
         };
 
-        // console.log(selectedNodes);
+        console.log(selectedNodes);
 
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {
                 console.log(response.data);
-                props.toolrunner(response.data.run_id)
+                props.newRun(true)
+                dispatch(viewChange('list'))
             })
             .catch((error) => {
                 console.error(error);
@@ -101,8 +102,7 @@ const ToolCard = (props) => {
 
     const selectedNode = tools?.map((tool, idx) => {
         return selectedEventKey === `selected-${idx}` ? (
-            <Container>
-                <Card className="mt-1">
+                <Card className="mt-1 tw-w-full">
                     <Card.Header className="mb-1">
                         <Button
                             variant="light"
@@ -117,13 +117,13 @@ const ToolCard = (props) => {
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
-                        {labelData.length ? (
+                        {labelData?.length ? (
                             <Form onSubmit={runTool}>
                                 {tool.apply.map((p, idx) => (
                                     <Form.Group key={idx}>
                                         <Form.Label>{p}</Form.Label>
                                         {labelData.map((node, idx) => {
-                                            console.log(labelData);
+                                            // console.log(labelData);
                                             if (p in node.property) {
                                                 return (
                                                     <Form.Check
@@ -138,18 +138,7 @@ const ToolCard = (props) => {
                                         })}
                                     </Form.Group>
                                 ))}
-                                {toolState==="running"?(<Col md={{ span: 3, offset: 9 }}>
-                                    <Button variant="outline-dark" ref={runButton} type="submit">
-                                        <Play />
-                                    </Button>
-                                    <Overlay target={runButton.current} show={show} placement="right">
-                                    {(props) => (
-                                        <Tooltip id="overlay-example" {...props}>
-                                        Tool Is Already Running
-                                        </Tooltip>
-                                    )}
-                                    </Overlay>
-                                </Col>):(<Col md={{ span: 3, offset: 9 }}>
+                                <Col md={{ span: 3, offset: 9 }}>
                                     <Button variant="outline-dark" ref={runButton} type="submit" >
                                         <Play />
                                     </Button>
@@ -160,19 +149,18 @@ const ToolCard = (props) => {
                                         </Tooltip>
                                     )}
                                     </Overlay>):null}
-                                </Col>)}
+                                </Col>
                                 
                             </Form>
                         ) : "Unavailable"}
                     </Card.Body>
                 </Card>
-            </Container>
         ) : null;
     });
 
     return (
         <Container>
-            {selectedEventKey === 'list' ? toolList : selectedNode}
+            {selectedEventKey === 'list' ? (tools?toolList:<p className='tw-text-center'>no tools yet</p>) : selectedNode}
         </Container>
     );
 };

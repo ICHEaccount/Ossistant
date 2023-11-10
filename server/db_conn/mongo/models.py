@@ -3,6 +3,16 @@ from .init import db
 import uuid
 import datetime
 
+
+class ResultModel(db.DynamicDocument):
+    col_name = 'Result'
+    meta = {'collection':col_name}
+
+    result_id = db.SequenceField(primary_key=True) 
+    result = db.DynamicField(required=True)
+    created= db.BooleanField(required=True, default=False)
+
+    
 class RunModel(db.DynamicDocument):
     col_name = 'Run'
     meta = {'collection':col_name}
@@ -11,10 +21,57 @@ class RunModel(db.DynamicDocument):
     status = db.StringField(required=True)
     runtime = db.StringField(required=True)
     tool_id = db.StringField(required=True)
+    input_uid = db.StringField()
+    input_value = db.StringField(required=True)
+    results = db.ListField(db.ReferenceField('ResultModel'))
+
+    @classmethod
+    def get_all_results(cls, run_id):
+        result_list = []
+        run_obj = cls.objects(run_id=run_id).first()
+        if not run_obj:
+            return None, 'Run data did not exist'
+        
+        for result_ref in run_obj.results:
+            result = ResultModel.objects(result_id=result_ref.result_id).first()
+            if result:
+                result_list.append({
+                    "result_id": result.result_id,
+                    "result": result.result,
+                    "created": result.created
+                })
+        return True, result_list  # Return run_list
+
+    @classmethod
+    def create_result(cls, data, run_id):
+        try:
+            run = cls.objects(run_id=run_id).first()
+            if not run:
+                return None, 'Run data did not exist'
+            
+            if isinstance(data,dict):
+                result_obj = ResultModel(result=data)
+                result_obj.save()
+
+                run.results.append(result_obj)
+            elif isinstance(data,list):
+                    for item in data:
+                        result_obj = ResultModel(result=item)
+                        result_obj.save()
+                        run.results.append(result_obj)
+            else:
+                return None, "Invalid data type"
+            
+            run.save()
+            return True, 'Success'
+        except Exception as e:
+            return None, f'{cls.col_name} : Result Creation Error: {e}'
+
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
     meta = {'collection':col_name}
+
     tool_id = db.StringField(required=True)
     tool = db.StringField(required=True)
     created_date = db.StringField(required=True)
@@ -52,8 +109,8 @@ class CaseModel(db.DynamicDocument):
     def create(cls, data) -> bool:
         try:
             # if 'case_id' not in data:  # _id가 없는 경우에만 수동으로 생성
-            #     data['case_id'] = str(uuid.uuid1())
-            data['case_id'] = '1'
+            data['case_id'] = str(uuid.uuid1())
+            # data['case_id'] = '1'
             new_case = cls(**data)
             new_case.save()
             return new_case.case_id
@@ -81,12 +138,12 @@ class CaseModel(db.DynamicDocument):
 
     
     @classmethod
-    def create_runs(cls, case_id, tool_id, status='ready'):
+    def create_runs(cls, case_id, tool_id, input_value,status='ready'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id,runtime=runtime, status=status)
+                run = RunModel(tool_id=tool_id,runtime=runtime, status=status, input_value=input_value)
                 run.save()
                 case.runs.append(run)
                 case.save()
@@ -97,5 +154,23 @@ class CaseModel(db.DynamicDocument):
         except Exception as e:
             print(f'{cls.col_name} : Run Creation Error: {e}')
             return False
-              
 
+    @classmethod
+    def get_all_runs(cls, case_id):
+        run_list = []
+        case_obj = cls.objects(case_id=case_id).first()
+        if not case_obj:
+            return None, 'Case not exist'
+
+        for run_ref in case_obj.runs:
+            run = RunModel.objects(run_id=run_ref.run_id).first()
+            if run:
+                run_list.append({
+                    "run_id": run.run_id,
+                    "status": run.status,
+                    "runtime": run.runtime,
+                    "tool_id": run.tool_id,
+                    "input_value": run.input_value,
+                    "results": RunModel.get_all_results(run_id=run.run_id)[1]
+                })
+        return True, run_list

@@ -1,13 +1,3 @@
-//import React from 'react'
-//
-//const SuspectTimeline = () => {
-//  return (
-//    <div>SuspectTimeline</div>
-//  )
-//}
-//
-//export default SuspectTimeline
-
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
@@ -102,7 +92,8 @@ const SuspectTimeline = (props) => {
 
     // 그래프 옵션
     const options = {
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
+        aspectRatio: 3,
         showLine: false,
         scales: {
             x: {
@@ -148,9 +139,7 @@ const SuspectTimeline = (props) => {
     };
 
     return (
-        <div>
-            <Line options={options} data={{ datasets }} style={{ height: "200px", width: "840px" }} />
-        </div>
+        <Line options={options} data={{ datasets }} height={null} width={null}/>
     );
 }
 

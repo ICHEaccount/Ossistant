@@ -119,7 +119,9 @@ const DomainTimeline = (props) => {
 
     // 그래프 옵션
     const options = {
-        maintainAspectRatio: false,
+
+        maintainAspectRatio: true,
+        aspectRatio: 3,
         showLine: false,
         scales: {
             x: {
@@ -165,9 +167,9 @@ const DomainTimeline = (props) => {
     };
 
     return (
-        <div>
-            <Line options={options} data={{ datasets }} style={{ height: "200px", width: "840px" }} />
-        </div>
+
+            <Line options={options} data={{datasets}} height={null} width={null}/>
+
     );
 }
 

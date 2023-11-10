@@ -8,6 +8,11 @@ __pycache__/
 *$py.class
 
 ## for pycharm
+venv
 venv2
 .idea
-#
+
+## osint tools
+server/osint/tools/lib/maigret
+reports/
+server/osint/reports
