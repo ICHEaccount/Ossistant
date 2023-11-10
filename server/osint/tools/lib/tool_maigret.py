@@ -9,7 +9,9 @@ from db_conn.neo4j.models import SurfaceUser
 def run_maigret(run):
     # print("Current working directory:", os.getcwd())
     try:
-        subprocess.Popen(['maigret', run.input_value, '--json', 'simple'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.Popen([
+            'maigret', run.input_value, '--top-sites', '100', '--timeout', '10', '--no-recursion', '--json', 'simple'
+        ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         run.status = 'running'
     except Exception as e:
         message = f'Run maigret failed. Username is {run.input_value}. Return code: {e}'

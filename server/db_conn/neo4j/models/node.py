@@ -59,16 +59,16 @@ class Comment(BaseNode):
     case_id = StringProperty()
     note = StringProperty()
 
-def to_json(self):
-    return {
-        "uid": self.uid,
-        "url": self.url,
-        "name": self.name,
-        "content": self.content,
-        "created_date": self.created_date,
-        "note": self.note
-    }
-
+    def to_json(self):
+        return {
+            "uid": self.uid,
+            "url": self.url,
+            "name": self.name,
+            "content": self.content,
+            "created_date": self.created_date,
+            "note": self.note
+        }
+    
 
 @NodeManager
 class Email(BaseNode):
