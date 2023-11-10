@@ -99,6 +99,7 @@ import BetaToast from '../components/betaToast';
                                 }
                                 if(newResultList.ready.length===0 && newResultList.running.length===0){
                                     clearInterval(interval);
+                                    setisDone(false);
                                     setisnewRun(false);
                                 }
                             }
