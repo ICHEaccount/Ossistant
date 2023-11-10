@@ -10,7 +10,8 @@ from neo4j import GraphDatabase
 bp = Blueprint('timeline', __name__, url_prefix='/timeline')
 
 #@bp.route('/test', methods=['GET'])
-def get_data():
+@bp.route("/whole/<string:case_id>", methods=["GET"])
+def get_data(case_id):
     # 초기 데이터 구조
     data = {
         "Company": [],
@@ -21,9 +22,11 @@ def get_data():
 
     # 각 노드 유형에 대한 쿼리 실행
     for node_type in data.keys():
+        if not case_id:
+            jsonify({'Error': 'case_id did not exist'}), 404
         query = (
             f"MATCH (n:{node_type})-[*1..2]-(connected_node) "
-            "WHERE NOT n = connected_node "  # 같은 노드 제외
+            f"WHERE NOT n = connected_node AND n.case_id = '{case_id}' "  # 같은 노드 제외 및 case_id 일치 조건 추가
             "RETURN n AS node, collect(connected_node) AS connected_nodes"
         )
         results, _ = db.cypher_query(query)
@@ -140,6 +143,8 @@ def get_data():
     # 결과를 JSON으로 반환
 
     #return filtered_data
+    post_dicts = filtered_data
+    return jsonify({'whole_dicts': post_dicts}), 200
 
 # @bp.route('/whole', methods=["GET"])
 # def create_post():
@@ -149,15 +154,24 @@ def get_data():
 ########################################suspect_Timeline################################################
 
 #@bp.route('/test', methods=['GET'])
-def get_surfaceuser_and_connected_nodes():
+@bp.route("/suspect/<string:case_id>", methods=["GET"])
+def get_surfaceuser_and_connected_nodes(case_id):
     data = []
 
     # SurfaceUser 노드 가져오기
-    surfaceuser_query = "MATCH (s:SurfaceUser) RETURN s"
+    surfaceuser_query = (
+        f"MATCH (s:SurfaceUser) "
+        f"WHERE s.case_id = '{case_id}' "
+        "RETURN s"
+    )
     surfaceuser_nodes, _ = db.cypher_query(surfaceuser_query)
 
     # DarkUser 노드 가져오기
-    darkuser_query = "MATCH (d:DarkUser) RETURN d"
+    darkuser_query = (
+        f"MATCH (d:DarkUser) "
+        f"WHERE d.case_id = '{case_id}' "
+        "RETURN d"
+    )
     darkuser_nodes, _ = db.cypher_query(darkuser_query)
 
     # 각 SurfaceUser 노드에 대해 연결된 노드 정보 가져오기
@@ -278,9 +292,11 @@ def get_surfaceuser_and_connected_nodes():
         item['regdate'] = item['regdate'][:10]  # YYYY-MM-DD 포맷으로 슬라이싱
 
     # 데이터 반환
-    #return data
-
-
+#     return data
+    post_dicts = data
+    return jsonify({'suspect_dicts': post_dicts}), 200
+#
+#
 # @bp.route('/suspect', methods=["GET"])
 # def create_post():
 #     post_dicts = get_surfaceuser_and_connected_nodes()
@@ -290,8 +306,9 @@ def get_surfaceuser_and_connected_nodes():
 
 ########################################Domain_Timeline################################################
 
-@bp.route('/test', methods=['GET'])
-def post_function():
+#@bp.route('/test', methods=['GET'])
+@bp.route("/post/<string:case_id>", methods=["GET"])
+def post_function(case_id):
     # 초기 데이터 구조
     data = {
         "Domain": [],
@@ -301,99 +318,68 @@ def post_function():
     # Domain 노드와 연결된 Post 노드에 대한 쿼리 실행
     query = (
         "MATCH (d:Domain)-[*1..2]-(p:Post) "
-        "WHERE NOT d = p "  # 동일 노드 제외
-        "RETURN d AS domain_node, collect(DISTINCT p) AS connected_posts"
+        f"WHERE NOT d = p AND d.case_id = '{case_id}' "  # 동일 노드 제외 및 case_id 조건 추가
+        "RETURN d AS domain_node, p AS post_node"
     )
     results, _ = db.cypher_query(query)
 
     # 결과 데이터 처리
     for record in results:
         domain_node = record[0]
-        connected_posts = record[1]
+        post_node = record[1]
 
         # domain_node가 None이 아닌지 확인
         if domain_node:
-            # 도메인 노드 데이터 추가 (노드 객체를 딕셔너리로 변환)
-            data["Domain"].append(dict(domain_node._properties))
+            domain_data = dict(domain_node._properties)
 
-        # 연결된 포스트 노드 데이터 추가, None이 아닌 노드만 포함
-        posts_data = [dict(post._properties) for post in connected_posts if post]
-        data["Post"].extend(posts_data)
+            domain_data['domain_registered_date'] = 'Domain_registered'
 
-    # 결과를 JSON 형식으로 반환합니다.
-    return jsonify(data)
+            # Post 노드 데이터에 Domain의 'domain' 속성 추가
+            post_data = dict(post_node._properties)
+            post_data['domain'] = domain_data['domain']
 
+            data["Post"].append(post_data)
 
+            # 도메인 노드 데이터가 아직 Domain 리스트에 없으면 추가
+            if domain_data not in data["Domain"]:
+                data["Domain"].append(domain_data)
+
+    combined_list = data["Domain"] + data["Post"]
+    data = combined_list
+    # created_date를 regdate로 변경하고, regdate가 있는 딕셔너리만 추출합니다.
+    processed_data = []
+    for item in data:
+        # created_date가 있으면 regdate로 변경
+        if 'created_date' in item:
+            item['regdate'] = item.pop('created_date')
+        # regdate가 있는 딕셔너리만 추출
+        if 'regdate' in item:
+            processed_data.append(item)
+
+    # regdate의 시간 값을 추출하여 Hour 키를 추가합니다.
+    for item in processed_data:
+        # datetime 객체를 사용하여 시간을 추출합니다.
+        date_time_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
+        item['Hour'] = date_time_obj.hour
+
+    # regdate 기준으로 정렬합니다.
+    processed_data.sort(key=lambda x: datetime.strptime(x['regdate'], "%Y-%m-%d %H:%M:%S"))
+
+    # regdate 포맷을 변경하고 문자열로 변환합니다.
+    for item in processed_data:
+        # datetime 객체를 사용하여 날짜만 추출하고 포맷을 변경합니다.
+        item['regdate'] = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S").date().isoformat()
+
+    # 결과를 출력합니다.
+#     return processed_data
+    post_dicts = processed_data
+    return jsonify({'post_dicts': post_dicts}), 200
+
+#
+#
 # @bp.route('/post', methods=["GET"])
 # def create_post():
-#   post_dicts = post_function()
-#   return jsonify({'post_dicts': post_dicts}), 200
+#    post_dicts = post_function()
+#    return jsonify({'post_dicts': post_dicts}), 200
 
 #####################################################################################################################
-
-# queries = [
-    #     "MATCH (d:Domain) RETURN PROPERTIES(d) AS data",
-    #     "MATCH (p:Post) RETURN PROPERTIES(p) AS data",
-    #     "MATCH (s:SurfaceUser) RETURN PROPERTIES(s) AS data"
-    # ]
-    #
-    # results = []
-    #
-    # for query in queries:
-    #     result, _ = db.cypher_query(query)
-    #     for row in result:
-    #         data = row[0]  # 각 튜플의 첫 번째 요소를 가져옵니다.
-    #         results.append(data)
-    #
-    # username_dict = None
-    # for item in results:
-    #     if "username" in item:
-    #         username_dict = item
-    #         break
-    #
-    # # username이 있는 경우, 같은 url 또는 domain 값을 가진 딕셔너리에 username 추가
-    # if username_dict:
-    #     for item in results:
-    #         if item.get("domain") == username_dict.get("url"):
-    #             item["username"] = username_dict.get("username")
-    #
-    # # 결과를 저장할 리스트
-    # filtered_data_domain = [] # This is domain
-    #
-    # for item in results:
-    #     if 'domain' in item:
-    #         filtered_item = {
-    #             "domain": item["domain"],
-    #             "regdate": item.get("regdate"),
-    #             "status": item.get("status")
-    #         }
-    #
-    #         # 'username' 키가 있는지 확인하고, 있다면 그 값을 추가
-    #         if 'username' in item:
-    #             filtered_item["username"] = item["username"]
-    #
-    #         filtered_data_domain.append(filtered_item)
-    #
-    # # 데이터셋을 반복하면서 domain 값을 분석하고 domain_name을 추가
-    # for item in filtered_data_domain:
-    #     domain_value = item.get("domain")
-    #     if domain_value:
-    #         # 정규 표현식을 사용하여 도메인 이름 추출
-    #         match = re.search('(?:https?://)?(?:www\.)?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)', domain_value)
-    #         # match = re.search(r'www\.(.*?)\.', domain_value)
-    #         if match:
-    #             domain_name = match.group(1)
-    #             item["domain_name"] = domain_name
-    #
-    # # 날짜 형식으로 변환
-    # for item in filtered_data_domain:
-    #     if item["regdate"] :
-    #         item["regdate"] = datetime.strptime(item["regdate"], "%Y-%m-%d").date()
-    #
-    # # 날짜를 기준으로 정렬 (lambda 함수 사용)
-    # sorted_data = sorted(filtered_data_domain, key=lambda x: x["regdate"])
-    #
-    # # 날짜를 문자열로 다시 변환
-    # for item in sorted_data:
-    #     if item["regdate"] :
-    #         item["regdate"] = item["regdate"].strftime("%Y-%m-%d")
