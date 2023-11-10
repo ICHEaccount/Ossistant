@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET'})
             .then(response => response.json())
             .then(data => {
-                searchResultsDiv.innerHTML = '';  // 이전 결과 지우기
+                searchResultsDiv.innerHTML = '';  // 이전 결과 지워
                 data.forEach(caseItem => {
                     let p = document.createElement('div');
                     p.classList.add('case-item')
