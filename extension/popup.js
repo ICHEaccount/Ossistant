@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: document.getElementById('description').value
         };
 
-        fetch('http://127.0.0.1:5000/case/createCase', {
+        fetch('http://13.209.168.47:5000/case/createCase', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 chrome.runtime.sendMessage({ caseId: data.case_id }, function(response) {
                     console.log(response); 
                 });
-                window.open(`http://127.0.0.1:3000/casepage/${data.case_id}`, '_blank');  
+                window.open(`http://13.209.168.47:3000/casepage/${data.case_id}`, '_blank');  
             } else {
                 throw new Error('Case ID not returned from server');
             }
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let searchResultsDiv = document.getElementById('searchResults');
 
     searchInput.addEventListener('input', function() {
-        fetch('http://127.0.0.1:5000/case/searchCases?query=' + encodeURIComponent(searchInput.value),{
+        fetch('http://13.209.168.47:5000/case/searchCases?query=' + encodeURIComponent(searchInput.value),{
             method: 'GET'})
             .then(response => response.json())
             .then(data => {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             chrome.runtime.sendMessage({ caseId: selectedCaseId }, function(response) {
                 console.log(selectedCaseId); 
             });
-            window.open('http://127.0.0.1:3000/casepage/' + selectedCaseId, '_blank');
+            window.open('http://13.209.168.47:3000/casepage/' + selectedCaseId, '_blank');
         } else {
             alert('케이스를 선택해주세요.');
         }

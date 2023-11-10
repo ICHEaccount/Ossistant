@@ -367,8 +367,5 @@ function convertDateFormat(dateTimeStr, type) {
         return formattedDate;
     }
 }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 0ef6a8ee7d0b822d921e718107ec467981a4eb58
