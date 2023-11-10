@@ -11,7 +11,7 @@ import lbs from '../../labels';
 import CreateData from './createData';
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
-import {select,clear,viewChange} from '../../reducers/node'
+import {select,clear,viewChange, changeBehavior} from '../../reducers/node'
 import  Axios  from 'axios';
 import { ListGroup } from 'react-bootstrap';
 
@@ -40,6 +40,7 @@ const DataCard = (props) => {
                 "property":formData
             },label:label}))
             setonEdit(false);
+            dispatch(changeBehavior('modify-data'))
         })
         .catch((err)=>{
             console.log(err);
@@ -63,6 +64,7 @@ const DataCard = (props) => {
             setnodes(nodes.filter((n)=>{return n.node_id!==selected.node_id}))
             dispatch(clear());
             console.log(nodes);
+            dispatch(changeBehavior('delete-data'))
         })
         .catch((err)=>{
             console.log(err);

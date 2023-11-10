@@ -3,13 +3,17 @@ import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import 'chart.js/auto';
 import { useParams } from 'react-router-dom';
-///import 'chartjs-adapter-date-fns';
+import {changeBehavior} from '../../../reducers/node'
+import { useSelector, useDispatch } from 'react-redux'
 
 const SuspectTimeline = (props) => {
     const isDone = props.isDone;
     const [datasets, setDatasets] = useState([]);
     const params = useParams();
     const case_id = params.case_id;
+    const dispatch = useDispatch()
+    const behavior = useSelector(state => state.node.behavior)
+
 
     useEffect(() => {
         axios.get(`/timeline/suspect/${case_id}`).then((response) => {
@@ -88,7 +92,8 @@ const SuspectTimeline = (props) => {
         .catch((error) => {
             console.error('서버 오류:', error);
         });
-    }, [isDone]);
+        dispatch(changeBehavior('view'))
+    }, [isDone,behavior]);
 
     // 그래프 옵션
     const options = {
