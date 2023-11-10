@@ -22,7 +22,9 @@
     "uuid": "^9.0.1",
     "vis-data": "^7.1.7",
     "vis-network": "^9.1.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "date-fns": "2.30.0",
+    "chartjs-adapter-date-fns":"3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
