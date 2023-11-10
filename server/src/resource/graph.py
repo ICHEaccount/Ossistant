@@ -5,12 +5,15 @@ from db_conn.neo4j.models import *
 
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
-@bp.route("/node", methods=["GET"])
-def get_neo4j_data():
-    query = """
+@bp.route("/nodes/<string:case_id>", methods=["GET"])
+def get_neo4j_data(case_id):
+    if not case_id:
+        jsonify({'Error':'case_id did not exist'}), 404
+    query = f"""
     MATCH (n)
+    WHERE n.case_id = '{case_id}'
     OPTIONAL MATCH (n)-[r]-(m)
-    RETURN n, labels(n),TYPE(r), PROPERTIES(r), m, r.uid, n.uid, m.uid
+    RETURN n, labels(n), TYPE(r), PROPERTIES(r), m, r.uid, n.uid, m.uid
     """
     results, _ = db.cypher_query(query)
 
@@ -38,29 +41,31 @@ def get_node_properties_by_uid(uid):
     query = f"MATCH (n) WHERE n.uid = '{uid}' RETURN labels(n), properties(n)"
     results, _ = db.cypher_query(query)
     preprocessed_data = dict()
-    preprocessed_data['type'] = results[0][0][0] if results[0][0] else None
+    preprocessed_data['label'] = results[0][0][0] if results[0][0] else None
     preprocessed_data.update(results[0][1])
     if results:
         return preprocessed_data
     else:
         return None
 
-@bp.route("/node/<string:uid>", methods=["GET"])
-def get_node_properties(uid):
+
+@bp.route("/node/<string:uid>",methods=["GET"])
+def test(uid):
     if uid:
         result = get_node_properties_by_uid(uid)
-        # Delete unnecessary value 
-        if 'case_id' in result:
-            del(result['case_id'])
-        if 'label' in result:
-            del(result['label'])
-        if result != None:
-            return jsonify(result)
-        else:
-            return jsonify({'error': result}), 404
-    else:
-        return jsonify({'error': 'UID parameter is missing.'}), 400
+        if result:
+            keys_to_remove = ['case_id', 'uid', 'url']
+            for key in keys_to_remove:
+                if key in result:
+                    del result[key]
 
+            if result:
+                data = {'node_id': uid, 'property': result}
+                return jsonify(data), 200
+        else:
+            return jsonify({'Error':'Node did not exist'}), 500
+    else:
+        return jsonify({'Error': f'{uid} did not exist'}), 404
 
 @bp.route("/node/modify", methods=['POST'])
 def modify_node():
@@ -105,3 +110,58 @@ def modify_node():
         return jsonify({'error':'Fail to modify the node'}), 500
     return jsonify({'msg':'success'}), 200
 
+
+@bp.route('/rel/create', methods=["POST"])
+def create_relationship():
+    res = request.get_json()
+    func_type = res['type']
+    if not res:
+        return jsonify({'error': 'Invalid request data'}), 404
+    if func_type == "0":
+        check_status, rel_check_status = Relationship.check_relationship(from_uid=res['from'], to_uid=res['to'])
+        if rel_check_status is True:
+            return jsonify({'Msg':'Relationship already exist', 'isrel': True}),200 
+        else:
+            relationship_data = Relationship.create_relationship_by_uid(res['from'], res['to'])
+            if relationship_data is not None and isinstance(relationship_data, tuple):
+                status, msg = relationship_data
+                if status is True:
+                    return jsonify({'Msg': msg, 'isrel':False}), 200
+                else:
+                    return jsonify({'msg':'Node creation error'}),500
+            else:
+                return jsonify({'Error': msg}), 500
+    elif func_type == "1":
+        if not 'rel_uid':
+            return jsonify({'Msg':'Relationship uid did not exist'}), 404
+        rel_uid = res['rel_uid']
+        del_status, msg = Relationship.delete_relationship(rel_uid)
+        if del_status is True:
+            relationship_data = Relationship.create_relationship_by_uid(res['from'], res['to'])
+            return jsonify({'msg':'Success'}),200
+        else:
+            return jsonify({'Error':'Relation connection error'}), 500
+    else:
+        return jsonify({'Error':'Invalid func type'}), 404
+
+@bp.route('/rel/delete',methods=["POST"])
+def delete_relationship():
+    res = request.get_json()
+    if not res:
+        return jsonify({'error': 'Invalid request data'}), 404
+    del_type = res['type']
+    uid = res['uid']
+    if del_type == "node":
+        del_node_status = delete_node(node_id=uid)
+        if del_node_status is True:
+            return jsonify({'Msg':'Success'}),200
+        else:
+            return jsonify({'Error':'Node Deletion error'}),500
+    elif del_type == "rel":
+        del_rel_status, msg = Relationship.delete_relationship(uid=uid)
+        if del_rel_status is True:
+            return jsonify({'Msg':'Success'}),200
+        else:
+            return jsonify({'Error':msg}),500
+    else:
+        return jsonify({'Error':'Type did not exist'}), 404

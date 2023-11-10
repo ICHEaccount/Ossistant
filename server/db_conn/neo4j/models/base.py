@@ -8,4 +8,3 @@ class NodeRelationship(StructuredRel):
 class BaseNode(StructuredNode):
     __abstract_node__ = True
     rel_to = RelationshipTo("BaseNode","CUSTOM_TO",model=NodeRelationship)
-    # rel_from = RelationshipFrom('BaseNode', 'CUSTOM_FROM', model=NodeRelationship)

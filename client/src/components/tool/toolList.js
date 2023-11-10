@@ -9,20 +9,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import {labelChange, categoryChange} from '../../reducers/node'
 import { Accordion } from 'react-bootstrap';
 
-const dummy = {
-    "Domain":[
-        {"name":"whois",
-        "id":"01",
-        "apply":["domain"]}
-    ]
-    ,
-    "SurfaceUser":[
-        {"name":"osintagram",
-        "id":"02",
-        "apply":["username"]}
-    ],
-}
-
 const ToolList = (props) => {
     const selcted_label = useSelector(state => state.node.label)
     const selected_category = useSelector(state =>state.node.category)
@@ -34,17 +20,18 @@ const ToolList = (props) => {
     const [tools, settools] = useState([])
 
     useEffect(() => {
-        // Axios.get(`/tools/getToolList`)
-        //     .then((res)=>{
-        //     if(res.data){
-        //         settools(res.data.data)
-        //         setIsload(true)
-        //     }else{
-        //         console.error(res.error);
-        //         setIsload(false)
-        //     }
-        //     })
-        settools(dummy)
+        Axios.get(`/tools/getToolList`)
+            .then((res)=>{
+            if(res.data){
+                // console.log(res.data);
+                settools(res.data)
+                setIsload(true)
+            }else{
+                console.error(res.error);
+                setIsload(false)
+            }
+            })
+        // settools(dummy)
     }, [case_id])
 
     const categoryList = Object.keys(category).map((tag)=>{
@@ -54,7 +41,7 @@ const ToolList = (props) => {
             return <Accordion.Item eventKey={label}>
                 <Accordion.Header>{label}</Accordion.Header>
                 <Accordion.Body className='tw-mx-[-25px] tw-my-[-10px]'>
-                <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
+                <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} newRun={props.newRun}/>
                 </Accordion.Body>
                 </Accordion.Item>
         })
@@ -65,25 +52,6 @@ const ToolList = (props) => {
         </Tab>
     })
     
-
-    // const toolList=labels.map((label)=>{
-    //     if(Object.keys(caseData).length===0) return (
-    //         <Tab eventKey={label} title={label}>
-    //             <p className='tw-text-center tw-text-lg'>No Data Yet</p>
-    //         {/* <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/> */}
-    //         </Tab>
-    //         )
-    //     const labelTools = tools[label]
-    //     // console.log(labelTools);
-    //     // if(labelTools!==undefined) console.log(labelTools);
-    //     return (
-    //         <Tab eventKey={label} title={label}>
-    //         <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} toolrunner={props.toolrunner} toolState={props.toolState}/>
-    //         </Tab>
-    //         )
-            
-    
-    // })
 
 
     return (

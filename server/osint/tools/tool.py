@@ -1,19 +1,21 @@
-import json
-import re
-import whois 
+import os
 
 from db_conn.mongo.models import RunModel, CaseModel
+from db_conn.neo4j.models import *
+from flask import request, jsonify, Blueprint
 
-from flask import request, jsonify,Blueprint
-
-from .lib.tool_whois import run_whois
+from .lib.tool_whois import *
 from .lib.tool_maigret import *
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
+report_dir = './reports/'
+if not os.path.exists(report_dir):
+    os.makedirs(report_dir)
 
-def check_json_not_null(input):
-    for value in input.values():
+
+def check_json_not_null(input_json):
+    for value in input_json.values():
         if value is None:
             return False
         elif isinstance(value, dict):
@@ -27,6 +29,17 @@ def check_json_not_null(input):
                 elif item is None:
                     return False
     return True
+
+
+@bp.route('/getToolList', methods=['GET'])
+def tool_list():
+    try:
+        with open('./tools/tool_list.json') as data:
+            response = json.load(data)
+    except FileNotFoundError as e:
+        response = f'{e}. File cannot be found.'
+        return jsonify({'Message': response}), 500
+    return jsonify(response), 200
 
 
 @bp.route('/runTools', methods=['POST'])
@@ -46,74 +59,74 @@ def run_tool():
     if not case:
         return jsonify({'Message': 'Case Not Found'}), 500
 
+    # creating run
     run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='ready', input_value='query')
     if run is None:
         return jsonify({'Message': 'Run Creation Error'}), 500
 
     # run the requested tool
     if tool_id == '01':  # whois
-        # check input
         try:
-            domain = runtools_requested_json['properties'][0]['property'][0]['domain']
-            run.input_value = domain
+            run.input_value = runtools_requested_json['properties'][0]['property'][0]['domain']
         except Exception as e:
             return jsonify({'Message': 'Invalid domain', 'Code': {e}}), 400
-        # Execute Tool(whois)
-        run_id = run_whois(case_id, domain, run)
+        run_id = run_whois(run)
 
     elif tool_id == '03':  # maigret
-        # check input
         try:
-            username = runtools_requested_json['properties'][0]['property'][0]['username']
-            run.input_value = username
+            run.input_value = runtools_requested_json['properties'][0]['property'][0]['username']
         except Exception as e:
             return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
-        # Execute Tool(maigret)
         run_id = run_maigret(run)
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
-    
-    # Returning run_id
+
+    # Responding run_id
     if isinstance(run_id, int):
         return jsonify({'run_id': run_id}), 200
     else:
         return jsonify({'Message': run_id}), 400
     
 
-@bp.route('/getToolState/<int:run_id>',methods=["GET"])
-def tool_state(run_id):
-    try:
-        run = RunModel.objects.get(_id=run_id)
-        if run is None:
-            return jsonify({"error": "Run not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@bp.route('/getToolState/<string:case_id>', methods=["GET"])
+def tool_state(case_id):
+    all_run = CaseModel.get_all_runs(case_id=case_id)[1]
 
-    # check the tool_id
-    if run.tool_id == '03':
-        message = check_maigret(run)
-    else:
-        message = 'Invalid tool_id.'
+    # checking results
+    for run in all_run:
+        if run['tool_id'] == '01':
+            check_whois(case_id, run['run_id'])
+        elif run['tool_id'] == '03':
+            check_maigret(case_id, run['run_id'])
 
-    # check the status
-    if run.status == 'completed':
-        response = message
-        return jsonify(response), 200
-    elif run.status == 'running':
-        response = {
-            "run_id": run.run_id,
-            "state": run.status,
-            "debug": message
-        }
-        return jsonify(response), 200
-    elif run.status == 'ready' or 'error':
-        response = {
-            "run_id": run.run_id,
-            "state": run.status,
-            "debug": message
-        }
-        return jsonify(response), 200
-    else:
-        return jsonify({"message": "run.status error"}), 400
+    # making response
+    ready = []
+    running = []
+    completed = []
+    error = []
 
+    for run in all_run:
+        # adding 'tool_name'
+        if run['tool_id'] == '01':
+            run['tool_name'] = 'whois'
+        elif run['tool_id'] == '03':
+            run['tool_name'] = 'maigret'
+        # sorting by status
+        if run['status'] == 'ready':
+            ready.append(run)
+        elif run['status'] == 'running':
+            running.append(run)
+        elif run['status'] == 'completed':
+            completed.append(run)
+        elif run['status'] == 'error':
+            error.append(run)
+
+    response = {
+        "ready": ready,
+        "running": running,
+        "completed": completed,
+        "error": error
+    }
+
+    return jsonify(response), 200

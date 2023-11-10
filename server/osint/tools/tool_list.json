@@ -1,0 +1,16 @@
+{
+  "Domain": [
+    {
+      "name": "whois",
+      "tool_id": "01",
+      "apply": ["domain"]
+    }
+  ],
+  "SurfaceUser": [
+    {
+      "name": "maigret",
+      "tool_id": "03",
+      "apply": ["username"]
+    }
+  ]
+}
