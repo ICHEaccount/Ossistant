@@ -54,11 +54,7 @@ chrome.runtime.onInstalled.addListener(() => {
     };
 
     const validIds = keywordMenus.concat(
-<<<<<<< HEAD
-        ...Object.values(keywordSubMenus).map(subMenuArray => subMenuArray)
-=======
         ...Object.values(keywordSubMenus).flat()
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
     );
 
     for (let parentMenu in keywordSubMenus) {
@@ -89,45 +85,17 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     }
 
-<<<<<<< HEAD
-    // Context menu click listener
-    chrome.contextMenus.onClicked.addListener((info, tab) => {
-        if (["xss.is", "naver blog", "naver cafe"].includes(info.menuItemId)) {
-=======
 
     // Context menu click listener
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
         let datalist = [];
 
         if (info.menuItemId === "xss.is"){
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
             chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
                 if (chrome.runtime.lastError) {
                     console.error("Error:", chrome.runtime.lastError.message);
                     return;
                 }
-<<<<<<< HEAD
-    
-                let postData = {
-                    url: tab.url,
-                    label: "Post",
-                    keyword: {
-                        "writer": response.writer,
-                        "created_date": response.create_date,
-                        "title": response.title,
-                        "content": response.content
-                    }
-                };
-                sendDataToServer(postData);
-    
-                let darkUserData = {
-                    url: tab.url,
-                    label: "DarkUser",
-                    keyword: {
-                        "username": response.username,
-                        "rank": response.userBanner,
-                        "regdate": response.regdate,
-=======
         
                 let postData = {
                     label: "Post",
@@ -147,14 +115,10 @@ chrome.runtime.onInstalled.addListener(() => {
                         "username": response.username,
                         "rank": response.rank,
                         "regdate": convertDateFormat(response.regdate, 2),
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
                         "post_num": response.post_num,
                         "comment_num": response.comment_num
                     }
                 };
-<<<<<<< HEAD
-                sendDataToServer(darkUserData);
-=======
                 datalist.push(darkUserData);
 
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
@@ -246,19 +210,14 @@ chrome.runtime.onInstalled.addListener(() => {
                 }).catch(error => {
                     console.error('Failed to send data:', error);
                 });
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
             });
         } else {
             let selectedText = info.selectionText;
             let siteUrl = tab.url;
         
-<<<<<<< HEAD
-            let data = { url: siteUrl };
-=======
             let data = { 
                 case_id: globalCaseId,
                 url: siteUrl };
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
 
             if (keywordMenus.includes(info.menuItemId)) {
                 data.label = info.menuItemId;
@@ -274,13 +233,6 @@ chrome.runtime.onInstalled.addListener(() => {
             if (data.label) {
                 sendDataToServer(data);
             }
-<<<<<<< HEAD
-        }
-    });
-});
-
-// Helper function to send data to the server
-=======
 
         }
 
@@ -299,9 +251,8 @@ chrome.runtime.onMessage.addListener(
   );
 
 
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
 function sendDataToServer(data) {
-    fetch('http://127.0.0.1:5000/graph/ext/create', {
+    fetch('http://http://13.209.168.47/:5000/graph/ext/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -311,13 +262,6 @@ function sendDataToServer(data) {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-<<<<<<< HEAD
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-}
-=======
         return data;
     })
     .catch((error) => {
@@ -327,7 +271,7 @@ function sendDataToServer(data) {
 }
 
 function sendDataToServer2(data) {
-    fetch('http://127.0.0.1:5000/graph/ext/snapshot', {
+    fetch('http://http://13.209.168.47/:5000/graph/ext/snapshot', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -397,4 +341,3 @@ function convertDateFormat(dateTimeStr, type) {
         return formattedDate;
     }
 }
->>>>>>> 8fe94542615140662e2d07563d99680280b614e8
