@@ -70,7 +70,7 @@ def run_tool():
             run.input_value = runtools_requested_json['properties'][0]['property'][0]['domain']
         except Exception as e:
             return jsonify({'Message': 'Invalid domain', 'Code': {e}}), 400
-        run_id = run_whois(run)
+        run_id = run_whois(case_id=case_id,run=run) # Add case_id
 
     elif tool_id == '03':  # maigret
         try:
@@ -96,7 +96,7 @@ def tool_state(case_id):
     # checking results
     for run in all_run:
         if run['tool_id'] == '01':
-            check_whois(case_id, run['run_id'])
+            check_whois(run['run_id']) # Delete case_id
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
 
