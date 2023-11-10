@@ -43,14 +43,14 @@ const Main = () => {
     })
 
     return (
-    <div className='tw-h-full tw-overflow-hidden'> 
+    <div> 
         <Container className='mb-3'>
         <Row>
             <Col lg={6}>
                     <IntroCard/>
             </Col>
             <Col lg={6}>
-                <Stack gap={2} className='m-3 tw-h-5/6 tw-overflow-auto'>
+                <Stack gap={2} className='m-3 tw-h-[533px] tw-overflow-auto'>
                     {isload?caseList:null}
                 </Stack>
             </Col>
