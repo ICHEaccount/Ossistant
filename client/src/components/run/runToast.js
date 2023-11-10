@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Toast, ToastContainer } from 'react-bootstrap'
 import logo from '../../images/logo_textless.png';
 
 
 const RunToast = (props) => {
     const newResult = props.newResult
+    const isnewRun = props.isnewRun
+    const [showList, setshowList] = useState([])
     // console.log(newResult);
     const toastList = newResult?.completed?.map((result)=> {
+        // setisnewRun(false)
         return(
         <Toast>
             <Toast.Header className="tw-bg-bright-peach">
@@ -22,7 +25,7 @@ const RunToast = (props) => {
     })
     return (
         <ToastContainer position='bottom-end' className='p-2'>
-            {toastList}
+            {isnewRun&&toastList}
         </ToastContainer>
     
     )

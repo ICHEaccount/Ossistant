@@ -20,6 +20,7 @@ import BetaToast from '../components/betaToast';
         const [isLoad, setisLoad] = useState(false)
         const [toolResult, settoolResult] = useState({})
         const [newResult, setnewResult] = useState({})
+        const [isnewResult, setisnewResult] = useState(false)
         const [isDone, setisDone] = useState(false)
         const [newData, setnewData] = useState([])
         const [isnewRun, setisnewRun] = useState(false)
@@ -61,43 +62,49 @@ import BetaToast from '../components/betaToast';
         }, [case_id,isDone,selected])
 
         useEffect(() => {
-            
+            // console.log(isnewRun);
+            if(isnewRun){
                 const interval = setInterval(() => {
                     Axios.get(`/tools/getToolState/${case_id}`)
                         .then((res) => {
                             // console.log(res.data);
-                            const newResultList={
-                                'completed':[],
-                                'ready':[],
-                                'running':[],
-                                'error':[]
-                            }
-                            Object.keys(res.data).forEach((status)=>{
-                                const statusData = res.data[status]
-                                if(toolResult[status]){  
-                                    statusData.forEach((item) => {
-                                        newResultList[status]=[]
-                                        const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
-                                        if (!isOldData) {
-                                            newResultList[status].push(item);
-                                        }
-                                    })
-                                } else {
-                                    newResultList[status]=res.data[status]
+                            if(Object.keys(toolResult)&&isnewRun){
+                                const newResultList={
+                                    'completed':[],
+                                    'ready':[],
+                                    'running':[],
+                                    'error':[]
                                 }
-                            })
-                            setnewResult(newResultList)
+                                Object.keys(res.data).forEach((status)=>{
+                                    const statusData = res.data[status]
+                                    if(toolResult[status]){  
+                                        statusData.forEach((item) => {
+                                            newResultList[status]=[]
+                                            const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
+                                            if (!isOldData) {
+                                                newResultList[status].push(item);
+                                            }
+                                        })
+                                    } else {
+                                        newResultList[status]=res.data[status]
+                                    }
+                                })
+                                setnewResult(newResultList)
+                                console.log(newResultList);
+                                //new completed run exists
+                                if(newResultList.completed.length){
+                                    setisDone(true);
+                                    setisnewRun(false)
+                                    setisnewResult(true)
+                                }
+                                if(newResultList.ready.length===0 && newResultList.running.length===0){
+                                    clearInterval(interval);
+                                    setisnewRun(false);
+                                }
+                            }
+                            
                             settoolResult(res.data)
-                            console.log(newResultList);
-                            //new completed run exists
-                            if(newResultList.completed.length){
-                                setisDone(true);
-                                
-                            }
-                            if(newResultList.ready.length===0 && newResultList.running.length===0){
-                                clearInterval(interval);
-                                setisnewRun(false);
-                            }
+                            
                             setisLoaded(true)
                         })
                         .catch(error => {
@@ -106,6 +113,18 @@ import BetaToast from '../components/betaToast';
                             setisLoaded(true)
                         });
                 }, 3000); // 3초마다 확인
+            }else{
+                Axios.get(`/tools/getToolState/${case_id}`)
+                    .then((res) => {
+                        settoolResult(res.data)
+                        setisLoaded(true)
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        setisLoaded(true)
+                    });
+            }
+                
             
 
         }, [isnewRun])
@@ -124,7 +143,7 @@ import BetaToast from '../components/betaToast';
                 </Col>
             </Row>
             </Container>}
-            {isLoaded&&<RunToast newResult={newResult}/>}
+            {(isLoaded)&&<RunToast newResult={newResult} newRun={setisnewRun} isnewRun={isnewResult}/>}
             <BetaToast/>
             
         </div>
