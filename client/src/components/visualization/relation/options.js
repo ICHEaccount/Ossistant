@@ -3,61 +3,55 @@ import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
 
 const options = {
-  // manipulation: {
-  //   enabled: true,
-  //   addNode: false,
-  //   addEdge: true,
-  //   editNode: false,
-  //   editEdge: true,
-  //   deleteNode: false,
-  //   deleteEdge: true
+  // groups: {
+    // SurfaceUser: {
+    //   shape: 'image',
+    //   image: {
+    //     selected: SurfaceUserImage,
+    //     unselected: SurfaceUserImage, 
+    //     background: 'transparent', 
+    //   },
+    //   label: {
+    //     field: 'username',
+    //     drawThreshold: 1,
+    //   },
+    //   font: {
+    //     size: 12, 
+    //   },
+    // },
+    // Post: {
+    //   shape: 'image',
+    //   image: {
+    //     selected: PostImage,
+    //     unselected: PostImage, 
+    //     background: 'transparent', 
+    //   },
+    //   label: {
+    //     field: 'username',
+    //     drawThreshold: 1,
+    //   },
+    //   font: {
+    //     size: 12, // Adjust font size as needed
+    //   },
+    // },
+    // Domain: {
+    //   shape: 'image',
+    //   image: {
+    //     selected: DomainImage,
+    //     unselected: DomainImage, 
+    //     background: 'transparent', 
+    //   },
+    //   label: {
+    //     field: 'domain',
+    //     drawThreshold: 1,
+    //   },
+    //   font: {
+    //     size: 12, // Adjust font size as needed
+    //   },
+    // },    
   // },
-  groups: {
-    SurfaceUser: {
-      shape: 'image',
-      image: {
-        selected: SurfaceUserImage,
-        unselected: SurfaceUserImage, 
-        background: 'transparent', 
-      },
-      label: {
-        field: 'username',
-        drawThreshold: 1,
-      },
-      font: {
-        size: 12, 
-      },
-    },
-    Post: {
-      shape: 'image',
-      image: {
-        selected: PostImage,
-        unselected: PostImage, 
-        background: 'transparent', 
-      },
-      label: {
-        field: 'username',
-        drawThreshold: 1,
-      },
-      font: {
-        size: 12, // Adjust font size as needed
-      },
-    },
-    Domain: {
-      shape: 'image',
-      image: {
-        selected: DomainImage,
-        unselected: DomainImage, 
-        background: 'transparent', 
-      },
-      label: {
-        field: 'domain',
-        drawThreshold: 1,
-      },
-      font: {
-        size: 12, // Adjust font size as needed
-      },
-    },    
+  nodes: {
+    shape : 'box'
   },
   edges: {
     color: {
@@ -74,6 +68,9 @@ const options = {
     smooth: {
       type: 'dynamic',
     },
+    arrows: {
+      to: { enabled: true, scaleFactor: 1, type: "arrow" }
+    }
   },
 };
 
