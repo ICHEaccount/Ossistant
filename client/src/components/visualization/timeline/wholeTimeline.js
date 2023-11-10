@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import 'chart.js/auto';
-//import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 ///import 'chartjs-adapter-date-fns';
 
 const WholeTimeline = (props) => {
     const isDone = props.isDone;
     const [datasets, setDatasets] = useState([]);
-//    const params = useParams();
-//    const case_id = params.case_id;
+    const params = useParams();
+    const case_id = params.case_id;
 
     useEffect(() => {
-        axios.get(`/timeline/whole/${10}`).then((response) => {
+        axios.get(`/timeline/whole/${case_id}`).then((response) => {
             const serverData = response.data;
             const data = serverData.whole_dicts;
 
