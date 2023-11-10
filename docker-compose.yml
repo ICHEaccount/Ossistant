@@ -11,7 +11,6 @@ services:
     environment:
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
       - NEO4J_AUTH=neo4j/icheneo4j
-      - NEO4JLABS_PLUGINS="graph-data-science"
     volumes:
       - ./database/neo4j/plugins:/plugins
       - ./database/neo4j/data:/data 
