@@ -81,7 +81,7 @@ const DataCard = (props) => {
         <Card.Body>
             <Row>
                 <Col xs="10">
-                {node.property[title]}
+                {node.property[title]?node.property[title]:"untitled"}
                 </Col>
                 
                 <Col xs="2" className="d-flex align-items-center" >
@@ -131,7 +131,7 @@ const DataCard = (props) => {
                             <Row>
                             <Col xs="9">
                             <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}><ChevronLeft/></Button>
-                            {selected.property[title]}
+                            {selected.property[title]?selected.property[title]:"untitled"}
                             </Col>
                             <Col xs="1">
                             {onEdit?

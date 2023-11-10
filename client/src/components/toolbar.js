@@ -50,22 +50,22 @@ const Toolbar = () => {
                 })
             }
             
-            //load recent case
-            Axios.get("/case/getCaseList")
-            .then((res)=>{
-            if(res.data){
-                setcases(res.data)
-                setisload(true)
-                // console.log(res.data);
-            }else{
-                alert('Backend Connection Failed')
-            }
-            })
-        }
 
+        }
+        //load recent case
+        Axios.get("/case/getCaseList")
+        .then((res)=>{
+        if(res.data){
+            setcases(res.data.reverse())
+            setisload(true)
+            // console.log(res.data);
+        }else{
+            alert('Backend Connection Failed')
+        }
+        })
         
         
-    }, [location,case_id,isCasePage])
+    }, [location,case_id])
     
     //add only 3 recent case to the list
     const caseList = cases.slice(0, 3).map((caseData,idx)=>{
