@@ -64,7 +64,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }else if(request.command === "getTelegram"){
         const note = document.querySelectorAll('.bubbles-date-group') ? document.querySelector('.bubbles-date-group').innerText : '';
         sendResponse({note})
+    }else if(request.command === "getUrlValue"){
+        //proxy 
+        torurl = document.getElementById('foreverproxy-u').value;
+        sendResponse({torurl})
     }
 
+<<<<<<< HEAD
 
 }); 
+=======
+}); 
+>>>>>>> 0ef6a8ee7d0b822d921e718107ec467981a4eb58

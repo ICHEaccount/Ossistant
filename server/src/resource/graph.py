@@ -12,7 +12,7 @@ def get_neo4j_data(case_id):
     query = f"""
     MATCH (n)
     WHERE n.case_id = '{case_id}'
-    OPTIONAL MATCH (n)-[r]-(m)
+    OPTIONAL MATCH (n)-[r]->(m)
     RETURN n, labels(n), TYPE(r), PROPERTIES(r), m, r.uid, n.uid, m.uid
     """
     results, _ = db.cypher_query(query)

@@ -6,7 +6,7 @@ import options from './options';
 import { useSelector, useDispatch } from 'react-redux'
 import node, {select} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
-
+import lbs from '../../../labels';
 import { debounce } from "lodash";
 
 
@@ -32,7 +32,7 @@ function RelationGraph(props) {
       const addedEdges = new Set();
     
       graphData.forEach(item => {
-        const label = item.n.username || item.n.domain || item.n.title;
+        const label = item.n[lbs[item.n.label].title];
         const group = item.n.label;
         const nodeId = item.n.id;
     
@@ -52,6 +52,9 @@ function RelationGraph(props) {
               from: fromNodeId,
               to: toNodeId,
               label: item.r.properties.label,
+              arrows: {
+                to: { enabled: true, scaleFactor: 1, type: "arrow" }
+              }
             });
             addedEdges.add(relationshipId);
           }
@@ -65,9 +68,9 @@ function RelationGraph(props) {
       if (dragInfo && dragInfo.controlEdge && dragInfo.controlEdge.from && dragInfo.controlEdge.to){
         const from_uid = dragInfo.controlEdge.from;
         const to_uid = dragInfo.controlEdge.to;
-        
         if (from_uid && to_uid) {
           if(from_uid !== to_uid){
+            network.disableEditMode();
             const formData = {
               "from":from_uid,
               "to":to_uid,
@@ -116,7 +119,10 @@ function RelationGraph(props) {
           }
     });
 
-
+    network.on('release', (params) => {
+      console.log('release : ' + params);
+      network.disableEditMode();
+    })
     // // Modify relationship 
     // network.on('doubleClick', (params)=>{
     //   console.log("data : " + params.edges);
