@@ -24,13 +24,13 @@ def get_data(case_id):
     for node_type in data.keys():
         if not case_id:
             jsonify({'Error': 'case_id did not exist'}), 404
-        query = (
-            f"MATCH (n:{node_type})-[*1..2]-(connected_node) "
-            f"WHERE NOT n = connected_node AND n.case_id = '{case_id}' "  # 같은 노드 제외 및 case_id 일치 조건 추가
+        query = query = (
+            f"MATCH (n:{node_type})-[*1..]->(connected_node) "
+            f"WHERE NOT n = connected_node AND n.case_id = '{case_id}' "
             "RETURN n AS node, collect(connected_node) AS connected_nodes"
         )
         results, _ = db.cypher_query(query)
-
+        
         # 결과 처리
         for node, connected_nodes in results:
             node_info = {
@@ -114,23 +114,24 @@ def get_data(case_id):
             all_connected_nodes.extend(item.get('connected_nodes', []))
 
     data = all_connected_nodes
+
     # date와 created_date를 regdate로 변환
     for item in data:
         if 'date' in item:
-            item['regdate'] = item.pop('date')
+            item['regdate'] = item('date')
         elif 'created_date' in item:
             item['regdate'] = item.pop('created_date')
 
     # regdate가 있는 딕셔너리만 필터링
-    filtered_data = [item for item in data if 'regdate' in item]
-
+    filtered_data = [item for item in data if 'regdate' in item and item['regdate'] is not None]
+    # return jsonify({'whole':filtered_data, 'type':str(type(filtered_data[0]['regdate']))}),200
     # regdate의 hour 정보를 분리하고, regdate를 날짜만 포함하도록 변환
     for item in filtered_data:
         # regdate로부터 datetime 객체 생성
         regdate_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
-        # Hour 정보 추가
+        # # Hour 정보 추가
         item['Hour'] = regdate_obj.hour
-        # regdate를 날짜만 포함하는 datetime.date 객체로 변환
+        # # regdate를 날짜만 포함하는 datetime.date 객체로 변환
         item['regdate'] = regdate_obj.date()
 
     # 날짜로 정렬 (오름차순)
