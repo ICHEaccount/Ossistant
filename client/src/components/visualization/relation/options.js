@@ -2,6 +2,8 @@ import SurfaceUserImage from '../../../images/node_icon/surfaceuser.png';
 import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
 import axios from 'axios';
+import store from '../../../reducers/store'
+import {changeBehavior} from '../../../reducers/node'
 
 
 const options = {
@@ -27,6 +29,7 @@ const options = {
             if(isRel === false){
               callback(edgeData);
             }
+            store.dispatch(changeBehavior('rel-add'))
           })
         }
       }
@@ -47,6 +50,7 @@ const options = {
             if(response.status === 200){
               callback(edgeData);
             }
+            store.dispatch(changeBehavior('rel-edit'))
           })
         }
       }
@@ -60,6 +64,7 @@ const options = {
           if(response.status === 200){
             callback(edgeData);
           }
+          store.dispatch(changeBehavior('rel-delete'))
         })
       }
     },
