@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
 
 const RunCard = (props) => {
-	const list = props.runList?props.runList.reverse():null
+	const list = props.runList?[...props.runList].reverse():null
 	const status = props.status
     const [selectedEventKey, setSelectedEventKey] = useState('list');
 	const [selectedRun, setselectedRun] = useState({})
@@ -12,7 +12,7 @@ const RunCard = (props) => {
 	// console.log(list,status);
 
 	const runList = list?.map((run)=>{
-		
+		console.log(run);
 		return(<Card className="mt-1" key={run.run_id}>
 		<Card.Body>
 			<Row>

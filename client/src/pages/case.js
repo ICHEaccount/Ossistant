@@ -151,6 +151,7 @@ import BetaToast from '../components/betaToast';
                 Axios.get(`/tools/getToolState/${case_id}`)
                     .then((res) => {
                         settoolResult(res.data)
+                        console.log("case:",toolResult);
                         setisLoaded(true)
                     })
                     .catch(error => {
