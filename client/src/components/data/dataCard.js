@@ -77,7 +77,7 @@ const DataCard = (props) => {
         // console.log(newData);
         return(
         <Card
-        className={cls('mt-1',{"tw-bg-blue-200":newData&&newData.some((newNode)=>newNode.node_id===node.node_id)})}
+        className={cls('mt-1',{"tw-bg-bright-peach":newData&&newData.some((newNode)=>newNode.node_id===node.node_id)})}
         // key={node.id}
         >
         <Card.Body>

@@ -18,17 +18,7 @@ const RunCard = (props) => {
 			<Row>
 				<Col xs="10">{`#${run.run_id} ${run.tool_name}`}</Col>
 				<Col xs="2" className="d-flex align-items-center">
-					<Button
-						variant="outline-primary"
-						size="sm"
-						onClick={() => {
-							setSelectedEventKey(`selected-${run.run_id}`);
-							console.log(run);
-							setselectedRun(run)
-						}}
-					>
-						<ChevronRight />
-					</Button>
+					<ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>{setSelectedEventKey(`selected-${run.run_id}`);setselectedRun(run)}}/>
 				</Col>
 			</Row>
 		</Card.Body>
@@ -40,7 +30,7 @@ const RunCard = (props) => {
     {selectedEventKey==="list"?(list?runList:<p className='tw-text-center'>no run yet</p>):(
 		<Card className='mt-1'>
 		<Card.Header className='mb-1'>
-			<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setSelectedEventKey('list')}}><ChevronLeft/></Button>
+			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list')}}/>	
 			{selectedRun.tool_name}
 			{/* {onEdit?
 			<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
