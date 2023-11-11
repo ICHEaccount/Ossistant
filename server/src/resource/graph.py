@@ -117,6 +117,9 @@ def create_relationship():
     func_type = res['type']
     if not res:
         return jsonify({'error': 'Invalid request data'}), 404
+    if not res['from'] or not res['to']:
+        return jsonify({'error': 'Invalid request data'}), 404
+    
     if func_type == "0":
         check_status, rel_check_status = Relationship.check_relationship(from_uid=res['from'], to_uid=res['to'])
         if rel_check_status is True:
@@ -131,16 +134,6 @@ def create_relationship():
                     return jsonify({'msg':'Node creation error'}),500
             else:
                 return jsonify({'Error': msg}), 500
-    elif func_type == "1":
-        if not 'rel_uid':
-            return jsonify({'Msg':'Relationship uid did not exist'}), 404
-        rel_uid = res['rel_uid']
-        del_status, msg = Relationship.delete_relationship(rel_uid)
-        if del_status is True:
-            relationship_data = Relationship.create_relationship_by_uid(res['from'], res['to'])
-            return jsonify({'msg':'Success'}),200
-        else:
-            return jsonify({'Error':'Relation connection error'}), 500
     else:
         return jsonify({'Error':'Invalid func type'}), 404
 

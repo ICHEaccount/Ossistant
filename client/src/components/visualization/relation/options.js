@@ -1,8 +1,53 @@
 import SurfaceUserImage from '../../../images/node_icon/surfaceuser.png';
 import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
-
+import axios from 'axios';
 const options = {
+  manipulation: {
+    addEdge : function(edgeData, callback) {
+      if (edgeData){
+        if (edgeData.from !== edgeData.to){
+          const reqData = {
+            'type': '0',
+            'from': edgeData.from,
+            'to': edgeData.to
+          }
+          console.log(edgeData);
+          axios.post("/graph/rel/create",reqData).then((response) => {
+            const isRel = response.data.isrel;
+            if(isRel === false){
+              callback(edgeData);
+            }
+          })
+        }
+      }
+    },
+    addNode : false,
+    deleteNode : false,
+    editEdge : function(edgeData , callback) {
+      if(edgeData){
+        if(edgeData.from !== edgeData.to){
+          const reqData = {
+            'type' : '0',
+            'from': edgeData.from,
+            'to': edgeData.to
+          }
+          
+          console.log('edit' + JSON.stringify(reqData));
+          axios.post("/graph/rel/create",reqData).then((response) => {
+            if(response.status === 200){
+              callback(edgeData);
+            }
+          })
+        }
+      }
+    },
+    deleteEdge : function(edgeData, callback){
+      if(edgeData){
+        console.log(JSON.stringify(edgeData));
+      }
+    }
+  },
   // groups: {
     // SurfaceUser: {
     //   shape: 'image',
