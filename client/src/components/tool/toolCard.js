@@ -68,7 +68,8 @@ const ToolCard = (props) => {
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {
                 console.log(response.data);
-                props.newRun(true)
+                // props.newRun(true)
+                props.newRun((prev)=> [...prev,response.data.run_id])
                 dispatch(viewChange('list'))
             })
             .catch((error) => {

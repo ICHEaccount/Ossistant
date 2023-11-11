@@ -23,7 +23,8 @@ import BetaToast from '../components/betaToast';
         const [isnewResult, setisnewResult] = useState(false)
         const [isDone, setisDone] = useState(false)
         const [newData, setnewData] = useState([])
-        const [isnewRun, setisnewRun] = useState(false)
+        // const [isnewRun, setisnewRun] = useState(false)
+        const [activeRuns, setactiveRuns] = useState([])
         const [isLoaded, setisLoaded] = useState(false)
 
         useEffect(() => {
@@ -63,12 +64,12 @@ import BetaToast from '../components/betaToast';
 
         useEffect(() => {
             // console.log(isnewRun);
-            if(isnewRun){
+            if(activeRuns.length){
                 const interval = setInterval(() => {
                     Axios.get(`/tools/getToolState/${case_id}`)
                         .then((res) => {
                             // console.log(res.data);
-                            if(Object.keys(toolResult)&&isnewRun){
+                            if(Object.keys(toolResult)){
                                 const newResultList={
                                     'completed':[],
                                     'ready':[],
@@ -84,6 +85,13 @@ import BetaToast from '../components/betaToast';
                                             if (!isOldData) {
                                                 newResultList[status].push(item);
                                             }
+                                            if(status==="completed"||status==="error"){
+                                                let newActiveRuns = activeRuns
+                                                if(item.run_id in activeRuns){
+                                                    newActiveRuns.filter((i)=> i!==item.run_id)
+                                                }
+                                                setactiveRuns(newActiveRuns)
+                                            }
                                         })
                                     } else {
                                         newResultList[status]=res.data[status]
@@ -94,12 +102,12 @@ import BetaToast from '../components/betaToast';
                                 //new completed run exists
                                 if(newResultList.completed.length){
                                     setisDone(true);
-                                    setisnewRun(false)
+                                    // setisnewRun(false)
                                     setisnewResult(true)
                                 }
                                 if(newResultList.ready.length===0 && newResultList.running.length===0){
                                     clearInterval(interval);
-                                    setisnewRun(false);
+                                    // setisnewRun(false);
                                 }
                             }
                             
@@ -128,23 +136,23 @@ import BetaToast from '../components/betaToast';
                 
             
 
-        }, [isnewRun])
+        }, [activeRuns])
         
 
-
+        const DataPanelMemoized = React.memo(DataPanel);
         return (
         <div>
-            {(isLoad&&isLoaded)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
+            {(isLoad)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
-                    <DataPanel case_id={case_id} caseData={case_data} toolResult={toolResult} newData={newData} newRun={setisnewRun}/>
+                    <DataPanelMemoized case_id={case_id} caseData={case_data} toolResult={toolResult} newData={newData} newRun={setactiveRuns}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
                     <VisualPanel isDone={isDone}/>
                 </Col>
             </Row>
             </Container>}
-            {(isLoaded)&&<RunToast newResult={newResult} newRun={setisnewRun} isnewRun={isnewResult}/>}
+            {(isLoaded)&&<RunToast newResult={newResult} isnewRun={isnewResult}/>}
             <BetaToast/>
             
         </div>

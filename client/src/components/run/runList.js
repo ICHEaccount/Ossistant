@@ -23,7 +23,7 @@ const RunList = (props) => {
     const runCards = status.map((status)=>{
         // console.log(runList);
 
-        return <Tab eventKey={status} title={status}><RunCard runList = {runList[status].length?runList[status]:null} status={status}/></Tab>
+        return <Tab eventKey={status} title={status}><RunCard runList = {runList[status]?.length?runList[status]:null} status={status}/></Tab>
 
     })
 
