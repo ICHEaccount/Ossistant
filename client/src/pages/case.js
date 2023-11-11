@@ -97,7 +97,7 @@ import BetaToast from '../components/betaToast';
                                         'error':[]
                                     }
                                     Object.keys(res.data).forEach((status)=>{
-                                        const statusData = res.data[status].reverse()
+                                        const statusData = res.data[status]
                                         // console.log(statusData);
                                         if(toolResult[status]){  
                                             statusData.forEach((item) => {
@@ -150,9 +150,6 @@ import BetaToast from '../components/betaToast';
             }else{
                 Axios.get(`/tools/getToolState/${case_id}`)
                     .then((res) => {
-                        Object.keys(res.data).forEach((status)=>{
-                            res.data[status]=res.data[status].reverse()
-                        })
                         settoolResult(res.data)
                         setisLoaded(true)
                     })
