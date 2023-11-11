@@ -126,6 +126,11 @@ import BetaToast from '../components/betaToast';
                                         // setisnewRun(false)
                                         setisnewResult(true)
                                     }
+                                    if(newResultList.error.length){
+                                        setisDone(true);
+                                        // setisnewRun(false)
+                                        setisnewResult(true)
+                                    }
                                     if(newResultList.ready.length===0 && newResultList.running.length===0){
                                         clearInterval(intervalRef.current);
                                         intervalRef.current = null;
