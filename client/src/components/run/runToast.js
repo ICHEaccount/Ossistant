@@ -5,7 +5,6 @@ import logo from '../../images/logo_textless.png';
 
 const RunToast = (props) => {
     const newResult = props.newResult
-    const isnewRun = props.isnewRun
     const [showList, setshowList] = useState([])
     // console.log(newResult);
     const toastList = newResult?.completed?.map((result)=> {
@@ -25,7 +24,7 @@ const RunToast = (props) => {
     })
     return (
         <ToastContainer position='bottom-end' className='p-2'>
-            {isnewRun&&toastList}
+            {toastList}
         </ToastContainer>
     
     )
