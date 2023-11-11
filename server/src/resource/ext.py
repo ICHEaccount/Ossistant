@@ -45,7 +45,6 @@ def create_node():
     else:
         return jsonify({'Error':msg}), 500
     
-    
 
 @bp.route('/snapshot', methods=['POST'])
 def take_snapshot():
@@ -57,7 +56,7 @@ def take_snapshot():
         url = req.get('url')
         case_id = req.get('case_id')
         data = req.get('data')
-
+        snap_type = req.get('type')
         node_dict = dict()
 
         # Create Node 
@@ -70,6 +69,7 @@ def take_snapshot():
                 node = NODE_LIST[req_label].create_node(keyword)
                 node_dict[NODE_LIST[req_label].get_node_name()] = node
 
+        
         # Create Relationship 
         if 'Post' in node_dict:
             post_node = node_dict['Post']

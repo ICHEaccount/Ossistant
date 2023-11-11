@@ -11,7 +11,7 @@ class ResultModel(db.DynamicDocument):
     result_id = db.SequenceField(primary_key=True) 
     result = db.DynamicField(required=True)
     created= db.BooleanField(required=True, default=False)
-
+    
     
 class RunModel(db.DynamicDocument):
     col_name = 'Run'
@@ -24,6 +24,7 @@ class RunModel(db.DynamicDocument):
     input_uid = db.StringField()
     input_value = db.StringField(required=True)
     results = db.ListField(db.ReferenceField('ResultModel'))
+    final = db.ListField(required=False)
 
     @classmethod
     def get_all_results(cls, run_id):
@@ -43,7 +44,7 @@ class RunModel(db.DynamicDocument):
         return True, result_list  # Return run_list
 
     @classmethod
-    def create_result(cls, data, run_id):
+    def create_result(cls, data, run_id, label='result'):
         try:
             run = cls.objects(run_id=run_id).first()
             if not run:
@@ -54,11 +55,14 @@ class RunModel(db.DynamicDocument):
                 result_obj.save()
 
                 run.results.append(result_obj)
-            elif isinstance(data,list):
+            elif isinstance(data,list) and label =='result':
                     for item in data:
                         result_obj = ResultModel(result=item)
                         result_obj.save()
                         run.results.append(result_obj)
+            elif isinstance(data,list) and label =='final':
+                for item in data:
+                    run.final.append(item)
             else:
                 return None, "Invalid data type"
             

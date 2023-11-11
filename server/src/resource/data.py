@@ -68,11 +68,12 @@ def get_data(case_id):
 @bp.route('/deleteData/<string:data_id>', methods=["GET"])
 def delete_data(data_id):
     if data_id:
-        success = delete_node(data_id)  
+        success, msg = delete_node(data_id)
+          
         if success is True:
-            return jsonify({"message": "Node and relationships deleted successfully"})
+            return jsonify({"message": msg})
         else:
-            return jsonify({"message": "Node not found"}), 404  
+            return jsonify({"message": msg}), 404  
     else:
         return jsonify({"message": "Data ID not provided"}), 400 
 

@@ -66,10 +66,10 @@ def report_maigret(case_id, run):  # status is COMPLETED
     if not s_user:
         s_user = SurfaceUser.create_node({'username': run.input_value, 'case_id': case_id})
     # inside the node
-    inp_data = {'registered': result_site}
-    status, s_user = SurfaceUser.update_node_properties(node_id=s_user.uid, return_node=True, **inp_data)
-    if status is False:
-        return "SurfaceUser registered update error"
+    # inp_data = {'registered': result_site}
+    # status, s_user = SurfaceUser.update_node_properties(node_id=s_user.uid, return_node=True, **inp_data)
+    # if status is False:
+    #     return "SurfaceUser registered update error"
 
     return maigret_response
 

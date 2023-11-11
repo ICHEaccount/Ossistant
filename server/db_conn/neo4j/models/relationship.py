@@ -85,7 +85,6 @@ EXTENSION_RELATIONS = {
     }
 }
 
-
 class Relationship:
 
     @classmethod
@@ -162,6 +161,20 @@ class Relationship:
         except Exception as e:
             return False, f"An error occurred: {e}"
         return True, 'Relationship deleted successfully'
+
+    @classmethod
+    def delete_rels_uid(cls, from_uid, to_uid):
+        if not from_uid or not to_uid:
+            return False, 'UID did not exist'
+        query = "MATCH (n)-[r]-(m) WHERE n.uid = $from_uid AND m.uid = $to_uid DELETE r"
+        try:
+            results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
+            if results:
+                return True, 'Success'
+            else:
+                return False, 'Deletion Error'
+        except Exception as e:
+            return False, f"An error occurred: {e}"
 
     @classmethod
     def modify_relationship(cls, uid, new_label):
