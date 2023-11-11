@@ -16,23 +16,9 @@ const ToolList = (props) => {
     const case_id = props.case_id
     const labels = Object.keys(lbs)
     const caseData = props.caseData
-    const [isload, setIsload] = useState(false)
-    const [tools, settools] = useState([])
+    const tools = props.toolList
 
-    useEffect(() => {
-        Axios.get(`/tools/getToolList`)
-            .then((res)=>{
-            if(res.data){
-                // console.log(res.data);
-                settools(res.data)
-                setIsload(true)
-            }else{
-                console.error(res.error);
-                setIsload(false)
-            }
-            })
-        // settools(dummy)
-    }, [])
+    
 
     const categoryList = Object.keys(category).map((tag)=>{
         const list = category[tag]

@@ -26,6 +26,24 @@ import BetaToast from '../components/betaToast';
         // const [isnewRun, setisnewRun] = useState(false)
         const [activeRuns, setactiveRuns] = useState([])
         const [isLoaded, setisLoaded] = useState(false)
+        const [istoolLoad, setistoolLoad] = useState(false)
+        const [tools, settools] = useState([])
+
+        useEffect(() => {
+            Axios.get(`/tools/getToolList`)
+                .then((res)=>{
+                if(res.data){
+                    // console.log(res.data);
+                    settools(res.data)
+                    setistoolLoad(true)
+                }else{
+                    console.error(res.error);
+                    setistoolLoad(false)
+                }
+                })
+            // settools(dummy)
+        }, [])
+        
 
         useEffect(() => {
             Axios.get(`/data/getData/${case_id}`)
@@ -142,10 +160,10 @@ import BetaToast from '../components/betaToast';
         const DataPanelMemoized = React.memo(DataPanel);
         return (
         <div>
-            {(isLoad)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
+            {(isLoad&&istoolLoad)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
             <Row>
                 <Col lg={4}>
-                    <DataPanelMemoized case_id={case_id} caseData={case_data} toolResult={toolResult} newData={newData} newRun={setactiveRuns}/>
+                    <DataPanelMemoized case_id={case_id} caseData={case_data} toolList={tools} toolResult={toolResult} newData={newData} newRun={setactiveRuns}/>
                 </Col>
                 <Col lg={8} className='tw-border-l'>
                     <VisualPanel isDone={isDone}/>
