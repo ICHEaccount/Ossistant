@@ -11,7 +11,7 @@ import lbs from '../../labels';
 import CreateData from './createData';
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
-import {select,clear,viewChange} from '../../reducers/node'
+import {select,clear,viewChange, changeBehavior} from '../../reducers/node'
 import  Axios  from 'axios';
 import { ListGroup } from 'react-bootstrap';
 
@@ -25,7 +25,7 @@ const DataCard = (props) => {
     const [onEdit, setonEdit] = useState(false)
     const [nodes, setnodes] = useState(props.nodes)
     const [formData, setformData] = useState(selected?selected.property:{})
-    const [listProperty, setlistProperty] = useState(formData?formData[lbs[label].list]:[])
+    const [listProperty, setlistProperty] = useState(formData?(formData[lbs[label].list]?formData[lbs[label].list]:[]):[])
 
     const editData = (e)=>{
         e.preventDefault()
@@ -40,6 +40,7 @@ const DataCard = (props) => {
                 "property":formData
             },label:label}))
             setonEdit(false);
+            dispatch(changeBehavior('modify-data'))
         })
         .catch((err)=>{
             console.log(err);
@@ -63,6 +64,7 @@ const DataCard = (props) => {
             setnodes(nodes.filter((n)=>{return n.node_id!==selected.node_id}))
             dispatch(clear());
             console.log(nodes);
+            dispatch(changeBehavior('delete-data'))
         })
         .catch((err)=>{
             console.log(err);
@@ -81,16 +83,11 @@ const DataCard = (props) => {
         <Card.Body>
             <Row>
                 <Col xs="10">
-                {node.property[title]}
+                {node.property[title]?node.property[title]:"untitled"}
                 </Col>
                 
                 <Col xs="2" className="d-flex align-items-center" >
-                    <Button variant="outline-primary" size="sm"
-                    onClick={() => {
-                        dispatch(select({node,label}))
-                    }}>
-                        <ChevronRight/>
-                    </Button>
+                    <ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>dispatch(select({node,label}))}/>
                 </Col>
             </Row>
             
@@ -114,8 +111,8 @@ const DataCard = (props) => {
                 return(
                     <Container>
                         <Card className='mt-1'>
-                        <Card.Header className='mb-1'>
-                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'))}}><ChevronLeft/></Button>
+                        <Card.Header className='mb-1 tw-bg-bright-peach'>
+                        <ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline tw-rounded-md' size={20} onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}/>
                             {`New ${label}`}
                         </Card.Header>
                             <CreateData label ={label}/>
@@ -127,20 +124,20 @@ const DataCard = (props) => {
                     <Container>
                     <Card className='mt-1'>
                         <Form onSubmit={editData}>
-                        <Card.Header className='mb-1'>
+                        <Card.Header className='mb-1 tw-bg-bright-peach'>
                             <Row>
                             <Col xs="9">
-                            <Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}><ChevronLeft/></Button>
-                            {selected.property[title]}
+                            <ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{dispatch(viewChange('list'));dispatch(clear())}}/>
+                            {selected.property[title]?selected.property[title]:"untitled"}
                             </Col>
                             <Col xs="1">
                             {onEdit?
-                            <Button variant="light" type='submit' size='sm' className='tw-mr-2'><Check/></Button>
-                            :<Button variant="light" type='button' size='sm' className='tw-mr-2' onClick={(e)=>{e.preventDefault(); setonEdit(true)}}><PencilSquare/></Button>
+                            <Check onClick={editData} type='submit' className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20}/>
+                            :<PencilSquare className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20} onClick={(e)=>{e.preventDefault(); setonEdit(true)}}/>
                             }
                             </Col>
                             <Col xs="1">   
-                            <Button variant="light" size='sm' className='tw-mr-2' onClick={onDelete}><Trash/></Button>
+                            <Trash className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20}  onClick={onDelete}/>
                             </Col>
                             </Row>
                             
@@ -173,7 +170,7 @@ const DataCard = (props) => {
                                         +
                                     </Button>
                                     </Form.Label>
-                                    <div className={cls("",{"tw-h-32 tw-overflow-y-auto":listProperty})}>
+                                    <div className={cls("",{"tw-max-h-32 tw-overflow-y-auto":listProperty})}>
                                     {listProperty?.map((item, idx) => (
                                     <div key={idx} className="d-flex mb-1">
                                         <Form.Control

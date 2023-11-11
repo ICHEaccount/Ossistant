@@ -5,20 +5,20 @@ import CaseCard from '../components/case/caseCards';
 import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
 import IntroCard from '../components/introCard';
-import { Button, Container, Row, Spinner, Toast, ToastContainer } from 'react-bootstrap';
+import { BreadcrumbItem, Button, Container, Row, Spinner, Toast, ToastContainer } from 'react-bootstrap';
 
 
 const Main = () => {
     const [isload, setisload] = useState(false)
     const [cases, setcases] = useState([])
+    const [page, setPage] = useState(1); //페이지
 
     useEffect(() => {
         Axios.get("/case/getCaseList")
             .then((res)=>{
             if(res.data){
-                setcases(res.data)
+                setcases(res.data.reverse())
                 setisload(true)
-                console.log(res.data);
             }else{
                 alert('Backend Connection Failed')
             }
@@ -43,14 +43,14 @@ const Main = () => {
     })
 
     return (
-    <div>
+    <div> 
         <Container className='mb-3'>
         <Row>
             <Col lg={6}>
                     <IntroCard/>
             </Col>
             <Col lg={6}>
-                <Stack gap={3} className='m-3'>
+                <Stack gap={2} className='m-3 tw-h-[533px] tw-overflow-auto'>
                     {isload?caseList:null}
                 </Stack>
             </Col>

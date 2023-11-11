@@ -4,7 +4,7 @@ import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
-import node, {select} from '../../../reducers/node'
+import {select,changeBehavior} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
 
@@ -13,7 +13,7 @@ function RelationGraph(props) {
   const case_id = params.case_id;
   const isDone = props.isDone
   const dispatch = useDispatch()
-  // const selected = useSelector(state => state.node.selected)
+  const behavior = useSelector(state => state.node.behavior)
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
   const [selectedEdge, setSelectedEdge] = useState(null);
@@ -99,9 +99,10 @@ function RelationGraph(props) {
         })
       }
     });
-    
 
-  }, [isDone,visJSRef]);
+    dispatch(changeBehavior('view'))
+  }, [isDone,visJSRef,behavior]);
+
 
   return (
       <><div ref={visJSRef} style={{ height: "370px", width: "900px", position: 'relative'}}></div>

@@ -1,39 +1,20 @@
-//import React, { useEffect, useState } from 'react'
-//import {
-//    Chart as ChartJS,
-//    CategoryScale,
-//    LinearScale,
-//    PointElement,
-//    LineElement,
-//    Title,
-//    Tooltip,
-//    Legend,
-//} from 'chart.js';
-//import { Line } from 'react-chartjs-2';
-//import axios from 'axios';
-//
-//ChartJS.register(
-//    CategoryScale,
-//    LinearScale,
-//    PointElement,
-//    LineElement,
-//    Title,
-//    Tooltip,
-//    Legend
-//);
-
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import 'chart.js/auto';
 import { useParams } from 'react-router-dom';
-///import 'chartjs-adapter-date-fns';
+import {changeBehavior} from '../../../reducers/node'
+import { useSelector, useDispatch } from 'react-redux'
+
+
 
 const DomainTimeline = (props) => {
     const isDone = props.isDone;
     const [datasets, setDatasets] = useState([]);
     const params = useParams();
     const case_id = params.case_id;
+    const dispatch = useDispatch()
+    const behavior = useSelector(state => state.node.behavior)
 
     useEffect(() => {
         axios.get(`/timeline/post/${case_id}`).then((response) => {
@@ -115,7 +96,8 @@ const DomainTimeline = (props) => {
         .catch((error) => {
             console.error('서버 오류:', error);
         });
-    }, [isDone]);
+        dispatch(changeBehavior('view'))
+    }, [isDone,behavior]);
 
     // 그래프 옵션
     const options = {

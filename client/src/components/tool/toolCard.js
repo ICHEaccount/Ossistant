@@ -68,7 +68,8 @@ const ToolCard = (props) => {
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {
                 console.log(response.data);
-                props.newRun(true)
+                // props.newRun(true)
+                props.newRun((prev)=> [...prev,response.data.run_id])
                 dispatch(viewChange('list'))
             })
             .catch((error) => {
@@ -84,15 +85,7 @@ const ToolCard = (props) => {
                     <Row>
                         <Col xs="10">{tool.name}</Col>
                         <Col xs="2" className="d-flex align-items-center">
-                            <Button
-                                variant="outline-primary"
-                                size="sm"
-                                onClick={() => {
-                                    setSelectedEventKey(`selected-${idx}`);
-                                }}
-                            >
-                                <ChevronRight />
-                            </Button>
+                            <ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>setSelectedEventKey(`selected-${idx}`)}/>
                         </Col>
                     </Row>
                 </Card.Body>
@@ -103,17 +96,8 @@ const ToolCard = (props) => {
     const selectedNode = tools?.map((tool, idx) => {
         return selectedEventKey === `selected-${idx}` ? (
                 <Card className="mt-1 tw-w-full">
-                    <Card.Header className="mb-1">
-                        <Button
-                            variant="light"
-                            size="sm"
-                            className="tw-mr-2"
-                            onClick={() => {
-                                setSelectedEventKey('list');
-                            }}
-                        >
-                            <ChevronLeft />
-                        </Button>
+                    <Card.Header className='mb-1 tw-bg-bright-peach'>
+                        <ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach  ' size={20} onClick={()=>setSelectedEventKey('list')}/>
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
@@ -138,10 +122,9 @@ const ToolCard = (props) => {
                                         })}
                                     </Form.Group>
                                 ))}
-                                <Col md={{ span: 3, offset: 9 }}>
-                                    <Button variant="outline-dark" ref={runButton} type="submit" >
-                                        <Play />
-                                    </Button>
+                                <div className='tw-flex tw-justify-end'>
+                                <div onClick={runTool} ref={runButton} className='hover:tw-cursor-pointer tw-p-1 tw-pl-2 hover:tw-border hover:tw-border-navy tw-text-navy'>
+                                    Run <Play className=' tw-inline tw-fill-navy' size={25}/>
                                     {Object.keys(selectedItems).length === 0?(<Overlay target={runButton.current} show={show} placement="right">
                                     {(props) => (
                                         <Tooltip id="overlay-example" {...props}>
@@ -149,7 +132,10 @@ const ToolCard = (props) => {
                                         </Tooltip>
                                     )}
                                     </Overlay>):null}
-                                </Col>
+                                    </div>
+                                </div>
+
+
                                 
                             </Form>
                         ) : "Unavailable"}

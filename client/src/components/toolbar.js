@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Form, Link, useLocation} from 'react-router-dom';
 import logo from '../images/logo.png';
-import {List, House, PersonVcard, Calendar} from 'react-bootstrap-icons';
+import {List, House, PersonVcard, Calendar, ArrowClockwise} from 'react-bootstrap-icons';
 import Axios from "axios";
 import Help from './help';
 import { Col, Row } from 'react-bootstrap';
@@ -50,22 +50,22 @@ const Toolbar = () => {
                 })
             }
             
-            //load recent case
-            Axios.get("/case/getCaseList")
-            .then((res)=>{
-            if(res.data){
-                setcases(res.data)
-                setisload(true)
-                // console.log(res.data);
-            }else{
-                alert('Backend Connection Failed')
-            }
-            })
-        }
 
+        }
+        //load recent case
+        Axios.get("/case/getCaseList")
+        .then((res)=>{
+        if(res.data){
+            setcases(res.data.reverse())
+            setisload(true)
+            // console.log(res.data);
+        }else{
+            alert('Backend Connection Failed')
+        }
+        })
         
         
-    }, [location,case_id,isCasePage])
+    }, [location,case_id])
     
     //add only 3 recent case to the list
     const caseList = cases.slice(0, 3).map((caseData,idx)=>{
@@ -86,10 +86,12 @@ const Toolbar = () => {
         </Navbar.Brand>
         
         <div className="ml-auto d-flex" >
+            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' onClick={()=>window.location.reload()}/>)}
             {isCasePage &&
             (<Link to="/">
                 <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
-            </Link>)}
+            </Link>
+            )}
             <Help location = {location.pathname}/>
             <NavDropdown id="basic-nav-dropdown" align="end"  menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
                 {case_id?(
