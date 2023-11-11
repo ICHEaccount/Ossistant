@@ -2,7 +2,16 @@ import SurfaceUserImage from '../../../images/node_icon/surfaceuser.png';
 import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
 import axios from 'axios';
+
+
 const options = {
+  layout:{
+    hierarchical: {
+      enabled:true,
+      sortMethod: 'directed',
+      nodeSpacing : 150
+    }
+  },
   manipulation: {
     addEdge : function(edgeData, callback) {
       if (edgeData){
@@ -44,9 +53,16 @@ const options = {
     },
     deleteEdge : function(edgeData, callback){
       if(edgeData){
-        console.log(JSON.stringify(edgeData));
+        const reqData = {
+          'uid': edgeData.edges[0]
+        }
+        axios.post("/graph/rel/delete",reqData).then((response) => {
+          if(response.status === 200){
+            callback(edgeData);
+          }
+        })
       }
-    }
+    },
   },
   // groups: {
     // SurfaceUser: {

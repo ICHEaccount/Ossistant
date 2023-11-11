@@ -7,8 +7,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import node, {select} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
-import { debounce } from "lodash";
-
 
 function RelationGraph(props) {
   const params = useParams();
@@ -67,6 +65,7 @@ function RelationGraph(props) {
     // Connect Relationship 
     network.on('selectNode', (params) => {
       const { nodes } = params;
+      
       console.log(nodes);
       if (nodes.length > 0) {
         axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
@@ -74,19 +73,20 @@ function RelationGraph(props) {
           const label = resData.property.label;
           delete resData.property.label;
           console.log(resData);
+          dispatch(select({node:resData,label:label}))
+          setSelectedNode(nodes[0]);
           network.addEdgeMode();
         });
-          setSelectedNode(nodes[0]);
-        } else {
-          setSelectedNode(null);
-        }
+      } else {
+        setSelectedNode(null);
+      }
       network.disableEditMode();
     });
 
     // Modify relationship 
     network.on('doubleClick', (properties)=>{
 
-      if (properties.edges.length > 0) {
+      if (properties.edges.length > 0 && properties.nodes.length === 0) {
         var edgeId = properties.edges[0];
         var clickedEdges = data.edges.get( edgeId );
         console.log("edit mode : " + JSON.stringify(clickedEdges));
@@ -98,53 +98,8 @@ function RelationGraph(props) {
           }
         })
       }
-      network.disableEditMode();
     });
     
-    network.on('selectEdge',(params) => {
-      if(params.edges.length > 0){
-        network.editEdgeMode();
-      }
-      network.disableEditMode();
-    })
-
-    
-
-    // network.on('doubleClick', (nodeInfo)=>{
-    //   console.log(nodeInfo); 
-      
-    //   if (nodeInfo.nodes.length > 0) {
-    //     network.deleteSelected();
-    //     const reqData = {
-    //       "type": "node",
-    //       "uid": nodeInfo.nodes[0]
-    //     }
-    //     axios.post('/graph/rel/delete', reqData)
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         console.log("Success");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("An error occurred:", error);
-    //     });
-    //   } else if (nodeInfo.edges.length > 0 && nodeInfo.nodes.length === 0) {
-    //     network.deleteSelected();
-    //     const reqData = {
-    //       "type": "rel",
-    //       "uid": nodeInfo.edges[0]
-    //     }
-    //     axios.post('/graph/rel/delete', reqData)
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         console.log("Success");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("An error occurred:", error);
-    //     });
-    //   }
-    // });
 
   }, [isDone,visJSRef]);
 

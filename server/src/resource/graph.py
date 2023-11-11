@@ -142,19 +142,9 @@ def delete_relationship():
     res = request.get_json()
     if not res:
         return jsonify({'error': 'Invalid request data'}), 404
-    del_type = res['type']
     uid = res['uid']
-    if del_type == "node":
-        del_node_status = delete_node(node_id=uid)
-        if del_node_status is True:
-            return jsonify({'Msg':'Success'}),200
-        else:
-            return jsonify({'Error':'Node Deletion error'}),500
-    elif del_type == "rel":
-        del_rel_status, msg = Relationship.delete_relationship(uid=uid)
-        if del_rel_status is True:
-            return jsonify({'Msg':'Success'}),200
-        else:
-            return jsonify({'Error':msg}),500
+    del_rel_status, msg = Relationship.delete_relationship(uid=uid)
+    if del_rel_status is True:
+        return jsonify({'Msg':'Success'}),200
     else:
-        return jsonify({'Error':'Type did not exist'}), 404
+        return jsonify({'Error':msg}),500

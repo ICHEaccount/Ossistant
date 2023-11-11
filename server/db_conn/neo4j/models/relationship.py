@@ -85,7 +85,6 @@ EXTENSION_RELATIONS = {
     }
 }
 
-
 class Relationship:
 
     @classmethod
