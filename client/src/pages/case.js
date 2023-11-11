@@ -97,7 +97,8 @@ import BetaToast from '../components/betaToast';
                                         'error':[]
                                     }
                                     Object.keys(res.data).forEach((status)=>{
-                                        const statusData = res.data[status]
+                                        const statusData = res.data[status].reverse()
+                                        // console.log(statusData);
                                         if(toolResult[status]){  
                                             statusData.forEach((item) => {
                                                 newResultList[status]=[]
@@ -110,15 +111,15 @@ import BetaToast from '../components/betaToast';
                                                     if(item.run_id in activeRuns){
                                                         newActiveRuns.filter((i)=> i!==item.run_id)
                                                     }
-                                                    setactiveRuns(newActiveRuns.reverse())
+                                                    setactiveRuns(newActiveRuns)
                                                 }
                                             })
                                         } else {
-                                            newResultList[status]=res.data[status].reverse()
+                                            newResultList[status]=statusData
                                         }
                                     })
                                     setnewResult(newResultList)
-                                    console.log(newResultList);
+                                    // console.log(newResultList);
                                     //new completed run exists
                                     if(newResultList.completed.length){
                                         setisDone(true);
@@ -149,6 +150,9 @@ import BetaToast from '../components/betaToast';
             }else{
                 Axios.get(`/tools/getToolState/${case_id}`)
                     .then((res) => {
+                        Object.keys(res.data).forEach((status)=>{
+                            res.data[status]=res.data[status].reverse()
+                        })
                         settoolResult(res.data)
                         setisLoaded(true)
                     })
