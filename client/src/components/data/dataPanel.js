@@ -19,6 +19,7 @@ const DataPanel = (props) => {
     const toolResult = props.toolResult
     const newData=props.newData
     const newRun = props.newRun
+    const toolList = props.toolList
     
     const LeftTabs = () => {
         return (
@@ -49,9 +50,9 @@ const DataPanel = (props) => {
                 </Nav>
             </Col>
             <Col sm={9}>
-                <Tab.Content>
+                <Tab.Content className='tw-h-[620px] tw-overflow-y-auto tw-overflow-x-hidden'>
                 <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData} newData={newData}/></Tab.Pane>
-                <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} newRun={newRun}/></Tab.Pane>
+                <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} newRun={newRun} toolList={toolList}/></Tab.Pane>
                 <Tab.Pane eventKey="run-list"><RunList case_id={case_id} toolResult={toolResult} /></Tab.Pane>
                 <Tab.Pane eventKey="report"><Report case_id={case_id} caseData={caseData}/></Tab.Pane>
                 </Tab.Content>
