@@ -12,7 +12,7 @@ const RunCard = (props) => {
 	// console.log(list,status);
 
 	const runList = list?.map((run)=>{
-		console.log(run);
+		// console.log(run);
 		return(<Card className="mt-1" key={run.run_id}>
 		<Card.Body>
 			<Row>
@@ -23,6 +23,7 @@ const RunCard = (props) => {
 						size="sm"
 						onClick={() => {
 							setSelectedEventKey(`selected-${run.run_id}`);
+							console.log(run);
 							setselectedRun(run)
 						}}
 					>
@@ -65,20 +66,19 @@ const RunCard = (props) => {
 			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>Result</p>:null}
 			{
 				selectedRun.results?.map((result)=>{
-					return (selectedRun.results.map((result)=>{
-						const type = Object.keys(result.result)[0]
-						return (
-						<InputGroup className='mb-1 px-1'>
-						{/* {type==="error"?null:<InputGroup.Checkbox aria-label="Checkbox for following text input" />} */}
-						<InputGroup.Text className={cls('',{'tw-text-red-500':type==="error"})} >{type}</InputGroup.Text>
-						<Form.Control
-						placeholder={result.result[type]}
-						disabled
-						/>
-						</InputGroup>)
-					}))
+					const type = Object.keys(result.result)[0]
+					return (
+					<InputGroup className='mb-1 px-1'>
+					{/* {type==="error"?null:<InputGroup.Checkbox aria-label="Checkbox for following text input" />} */}
+					<InputGroup.Text className={cls('',{'tw-text-red-500':type==="error"})} >{type}</InputGroup.Text>
+					<Form.Control
+					placeholder={result.result[type]}
+					disabled
+					/>
+					</InputGroup>)
 				})
 			}
+			
 			{/* {selectedRun.results.length!==0&&status!=="error"?<Col md={{ span: 3, offset: 9 }}><Button type="submit" variant="outline-primary" >{"Add"}</Button></Col>:null} */}
         </Form>
 	</Card>
