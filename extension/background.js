@@ -193,6 +193,7 @@ chrome.runtime.onInstalled.addListener(() => {
                 };
 
                 datalist.push(postData);
+                console.error("date", JSON.stringify(postData))
 
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
@@ -339,7 +340,11 @@ function convertDateFormat(dateTimeStr, type) {
         const time = '00:00:00';
         return `${formattedDate} ${time}`;
     }else if(type == 3){
-        const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
+        //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
+        const parts = dateTimeStr.match(/(\d{4})\.(\d{1,2})\.(\d{1,2}). (\d{1,2}):(\d{2})/);
+        console.error("date", dateTimeStr);
+
+        console.error("aa", parts);
         
         //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
         if (parts === null) {
@@ -358,7 +363,7 @@ function convertDateFormat(dateTimeStr, type) {
         const formattedDate = 
             date.getFullYear() + "-" + 
             ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
-            ("0" + date.getDate()).slice(-2) + " " + 
+            ("0" + date.getDate()).slice(-2) + " " +  
             ("0" + date.getHours()).slice(-2) + ":" + 
             ("0" + date.getMinutes()).slice(-2) + ":" + 
             "00"; 

@@ -58,28 +58,32 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         sendResponse({writer, created_date, title, content, registered})
     }else if(request.command === "getNaverCafeInfo"){
-        const title = document.querySelector('title') ? document.querySelector('title').textContent.trim() : '';
-        const writer = document.querySelector('.nick_box') ? document.querySelector('.nick_box').innerText : '';
-        
-        const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
 
-        const content = document.querySelector('.article_viewer') ? document.querySelector('.article_viewer').innerText.trim() : '';
+        if (window.top !== window.self) {
+            // iframe 내부에서만 실행됩니다.
+            const title = document.querySelector('.title_area .title_text') ? document.querySelector('.title_area .title_text').textContent.trim() : '';
+            const writer = document.querySelector('.nick_box') ? document.querySelector('.nick_box').innerText : '';
+            const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
+            const content = document.querySelector('.article_viewer') ? document.querySelector('.article_viewer').innerText.trim() : '';
         
-        const registered = [];
-        console.log("title", title)
-        console.log("writer", writer);
-        console.log("created_date", created_date);
-        console.log("content", content);
+            console.log("title", title);
+            console.log("writer", writer);
+            console.log("created_date", created_date);
+            console.log("content", content);
+
+            const registered = []
         
-        let match;
-        while ((match = krphoneRegex.exec(content)) !== null) {
-            registered.push(match[0]);
-        }
-        while ((match = emailRegex.exec(content)) !== null) {
-            registered.push(match[0]);
+            let match;
+            while ((match = krphoneRegex.exec(content)) !== null) {
+                registered.push(match[0]);
+            }
+            while ((match = emailRegex.exec(content)) !== null) {
+                registered.push(match[0]);
+            }
+    
+            sendResponse({writer, created_date, title, content, registered})
         }
 
-        sendResponse({writer, created_date, title, content, registered})
     }else if(request.command === "getTelegram"){
         const note = document.querySelectorAll('.bubbles-date-group') ? document.querySelector('.bubbles-date-group').innerText : '';
         sendResponse({note})
