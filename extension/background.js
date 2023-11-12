@@ -168,7 +168,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -194,8 +194,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
-                    console.error("aa", datalist)
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -226,7 +225,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -236,7 +235,7 @@ chrome.runtime.onInstalled.addListener(() => {
             let selectedText = info.selectionText;        
             let data = { 
                 case_id: globalCaseId,
-                url: checkUrl(tab.url) };
+                url: tab.url };
 
             let parts = info.menuItemId.split('-');
             let parentMenu = parts[0];
@@ -367,5 +366,4 @@ function convertDateFormat(dateTimeStr, type) {
         return formattedDate;
     }
 }
-
 

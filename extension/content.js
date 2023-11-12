@@ -30,12 +30,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         sendResponse({ writer, created_date, title, content, username, rank, regdate, post_num, comment_num, registered });
     }else if(request.command === "getNaverBlogInfo"){
-        const writer = document.querySelectorAll('.nick .link .pcol2')? document.querySelectorAll('.nick .link .pcol2').innerText : '';
-        const created_date = document.querySelectorAll('.se_publishDate.pcol2') ? document.querySelectorAll('.se_publishDate.pcol2').innerText.trim() : '';
+        // 첫 번째 요소의 innerText만 사용
+        //const writerElements = document.querySelectorAll('.nick .link .pcol2');
+        //const writer = writerElements.length > 0 ? writerElements[0].innerText : '';
+        const writer = document.querySelector('.writer .nick')? document.querySelector('.writer .nick').innerText : '';
+
+        const createDateElements = document.querySelectorAll('.se_publishDate.pcol2');
+        const created_date = createDateElements.length > 0 ? createDateElements[0].innerText.trim() : '';
+
         const title = document.querySelector('title') ? document.querySelector('title').innerText : '';
-        const content = document.querySelectorAll('.se-main-container') ? document.querySelectorAll('.se-main-container').innerText.trim() : '';
+
+        const contentElements = document.querySelectorAll('.se-main-container');
+        const content = contentElements.length > 0 ? contentElements[0].innerText.trim() : '';
+
         const registered = [];
-        
+
+        console.log("writer", writer);
+        console.log("created_date", created_date);
+        console.log("content", content);
         let match;
         while ((match = krphoneRegex.exec(content)) !== null) {
             registered.push(match[0]);
@@ -46,11 +58,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         sendResponse({writer, created_date, title, content, registered})
     }else if(request.command === "getNaverCafeInfo"){
+        const title = document.querySelector('title') ? document.querySelector('title').textContent.trim() : '';
         const writer = document.querySelector('.nick_box') ? document.querySelector('.nick_box').innerText : '';
+        
         const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
-        const title = document.querySelector('title') ? document.querySelector('title').innerText : '';
-        const content = document.querySelector('.ContentRenderer') ? document.querySelector('.ContentRenderer').innerText.trim() : '';
+
+        const content = document.querySelector('.article_viewer') ? document.querySelector('.article_viewer').innerText.trim() : '';
+        
         const registered = [];
+        console.log("title", title)
+        console.log("writer", writer);
+        console.log("created_date", created_date);
+        console.log("content", content);
         
         let match;
         while ((match = krphoneRegex.exec(content)) !== null) {
@@ -60,14 +79,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             registered.push(match[0]);
         }
 
-        sendResponse({username, created_date, title, content, registered})
+        sendResponse({writer, created_date, title, content, registered})
     }else if(request.command === "getTelegram"){
         const note = document.querySelectorAll('.bubbles-date-group') ? document.querySelector('.bubbles-date-group').innerText : '';
         sendResponse({note})
+
     }else if(request.command === "getUrlValue"){
         //proxy 
         torurl = document.getElementById('foreverproxy-u').value;
         sendResponse({torurl})
     }
+
+    return true;
 
 }); 
