@@ -9,7 +9,7 @@ export const nodeSlice = createSlice({
         view: "list",
         label: "SurfaceUser",
         panel:"data-list",
-        runView: "ready",
+        runView: "completed",
         behavior : "view",
     },
     reducers: {

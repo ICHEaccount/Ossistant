@@ -98,7 +98,6 @@ def run_whois(case_id, run):
         else: 
             run.status = 'error'
             run.save()
-            return 'Email parsing error'
         run.save()
         return run.run_id
 

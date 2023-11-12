@@ -123,7 +123,7 @@ const ToolCard = (props) => {
                                     </Form.Group>
                                 ))}
                                 <div className='tw-flex tw-justify-end'>
-                                <div onClick={runTool} ref={runButton} className='hover:tw-cursor-pointer tw-p-1 tw-pl-2 hover:tw-border hover:tw-border-navy tw-text-navy'>
+                                <div onClick={runTool} ref={runButton} className='hover:tw-cursor-pointer tw-p-1 tw-pl-2 hover:tw-border tw-rounded-md hover:tw-border-navy tw-text-navy'>
                                     Run <Play className=' tw-inline tw-fill-navy' size={25}/>
                                     {Object.keys(selectedItems).length === 0?(<Overlay target={runButton.current} show={show} placement="right">
                                     {(props) => (
