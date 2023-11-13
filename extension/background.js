@@ -306,7 +306,7 @@ function sendDataToServer2(data) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        console.log('Success:', JSON.stringify(data));
         return data;
     })
     .catch((error) => {
