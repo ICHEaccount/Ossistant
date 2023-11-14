@@ -68,27 +68,29 @@ def take_snapshot():
             if keyword:
                 keyword['url'] = url
                 keyword['case_id'] = case_id
-                node = NODE_LIST[req_label].get_node(keyword)
-                if node is None:
+                node_check_flag, node = NODE_LIST[req_label].check_node(keyword)
+                if node_check_flag is False:
                     node = NODE_LIST[req_label].create_node(keyword)
                 
-                node_dict[NODE_LIST[req_label].get_node_name()] = node
+                node_dict[req_label] = node
     
         # Create Relationship 
         if 'Post' in node_dict:
             post_node = node_dict['Post']
 
             for key, rels in EXTENSION_RELATIONS.items():
-                if key in node_dict:
+                if key in node_dict and node_dict[key]:
                     pos = rels['pos']
                     if pos == "to":
-                        status, check_flag = Relationship.check_relationship(to_uid=post_node.uid, from_uid=node_dict[key].uid, is_label=True, label=rels['label'])
+                        status, check_flag = Relationship.check_relationship(to_uid=node_dict[key].uid, from_uid=post_node.uid)
                         if status is True and check_flag is False:
                             post_node.rel_to.connect(node_dict[key], {'label': rels['label']})
-                    else:
-                        status, check_flag = Relationship.check_relationship(to_uid=node_dict[key].uid, from_uid=post_node.uid, is_label=True, label=rels['label'])
+                    elif pos =="from":
+                        status, check_flag = Relationship.check_relationship(to_uid=post_node.uid, from_uid=node_dict[key].uid)
                         if status is True and check_flag is False:
                             node_dict[key].rel_to.connect(post_node, {'label': rels['label']})
+                    else:
+                        return jsonify({'Error': 'Invalid extension config'}), 500
 
         return jsonify({'Message': 'Success'}), 200
     except KeyError as e:
