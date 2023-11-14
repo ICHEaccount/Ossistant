@@ -31,10 +31,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse({ writer, created_date, title, content, username, rank, regdate, post_num, comment_num, registered });
     }else if(request.command === "getNaverBlogInfo"){
         //if (window.self !== window.top && window.parent === window.top) {
-
-        // 첫 번째 요소의 innerText만 사용
-            //const writerElements = document.querySelectorAll('.nick .link .pcol2');
-            //const writer = writerElements.length > 0 ? writerElements[0].innerText : '';
         const title = document.querySelector('title') ? document.querySelector('title').textContent.trim() : '';
         const writer = document.querySelector('.writer .nick') ? document.querySelector('.writer .nick').innerText : '';
         const created_date = document.querySelector('.se_publishDate.pcol2') ? document.querySelector('.se_publishDate.pcol2').innerText.trim() : '';

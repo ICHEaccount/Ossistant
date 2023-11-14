@@ -1,6 +1,15 @@
 import SurfaceUserImage from '../../../images/node_icon/surfaceuser.png';
 import PostImage from '../../../images/node_icon/post.png';
 import DomainImage from '../../../images/node_icon/domain.png';
+import DarkUserImage from '../../../images/node_icon/darkuser.png';
+import CommentImage from '../../../images/node_icon/comment.png';
+import EmailImage from '../../../images/node_icon/email.png';
+import PhoneImage from '../../../images/node_icon/phone.png';
+import MessageImage from '../../../images/node_icon/message.png';
+import WalletImage from '../../../images/node_icon/wallet.png';
+import PersonImage from '../../../images/node_icon/person.png';
+import CompanyImage from '../../../images/node_icon/company.png';
+
 import axios from 'axios';
 import store from '../../../reducers/store'
 import {changeBehavior} from '../../../reducers/node'
@@ -11,7 +20,7 @@ const options = {
     hierarchical: {
       enabled:true,
       sortMethod: 'directed',
-      nodeSpacing : 100
+      nodeSpacing : 150
     }
   },
   manipulation: {
@@ -69,53 +78,99 @@ const options = {
       }
     },
   },
-  // groups: {
-    // SurfaceUser: {
-    //   shape: 'image',
-    //   image: {
-    //     selected: SurfaceUserImage,
-    //     unselected: SurfaceUserImage, 
-    //     background: 'transparent', 
-    //   },
-    //   label: {
-    //     field: 'username',
-    //     drawThreshold: 1,
-    //   },
-    //   font: {
-    //     size: 12, 
-    //   },
-    // },
-    // Post: {
-    //   shape: 'image',
-    //   image: {
-    //     selected: PostImage,
-    //     unselected: PostImage, 
-    //     background: 'transparent', 
-    //   },
-    //   label: {
-    //     field: 'username',
-    //     drawThreshold: 1,
-    //   },
-    //   font: {
-    //     size: 12, // Adjust font size as needed
-    //   },
-    // },
-    // Domain: {
-    //   shape: 'image',
-    //   image: {
-    //     selected: DomainImage,
-    //     unselected: DomainImage, 
-    //     background: 'transparent', 
-    //   },
-    //   label: {
-    //     field: 'domain',
-    //     drawThreshold: 1,
-    //   },
-    //   font: {
-    //     size: 12, // Adjust font size as needed
-    //   },
-    // },    
-  // },
+  groups: {
+    SurfaceUser: {
+      shape: 'image',
+      image: {
+        selected: SurfaceUserImage,
+        unselected: SurfaceUserImage, 
+        background: 'transparent', 
+      },
+    },
+    Post: {
+      shape: 'image',
+      image: {
+        selected: PostImage,
+        unselected: PostImage, 
+        background: 'transparent', 
+      },
+    },
+    Domain: {
+      shape: 'image',
+      image: {
+        selected: DomainImage,
+        unselected: DomainImage, 
+        background: 'transparent', 
+      },
+      font: {
+        size: 12, // Adjust font size as needed
+      },
+    },
+    DarkUser: {
+      shape: 'image',
+      image: {
+        selected: DarkUserImage,
+        unselected: DarkUserImage, 
+        background: 'transparent', 
+      },
+    },
+    Comment: {
+      shape: 'image',
+      image: {
+        selected: CommentImage,
+        unselected: CommentImage, 
+        background: 'transparent', 
+      },
+    },  
+    Email: {
+      shape: 'image',
+      image: {
+        selected: EmailImage,
+        unselected: EmailImage, 
+        background: 'transparent', 
+      },
+    },  
+    Phone: {
+      shape: 'image',
+      image: {
+        selected: PhoneImage,
+        unselected: PhoneImage, 
+        background: 'transparent', 
+      },
+    },  
+    Message: {
+      shape: 'image',
+      image: {
+        selected: MessageImage,
+        unselected: MessageImage, 
+        background: 'transparent', 
+      },
+    },  
+    Wallet: {
+      shape: 'image',
+      image: {
+        selected: WalletImage,
+        unselected: WalletImage, 
+        background: 'transparent', 
+      },
+    },  
+    Company: {
+      shape: 'image',
+      image: {
+        selected: CompanyImage,
+        unselected: CompanyImage, 
+        background: 'transparent', 
+      },
+    }, 
+    Person: {
+      shape: 'image',
+      image: {
+        selected: PersonImage,
+        unselected: PersonImage, 
+        background: 'transparent', 
+      },
+    },                        
+  },
   nodes: {
     shape : 'box'
   },
@@ -136,7 +191,15 @@ const options = {
     },
     arrows: {
       to: { enabled: true, scaleFactor: 1, type: "arrow" }
+    },
+    physics: {
+      barnesHut: {
+        springLength: 200
+      }
     }
+  },    
+  interaction: {
+    hover: true,
   },
 };
 
