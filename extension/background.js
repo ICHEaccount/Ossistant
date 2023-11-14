@@ -274,7 +274,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     return;
                 }
 
-                //telegram username(@)
+                //telegram username(@)/
                 const atSymbolIndex = tab.url.indexOf('@');
                 const hashSymbolIndex = tab.url.indexOf('/#');
                 let extracted = '';
