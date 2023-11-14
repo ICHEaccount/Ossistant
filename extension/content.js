@@ -40,21 +40,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         const created_date = document.querySelector('.se_publishDate.pcol2') ? document.querySelector('.se_publishDate.pcol2').innerText.trim() : '';
         const content = document.querySelector('.se-main-container') ? document.querySelector('.se-main-container').innerText.trim() : '';
 
-        const registered = [];
-        console.log("title", title)
-        console.log("writer", writer);
-        console.log("created_date", created_date);
-        console.log("content", content);
-        let match;
-        while ((match = krphoneRegex.exec(content)) !== null) {
-            registered.push(match[0]);
-        }
-        while ((match = emailRegex.exec(content)) !== null) {
-            registered.push(match[0]);
+        if (title && writer && created_date && content) {
+            let phones = []; // 전화번호를 저장할 배열
+            let emails = []; // 이메일을 저장할 배열
+        
+            let match;
+            while ((match = krphoneRegex.exec(content)) !== null) {
+                phones.push(match[0]);
+            }
+            while ((match = emailRegex.exec(content)) !== null) {
+                emails.push(match[0]);
+            }
+        
+            console.log("title", title);
+            console.log("writer", writer);
+            console.log("created_date", created_date);
+            console.log("content", content);
+        
+            sendResponse({ writer, created_date, title, content, phones, emails });
         }
 
-        sendResponse({writer, created_date, title, content, registered})
-    
     }else if(request.command === "getNaverCafeInfo"){
 
         if (window.top !== window.self) {
