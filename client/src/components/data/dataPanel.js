@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import { Alert, Button, Nav, Tab } from 'react-bootstrap';
 import DataList from './dataList';
-import { Database , Gear, FileEarmarkText, ArrowRepeat} from 'react-bootstrap-icons';
+import { Database , Gear, FileEarmarkText, ArrowRepeat, Tools} from 'react-bootstrap-icons';
 import ToolList from '../tool/toolList';
 import Report from '../report';
 import Axios  from 'axios';
@@ -34,7 +34,7 @@ const DataPanel = (props) => {
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="tool-list" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                            <Gear size="30px"/>
+                            <Tools size="30px"/>
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>

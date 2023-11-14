@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import { ClipboardCheck, Envelope } from 'react-bootstrap-icons'
+import bob from '../images/bob_logo.jpg'
+import logo from '../images/logo.png'
 
 
 const Test = () => {
@@ -13,12 +15,13 @@ const Test = () => {
                 <Col lg={10}>
                 <Card className='tw-w-full tw-h-full mt-2'>
                     <Card.Body>
-                    <Card.Title className='tw-text-center'>OSSISTANT Beta Test</Card.Title>
+                    <Card.Title className='tw-text-center'>
+                    <strong>OSSISTANT</strong> Beta Test
+                    </Card.Title>
                     <Card.Subtitle className="mb-2 text-muted tw-text-end">Team ICHE</Card.Subtitle>
                     <Form className='tw-flex tw-justify-end'>
                         English
                         <Form.Check className='tw-ml-2' type='switch' label="한국어" defaultChecked={korean} onChange={()=>{setkorean(!korean)}}/>
-
                     </Form>
                     {korean?(<Card.Text>
                         <p>테스트 대상: 전/현직 사이버 수사관 </p>
@@ -52,12 +55,13 @@ const Test = () => {
                         {korean?"아래 구글 폼을 참고하여 베타 테스트에 참여해주시면 감사하겠습니다.":"Please refer to the Google Form below and participate in the beta test. Your cooperation is greatly appreciated."}
                         </Card.Text>
                     </Card.Body>
-                    <Card.Body>
-                    <Card.Text>
+                    <Card.Body  className='tw-flex tw-align-middle tw-justify-between'>
+                    <Card.Text className='tw-justify-self-start'>
                     <h4>Contact </h4> 
                     <Card.Link href="#" rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'> <ClipboardCheck size={12} className='tw-inline-block tw-mr-1'/>{korean?"테스트 평가 구글 폼":"Evaluation Google Form"}</Card.Link>
                     <Card.Link href="mailto:iche230905@gmail.com" className='tw-underline tw-text-blue-600'><Envelope size={12} className='tw-inline-block tw-mr-1'/>iche230905@gmail.com </Card.Link>
                     </Card.Text>
+                    <img src={bob} alt="bob_logo" className="tw-object-fill tw-justify-self-end tw-h-14 tw-w-22"/>
                     </Card.Body>
                     <Card.Body className='tw-flex tw-justify-center'>
                     <Button variant="primary" href='/main'>{korean?"테스트 시작":"Start"}</Button>
