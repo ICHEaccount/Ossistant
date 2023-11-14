@@ -68,7 +68,7 @@ function RelationGraph(props) {
     // Connect Relationship 
     network.on('selectNode', (params) => {
       const { nodes } = params;
-      
+      network.disableEditMode();
       console.log(nodes);
       if (nodes.length > 0) {
         axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
@@ -101,6 +101,7 @@ function RelationGraph(props) {
           }
         })
       }
+      network.disableEditMode();
     });
 
     dispatch(changeBehavior('view'))
