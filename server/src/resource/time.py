@@ -282,11 +282,11 @@ def get_surfaceuser_and_connected_nodes(case_id):
     # regdate로 정렬 후 Hour 추가하고 regdate 형식 변경
     for item in data:
         regdate_str = item['regdate']
-        regdate_obj = datetime.strptime(regdate_str, '%Y-%m-%d %H:%M:%S')
+        regdate_obj = datetime.strptime(regdate_str, '%Y-%m-%d %H:%M')
         item['Hour'] = regdate_obj.hour  # Hour 키에 시간 값 추가
 
     # regdate 기준으로 정렬
-    data.sort(key=lambda x: datetime.strptime(x['regdate'], '%Y-%m-%d %H:%M:%S'))
+    data.sort(key=lambda x: datetime.strptime(x['regdate'], '%Y-%m-%d %H:%M'))
 
     # regdate 형식을 'YYYY-MM-DD'로 변경
     for item in data:

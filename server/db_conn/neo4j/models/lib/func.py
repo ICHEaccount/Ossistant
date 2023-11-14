@@ -1,4 +1,5 @@
 from ...init import db
+import re
 
 def delete_node(node_id):
     try:
@@ -15,19 +16,33 @@ def delete_node(node_id):
         return False, str(e)
 
 from datetime import datetime
+import re
 
 def format_date_time(input_date):
     formats = ['%Y/%m/%d %H:%M', '%Y/%m/%d/ %H:%M', '%Y.%m.%d. %H:%M', '%Y.%m.%d %H:%M']
-
+    format_flag = False
     output_format = '%Y-%m-%d %H:%M'
-    formatted_date = None
-    for fmt in formats:
-        try:
-            dt = datetime.strptime(input_date, fmt)
-            formatted_date = dt.strftime(output_format)
-            break
-        except ValueError:
-            continue
+
+    # split_date = input_d.rsplit(' ', 1)
+    # date_part = split_date[0]  
+    # time_part = split_date[1]  
+    # date_part = date_part.replace(' ','')  # Assign the result back to date_part
+    # input_date = date_part + " "+ time_part    
+    try:
+        dt_underbar = datetime.strptime(input_date, '%Y-%m-%d %H:%M:%S')
+        formatted_date = dt_underbar.strftime(output_format)
+    except ValueError:
+        format_flag = True
+    
+    if format_flag is True:
+        formatted_date = None
+        for fmt in formats:
+            try:
+                dt = datetime.strptime(input_date, fmt)
+                formatted_date = dt.strftime(output_format)
+                break
+            except ValueError:
+                continue
 
     if formatted_date:
         return formatted_date

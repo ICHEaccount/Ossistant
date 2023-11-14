@@ -25,10 +25,10 @@ def create_data():
         node_label = list(data.keys())[1]
         node_data = data.get(node_label) 
         node_data['case_id'] = data['case_id']
-        if 'created_date' in node_data:
-            node_data['created_date'] = format_date_time(node_data['created_date'])
-        elif 'regdate' in node_data:
-            node_data['regdate'] = format_date_time(node_data['regdate'])
+        # if 'created_date' in node_data:
+        #     node_data['created_date'] = format_date_time(node_data['created_date'])
+        # elif 'regdate' in node_data:
+        #     node_data['regdate'] = format_date_time(node_data['regdate'])
 
         check_status, existed_node = NODE_LIST[node_label].check_node(node_data)
         if check_status is True:
@@ -90,10 +90,10 @@ def edit_data():
     
     node_label = list(res.keys())[1]
     node_data = res.get(node_label)
-    if 'created_date' in node_data:
-        node_data['created_date'] = format_date_time(node_data['created_date'])
-    elif 'regdate' in node_data:
-        node_data['regdate'] = format_date_time(node_data['regdate'])
+    # if 'created_date' in node_data:
+    #     node_data['created_date'] = format_date_time(node_data['created_date'])
+    # elif 'regdate' in node_data:
+    #     node_data['regdate'] = format_date_time(node_data['regdate'])
 
     if node_label in NODE_LIST:
         update_status, msg = NODE_LIST[node_label].update_node_properties(res.get('data_id'),**node_data)
