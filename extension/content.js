@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
 
         //DarkUser
-        const username = document.querySelector('.message-name .username') ? document.querySelector('.message-name .username').innerText : '';
+        //username == writer
         const rank = document.querySelector('.message-userDetails strong') ? document.querySelector('.message-userDetails strong').innerText : '';
         const regdate = document.querySelector('.message-userExtras dd') ? document.querySelector('.message-userExtras dd').innerText.trim() : '';
         const dtElements = Array.from(document.querySelectorAll('.message-userExtras dt'));        
@@ -28,7 +28,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         const dtComment = dtElements.find(dt => dt.textContent.includes('Реакции'));
         const comment_num = dtComment ? dtComment.nextElementSibling.innerText : '';
 
-        sendResponse({ writer, created_date, title, content, username, rank, regdate, post_num, comment_num, registered });
+        console.log("title", title);
+        console.log("writer", writer);
+        console.log("created_date", created_date);
+        console.log("content", content);
+        console.log("rank", rank);
+        console.log("regdate", regdate);
+        console.log("post_num", post_num);
+        console.log("comment_num", comment_num);
+        console.log("registered", registered);
+       
+
+
+        sendResponse({ writer, created_date, title, content, rank, regdate, post_num, comment_num, registered });
     }else if(request.command === "getNaverBlogInfo"){
         //if (window.self !== window.top && window.parent === window.top) {
 

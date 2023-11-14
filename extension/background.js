@@ -53,17 +53,17 @@ chrome.runtime.onInstalled.addListener(() => {
         "Company": ["name", "fake", "business_num", "phone_num"],
         "Person": ["name", "fake"],
         "Domain": ["domain", "regdate", "status"],
-        "Post": ["title", "writer", "content", "created_date", "post_type"],
+        "Post": ["title", "writer", "content", "created_date"],
         "Comment": ["name", "content", "created_date"],
         "Email": ["email", "fake"],
         "Phone": ["number"],
-        "Message": ["sender", "content", "date"],
+        //"Message": ["sender", "content", "date"],
         "Wallet": ["wallet", "wallet_type"]
     };
 
-    const validIds = keywordMenus.concat(
-        ...Object.values(keywordSubMenus).flat()
-    );
+    //const validIds = keywordMenus.concat(
+    //    ...Object.values(keywordSubMenus).flat()
+    //);
 
     for (let parentMenu in keywordSubMenus) {
         for (let subMenu of keywordSubMenus[parentMenu]) {
@@ -102,7 +102,7 @@ chrome.runtime.onInstalled.addListener(() => {
             //proxy 4everproxy
             if(url.startsWith("https://pl.4everproxy.com/")){
                 chrome.tabs.sendMessage(tab.id, { command: "getUrlValue" }, function(response) {
-                    console.error("aaa", response.torurl);
+                    //console.error("aaa", response.torurl);
                     return response.torurl;
                 });
             }else{
@@ -114,7 +114,7 @@ chrome.runtime.onInstalled.addListener(() => {
         if (info.menuItemId === "xss.is"){
             chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
                 if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
+                    //console.error("Error:", chrome.runtime.lastError.message);
                     return;
                 }
         
@@ -124,8 +124,7 @@ chrome.runtime.onInstalled.addListener(() => {
                         "writer": response.writer,
                         "created_date": convertDateFormat(response.created_date, 1),
                         "title": response.title,
-                        "content": response.content,
-                        "registered": response.registered
+                        "content": response.content
                     }
                 };
                 datalist.push(postData);
@@ -133,11 +132,12 @@ chrome.runtime.onInstalled.addListener(() => {
                 let darkUserData = {
                     label: "DarkUser",
                     keyword: {
-                        "username": response.username,
+                        "username": response.writer,
                         "rank": response.rank,
                         "regdate": convertDateFormat(response.regdate, 2),
                         "post_num": response.post_num,
-                        "comment_num": response.comment_num
+                        "comment_num": response.comment_num,
+                        "registered": response.registered
                     }
                 };
                 datalist.push(darkUserData);
@@ -145,13 +145,13 @@ chrome.runtime.onInstalled.addListener(() => {
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
-                    console.error('Failed to send data:', error);
+                    console.log('Failed to send data:', error);
                 });
             });
         } else if(info.menuItemId === "naver blog"){
             chrome.tabs.sendMessage(tab.id, { command: "getNaverBlogInfo" }, function(response) {
                 if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
+                    //console.error("Error:", chrome.runtime.lastError.message);
                     return;
                 }
 
@@ -205,13 +205,13 @@ chrome.runtime.onInstalled.addListener(() => {
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
-                    console.error('Failed to send data:', error);
+                    console.log('Failed to send data:', error);
                 });
             });
         } else if(info.menuItemId === "naver cafe"){
             chrome.tabs.sendMessage(tab.id, { command: "getNaverCafeInfo" }, function(response) {
                 if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
+                    //console.error("Error:", chrome.runtime.lastError.message);
                     return;
                 }
 
@@ -264,17 +264,17 @@ chrome.runtime.onInstalled.addListener(() => {
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
-                    console.error('Failed to send data:', error);
+                    console.log('Failed to send data:', error);
                 });
             });
         } else if(info.menuItemId === "telegram"){
             chrome.tabs.sendMessage(tab.id, { command: "getTelegram" }, function(response) {
                 if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
+                    console.log("Error:", chrome.runtime.lastError.message);
                     return;
                 }
 
-                //telegram username(@)
+                //telegram username(@)/
                 const atSymbolIndex = tab.url.indexOf('@');
                 const hashSymbolIndex = tab.url.indexOf('/#');
                 let extracted = '';
@@ -295,7 +295,7 @@ chrome.runtime.onInstalled.addListener(() => {
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
-                    console.error('Failed to send data:', error);
+                    console.log('Failed to send data:', error);
                 });
             });
         } else {
@@ -322,6 +322,10 @@ chrome.runtime.onInstalled.addListener(() => {
                 }
             }
 
+            // console.error("aa", JSON.stringify(data.label))
+            // console.error("aa", JSON.stringify(data.keyword))
+            // console.error("aa", JSON.stringify(data))
+
             if (data.label) {
                 sendDataToServer(data);
             }
@@ -343,27 +347,31 @@ chrome.runtime.onMessage.addListener(
   );
 
 
-function sendDataToServer(data) {
-    fetch('http://127.0.0.1:5000/graph/ext/create', {
+  function sendDataToServer(data) {
+    fetch('http://13.209.168.47:5000/graph/ext/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        return data;
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // 응답을 JSON으로 변환
+    })
+    .then(jsonData => {
+        console.log('Success:', jsonData); // 실제 데이터 로깅
     })
     .catch((error) => {
-        console.error('Error:', error);
-        throw error; 
+        console.log('Error:', error);
     });
 }
 
+
 function sendDataToServer2(data) {
-    fetch('http://13.209.168.47:3000/graph/ext/snapshot', {
+    fetch('http://13.209.168.47:5000/graph/ext/snapshot', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -376,7 +384,7 @@ function sendDataToServer2(data) {
         return data;
     })
     .catch((error) => {
-        console.error('Error:', error);
+        console.log('Error:', error);
         throw error; 
     });
 }
@@ -408,9 +416,9 @@ function convertDateFormat(dateTimeStr, type) {
     }else if(type == 3){
         //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
         const parts = dateTimeStr.match(/(\d{4})\.(\d{1,2})\.(\d{1,2}). (\d{1,2}):(\d{2})/);
-        console.error("date", dateTimeStr);
+        // console.error("date", dateTimeStr);
 
-        console.error("aa", parts);
+        // console.error("aa", parts);
         
         //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
         if (parts === null) {
@@ -438,9 +446,9 @@ function convertDateFormat(dateTimeStr, type) {
     }else if(type == 4){
         //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
         const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2}). (\d{1,2}):(\d{2})/);
-        console.error("date", dateTimeStr);
+        // console.error("date", dateTimeStr);
 
-        console.error("aa", parts);
+        // console.error("aa", parts);
         
         //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
         if (parts === null) {
