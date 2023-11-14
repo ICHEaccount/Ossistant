@@ -4,6 +4,7 @@ from flask import request, jsonify,Blueprint
 
 from db_conn.neo4j.init import db
 from db_conn.neo4j.models import *
+from db_conn.neo4j.models.lib.func import format_date_time
 
 bp = Blueprint('extension', __name__, url_prefix='/graph/ext')
 
@@ -22,6 +23,10 @@ def create_node():
     req_arg = {keys[0]: req['keyword'][keys[0]]}
     req_arg['case_id'] = req['case_id']
     req_arg['url'] = req['url']
+    if 'created_date' in req_arg:
+        req_arg['created_date'] = format_date_time(req_arg['created_date'])
+    elif 'regdate' in req_arg:
+        req_arg['regdate'] = format_date_time(req_arg['regdate'])
 
     # create node 
     if req_label not in NODE_LIST:
@@ -68,6 +73,11 @@ def take_snapshot():
             if keyword:
                 keyword['url'] = url
                 keyword['case_id'] = case_id
+                if 'created_date' in keyword:
+                    keyword['created_date'] = format_date_time(keyword['created_date'])
+                elif 'regdate' in keyword:
+                    keyword['regdate'] = format_date_time(keyword['regdate'])
+                
                 node_check_flag, node = NODE_LIST[req_label].check_node(keyword)
                 if node_check_flag is False:
                     node = NODE_LIST[req_label].create_node(keyword)
