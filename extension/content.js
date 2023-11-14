@@ -98,15 +98,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse({torurl})
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-}); 
-=======
-}); 
->>>>>>> 0ef6a8ee7d0b822d921e718107ec467981a4eb58
-=======
     return true;
 
 }); 
->>>>>>> aec742ff771a716a1a4016ccfd8113555d133a64

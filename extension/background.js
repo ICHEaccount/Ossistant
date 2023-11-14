@@ -344,7 +344,7 @@ chrome.runtime.onMessage.addListener(
 
 
 function sendDataToServer(data) {
-    fetch('http://http://13.209.168.47/:5000/graph/ext/create', {
+    fetch('http://127.0.0.1:5000/graph/ext/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -363,7 +363,7 @@ function sendDataToServer(data) {
 }
 
 function sendDataToServer2(data) {
-    fetch('http://http://13.209.168.47/:5000/graph/ext/snapshot', {
+    fetch('http://127.0.0.1:5000/graph/ext/snapshot', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
