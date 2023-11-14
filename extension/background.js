@@ -199,6 +199,8 @@ chrome.runtime.onInstalled.addListener(() => {
                         datalist.push(PhoneData);
                     });
                 }
+                
+                
 
                 sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
@@ -224,6 +226,7 @@ chrome.runtime.onInstalled.addListener(() => {
                 };
 
                 datalist.push(postData);
+                //console.error("date", JSON.stringify(postData))
 
                 let SurfaceUserData = {
                     label: "SurfaceUser",
@@ -369,7 +372,7 @@ function sendDataToServer2(data) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', JSON.stringify(data));
+        console.log('Success:', data);
         return data;
     })
     .catch((error) => {
