@@ -128,7 +128,7 @@ def get_data(case_id):
     # regdate의 hour 정보를 분리하고, regdate를 날짜만 포함하도록 변환
     for item in filtered_data:
         # regdate로부터 datetime 객체 생성
-        regdate_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
+        regdate_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M")
         # # Hour 정보 추가
         item['Hour'] = regdate_obj.hour
         # # regdate를 날짜만 포함하는 datetime.date 객체로 변환

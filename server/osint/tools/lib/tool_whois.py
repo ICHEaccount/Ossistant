@@ -40,7 +40,7 @@ def run_whois(case_id, run):
         regdate = None
         if regdate_response:
             if isinstance(regdate_response, datetime):
-                regdate = regdate_response.strftime('%Y-%m-%d %H:%M:%S')
+                regdate = regdate_response.strftime('%Y-%m-%d %H:%M')
             elif isinstance(regdate_response, str):
                 regdate = regdate_response
 

@@ -34,7 +34,7 @@ function RelationGraph(props) {
         const nodeId = item.n.id;
     
         if (!addedNodes.has(nodeId)) {
-          if(label.length > 20 && group ==="Post"){
+          if(label && label.length > 20 && group ==="Post"){
             label = label.substring(0,15) + "...";
           }
           console.log("Node label : "+label);

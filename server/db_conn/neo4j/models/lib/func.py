@@ -14,3 +14,22 @@ def delete_node(node_id):
         print(f"An error occurred: {e}")
         return False, str(e)
 
+from datetime import datetime
+
+def format_date_time(input_date):
+    formats = ['%Y/%m/%d %H:%M', '%Y/%m/%d/ %H:%M', '%Y.%m.%d. %H:%M', '%Y.%m.%d %H:%M']
+
+    output_format = '%Y-%m-%d %H:%M'
+    formatted_date = None
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(input_date, fmt)
+            formatted_date = dt.strftime(output_format)
+            break
+        except ValueError:
+            continue
+
+    if formatted_date:
+        return formatted_date
+    else:
+        return None
