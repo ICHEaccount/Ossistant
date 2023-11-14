@@ -48,15 +48,17 @@ def create_node():
 
 @bp.route('/snapshot', methods=['POST'])
 def take_snapshot():
+
     req = request.get_json()
     if not req:
         return jsonify({'Error':'Invalid request'}), 404
     
     try:
+        node = None
         url = req.get('url')
         case_id = req.get('case_id')
         data = req.get('data')
-        snap_type = req.get('type')
+        # snap_type = req.get('type')
         node_dict = dict()
 
         # Create Node 
@@ -66,10 +68,12 @@ def take_snapshot():
             if keyword:
                 keyword['url'] = url
                 keyword['case_id'] = case_id
-                node = NODE_LIST[req_label].create_node(keyword)
+                node = NODE_LIST[req_label].get_node(keyword)
+                if node is None:
+                    node = NODE_LIST[req_label].create_node(keyword)
+                
                 node_dict[NODE_LIST[req_label].get_node_name()] = node
-
-        
+    
         # Create Relationship 
         if 'Post' in node_dict:
             post_node = node_dict['Post']

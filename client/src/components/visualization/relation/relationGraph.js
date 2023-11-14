@@ -4,7 +4,7 @@ import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
-import {select,changeBehavior} from '../../../reducers/node'
+import node, {select,changeBehavior} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
 
@@ -16,7 +16,6 @@ function RelationGraph(props) {
   const behavior = useSelector(state => state.node.behavior)
   const visJSRef = useRef(null)
   const [selectedNode, setSelectedNode] = useState(null); 
-  const [selectedEdge, setSelectedEdge] = useState(null);
 
   useEffect(() => {
     const data = {
@@ -30,11 +29,15 @@ function RelationGraph(props) {
       const addedEdges = new Set();
     
       graphData.forEach(item => {
-        const label = item.n[lbs[item.n.label].title];
+        var label = item.n[lbs[item.n.label].title];
         const group = item.n.label;
         const nodeId = item.n.id;
     
         if (!addedNodes.has(nodeId)) {
+          if(label.length > 20 && group ==="Post"){
+            label = label.substring(0,15) + "...";
+          }
+          console.log("Node label : "+label);
           data.nodes.add({ id: nodeId, label, group });
           addedNodes.add(nodeId);
         }
@@ -43,13 +46,13 @@ function RelationGraph(props) {
           const fromNodeId = item.n.id;
           const toNodeId = item.m.id;
           const relationshipId = item.r.id;
-    
+          
           if (!addedEdges.has(relationshipId)) {
             data.edges.add({
               id: relationshipId,
               from: fromNodeId,
               to: toNodeId,
-              label: item.r.properties.label,
+              // labelTo: item.r.properties.label,
               arrows: {
                 to: { enabled: true, scaleFactor: 1, type: "arrow" }
               }
@@ -105,7 +108,7 @@ function RelationGraph(props) {
 
 
   return (
-      <><div ref={visJSRef} style={{ height: "370px", width: "900px", position: 'relative'}}></div>
+      <><div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div>
       </>
   );
 }
