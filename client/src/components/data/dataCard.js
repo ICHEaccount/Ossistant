@@ -154,6 +154,17 @@ const DataCard = (props) => {
                                     as="textarea" />
                                     </InputGroup>)
                                 }
+                                if(key.includes("date")||key.includes("Date")){
+                                    return(<InputGroup className='mb-1 px-1' >
+                                    <InputGroup.Text id='note'>{key}</InputGroup.Text>
+                                    <Form.Control
+                                    value={formData[key]}
+                                    disabled={!onEdit}
+                                    onChange={(e)=>{const value = e.target.value.replace("T"," ");onChange(key,value)}}
+                                    type='datetime-local'
+                                    />
+                                    </InputGroup>)
+                                }
                                 if(lbs[label].list.includes(key)){
                                     // setlistProperty(formData[key])
                                     return(<Form.Group className="mb-1 px-1">

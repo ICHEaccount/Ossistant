@@ -51,6 +51,17 @@ const CreateData = (props) => {
 
 
     const formList = properties.map((property)=>{
+        if(property.includes("date")||property.includes("Date")){
+            return(<InputGroup className='mb-1'>
+            <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
+            <Form.Control 
+            value={formData[label][property]||""}
+            onChange={(e)=>{const value = e.target.value.replace("T"," "); updateFormValue(property,value)}}
+            required={title===property}
+            type='datetime-local'
+            />
+            </InputGroup>)
+        }
         if(lbs[label].list.includes(property)){
             return(
                 <Form.Group className="mb-1" controlId={`${property}`}>

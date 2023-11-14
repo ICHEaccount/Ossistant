@@ -128,7 +128,7 @@ def get_data(case_id):
     # regdate의 hour 정보를 분리하고, regdate를 날짜만 포함하도록 변환
     for item in filtered_data:
         # regdate로부터 datetime 객체 생성
-        regdate_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
+        regdate_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M")
         # # Hour 정보 추가
         item['Hour'] = regdate_obj.hour
         # # regdate를 날짜만 포함하는 datetime.date 객체로 변환
@@ -282,11 +282,11 @@ def get_surfaceuser_and_connected_nodes(case_id):
     # regdate로 정렬 후 Hour 추가하고 regdate 형식 변경
     for item in data:
         regdate_str = item['regdate']
-        regdate_obj = datetime.strptime(regdate_str, '%Y-%m-%d %H:%M:%S')
+        regdate_obj = datetime.strptime(regdate_str, '%Y-%m-%d %H:%M')
         item['Hour'] = regdate_obj.hour  # Hour 키에 시간 값 추가
 
     # regdate 기준으로 정렬
-    data.sort(key=lambda x: datetime.strptime(x['regdate'], '%Y-%m-%d %H:%M:%S'))
+    data.sort(key=lambda x: datetime.strptime(x['regdate'], '%Y-%m-%d %H:%M'))
 
     # regdate 형식을 'YYYY-MM-DD'로 변경
     for item in data:

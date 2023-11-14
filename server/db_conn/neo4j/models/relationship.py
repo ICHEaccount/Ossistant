@@ -69,19 +69,19 @@ AUTO_RELATIONS = {
 EXTENSION_RELATIONS = {
     "SurfaceUser":{
         "pos":"from",
-        "label":"CONTAIN"
+        "label":"POST"
     },
     "Email": {
-        "post":"to",
+        "pos":"to",
         "label":"HAS"
     },
     "Phone": {
-        "post":"to",
+        "pos":"to",
         "label":"HAS"
     },
     "DarkUser":{
         "pos":"from",
-        "label":"CONTAIN"
+        "label":"POST"
     }
 }
 
@@ -109,11 +109,13 @@ class Relationship:
                 # get node 
                 from_node = NODE_LIST[from_label].get_node({"uid":from_uid})
                 to_node = NODE_LIST[to_label].get_node({"uid":to_uid})
-                if from_node and to_node:
-                    from_node.rel_to.connect(to_node,{'label':'NONE'})
-                    return True, 'Success'
-                else:
-                    return False, 'Relation connection error'
+                func_flag, rel_check_flag = cls.check_relationship(from_uid=from_node.uid, to_uid=to_node.uid, is_label=False)
+                if func_flag is True and rel_check_flag is False:
+                    if from_node and to_node:
+                        from_node.rel_to.connect(to_node,{'label':'NONE'})
+                        return True, 'Success'
+                    else:
+                        return False, 'Relation connection error'
             else:
                 return False, 'Node did not Exist'
         except Exception as e:
@@ -197,10 +199,10 @@ class Relationship:
         if not from_uid or not to_uid:
             return False, 'Node uid did not exist'
         try:
-            if is_label == True:
+            if is_label == False:
                 query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid RETURN r"
                 results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
-            elif is_label == False:
+            elif is_label == True:
                 query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid AND r.lable= $r_label RETURN r"
                 if label is None:
                     return False, "Label did not exist"
