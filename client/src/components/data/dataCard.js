@@ -160,7 +160,7 @@ const DataCard = (props) => {
                                     <Form.Control
                                     value={formData[key]}
                                     disabled={!onEdit}
-                                    onChange={(e)=>onChange(key,e.target.value)}
+                                    onChange={(e)=>{const value = e.target.value.replace("T"," ");onChange(key,value)}}
                                     type='datetime-local'
                                     />
                                     </InputGroup>)

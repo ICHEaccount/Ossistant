@@ -56,7 +56,7 @@ const CreateData = (props) => {
             <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
             <Form.Control 
             value={formData[label][property]||""}
-            onChange={(e)=>{updateFormValue(property,e.target.value)}}
+            onChange={(e)=>{const value = e.target.value.replace("T"," "); updateFormValue(property,value)}}
             required={title===property}
             type='datetime-local'
             />
