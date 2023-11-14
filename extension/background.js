@@ -363,7 +363,7 @@ function sendDataToServer(data) {
 }
 
 function sendDataToServer2(data) {
-    fetch('http://127.0.0.1:5000/graph/ext/snapshot', {
+    fetch('http://13.209.168.47:3000/graph/ext/snapshot', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
