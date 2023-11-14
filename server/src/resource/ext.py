@@ -82,9 +82,13 @@ def take_snapshot():
                 if key in node_dict:
                     pos = rels['pos']
                     if pos == "to":
-                        post_node.rel_to.connect(node_dict[key], {'label': rels['label']})
+                        status, check_flag = Relationship.check_relationship(to_uid=post_node.uid, from_uid=node_dict[key].uid, is_label=True, label=rels['label'])
+                        if status is True and check_flag is False:
+                            post_node.rel_to.connect(node_dict[key], {'label': rels['label']})
                     else:
-                        node_dict[key].rel_to.connect(post_node, {'label': rels['label']})
+                        status, check_flag = Relationship.check_relationship(to_uid=node_dict[key].uid, from_uid=post_node.uid, is_label=True, label=rels['label'])
+                        if status is True and check_flag is False:
+                            node_dict[key].rel_to.connect(post_node, {'label': rels['label']})
 
         return jsonify({'Message': 'Success'}), 200
     except KeyError as e:
