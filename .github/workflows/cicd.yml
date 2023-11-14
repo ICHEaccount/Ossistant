@@ -2,7 +2,7 @@ name: cicd
 
 on:
   push:
-    branches: [action_test]
+    branches: [OSINT-291]
 
 jobs:
   build:
@@ -54,6 +54,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - run: ls -al
       - name: ssh connect & production
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -62,9 +64,29 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            whoami > hihi
+            cd server
+            sudo rm -rf db_conn
+      - name: Upload files via scp
+        uses: appleboy/scp-action@master
+        with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            source: "server/db_conn"
+            target: "~/server/db_conn"
+            strip_components: 2
+            
+      - name: ssh connect & production
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            whoami > whos
             docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_PASSWORD }}
             docker system prune -a --volumes -f
             docker compose pull -q
-            docker compose up --force-recreate --build -d --quiet-pull 2>log.out
+            docker compose up --force-recreate -d --quiet-pull 2>log.out
             cat log.out
