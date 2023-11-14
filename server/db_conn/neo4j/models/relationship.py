@@ -85,7 +85,6 @@ EXTENSION_RELATIONS = {
     }
 }
 
-
 class Relationship:
 
     @classmethod
@@ -140,12 +139,14 @@ class Relationship:
                         return False,'Invalid node_config'
                 else:
                     return True, 'Success'
-                
                 if node2:
-                    if pos_flag is TO:
-                        node.rel_to.connect(node2,{'label':node_label})
-                    else:
-                        node2.rel_to.connect(node,{'label':node_label})
+                    rel_check_status, rel_exist_status = cls.check_relationship(from_uid=node.uid, to_uid=node2.uid, is_label=True, label= node_label)
+                    if rel_check_status == True and rel_exist_status == False:
+                        if pos_flag is TO:
+                            node.rel_to.connect(node2,{'label':node_label})
+                        else:
+                            node2.rel_to.connect(node,{'label':node_label})
+                
             return True, 'Success'
         else:
             return False, 'Node does not exist'
@@ -154,7 +155,7 @@ class Relationship:
     def delete_relationship(cls, uid):
         if not uid:
             return False, 'Relation uid did not exist'
-        query = "MATCH ()-[r]-() WHERE r.uid = $uid DELETE r"
+        query = "MATCH ()-[r]->() WHERE r.uid = $uid DELETE r"
         try:
             results, meta = db.cypher_query(query, {'uid': uid})
             if results:
@@ -164,10 +165,24 @@ class Relationship:
         return True, 'Relationship deleted successfully'
 
     @classmethod
+    def delete_rels_uid(cls, from_uid, to_uid):
+        if not from_uid or not to_uid:
+            return False, 'UID did not exist'
+        query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid DELETE r"
+        try:
+            results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
+            if results:
+                return True, 'Success'
+            else:
+                return False, 'Deletion Error'
+        except Exception as e:
+            return False, f"An error occurred: {e}"
+
+    @classmethod
     def modify_relationship(cls, uid, new_label):
         if not uid:
             return False, 'Relation uid did not exist'
-        query = "MATCH ()-[r]-() WHERE r.uid = $uid SET r.label = $new_label RETURN r"
+        query = "MATCH ()-[r]->() WHERE r.uid = $uid SET r.label = $new_label RETURN r"
         try:
             results, meta = db.cypher_query(query, {'uid': uid, 'new_label': new_label})
             if results:
@@ -178,12 +193,19 @@ class Relationship:
             return False, f"An error occurred: {e}"
     
     @classmethod
-    def check_relationship(cls,from_uid, to_uid):
+    def check_relationship(cls,from_uid, to_uid, is_label=False, label=None):
         if not from_uid or not to_uid:
             return False, 'Node uid did not exist'
         try:
-            query = "MATCH (n)-[r]-(m) WHERE n.uid = $from_uid AND m.uid = $to_uid RETURN r"
-            results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
+            if is_label == True:
+                query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid RETURN r"
+                results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
+            elif is_label == False:
+                query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid AND r.lable= $r_label RETURN r"
+                if label is None:
+                    return False, "Label did not exist"
+                results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid, 'r_label':label})
+            
             if results:
                 return True, True
             else:

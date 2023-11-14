@@ -5,13 +5,12 @@ import logo from '../../images/logo_textless.png';
 
 const RunToast = (props) => {
     const newResult = props.newResult
-    const isnewRun = props.isnewRun
     const [showList, setshowList] = useState([])
     // console.log(newResult);
     const toastList = newResult?.completed?.map((result)=> {
         // setisnewRun(false)
         return(
-        <Toast>
+        <Toast autohide>
             <Toast.Header className="tw-bg-bright-peach">
                 <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>
                 <strong className="me-auto">{`#${result.run_id} ${result.tool_name} Completed`}</strong> 
@@ -23,9 +22,24 @@ const RunToast = (props) => {
         </Toast>
         )
     })
+    const errorToast = newResult?.error?.map((result)=>{
+        return(
+        <Toast autohide>
+            <Toast.Header className="tw-bg-peach">
+                <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>
+                <strong className="me-auto">{`#${result.run_id} ${result.tool_name} ERROR`}</strong> 
+                <small>{result.run_time}</small>
+            </Toast.Header>
+            <Toast.Body>
+                {"Error! Something went wrong :("}
+            </Toast.Body>
+        </Toast>
+        )
+    })
     return (
-        <ToastContainer position='bottom-end' className='p-2'>
-            {isnewRun&&toastList}
+        <ToastContainer position='bottom-end' className='p-2' >
+            {toastList}
+            {errorToast}
         </ToastContainer>
     
     )

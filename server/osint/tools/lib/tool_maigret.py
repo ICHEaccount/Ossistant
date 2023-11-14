@@ -10,7 +10,7 @@ def run_maigret(run):
     # print("Current working directory:", os.getcwd())
     try:
         subprocess.Popen([
-            'maigret', run.input_value, '--top-sites', '100', '--timeout', '10', '--no-recursion', '--json', 'simple'
+            'maigret', run.input_value, '--top-sites', '50', '--timeout', '10', '--no-recursion', '--json', 'simple'
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         run.status = 'running'
     except Exception as e:
@@ -50,8 +50,9 @@ def report_maigret(case_id, run):  # status is COMPLETED
             "site": result_site[i],
             "url_user": result_url[i]
         }
-        RunModel.create_result(data=inside, run_id=run.run_id)
-        run.save()
+        if len(run.results) == 0:
+            RunModel.create_result(data=inside, run_id=run.run_id)
+            run.save()
 
     # Making response
     result_list = RunModel.get_all_results(run_id=run.run_id)[1]
@@ -66,10 +67,10 @@ def report_maigret(case_id, run):  # status is COMPLETED
     if not s_user:
         s_user = SurfaceUser.create_node({'username': run.input_value, 'case_id': case_id})
     # inside the node
-    inp_data = {'registered': result_site}
-    status, s_user = SurfaceUser.update_node_properties(node_id=s_user.uid, return_node=True, **inp_data)
-    if status is False:
-        return "SurfaceUser registered update error"
+    # inp_data = {'registered': result_site}
+    # status, s_user = SurfaceUser.update_node_properties(node_id=s_user.uid, return_node=True, **inp_data)
+    # if status is False:
+    #     return "SurfaceUser registered update error"
 
     return maigret_response
 

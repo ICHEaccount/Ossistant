@@ -11,7 +11,7 @@ class ResultModel(db.DynamicDocument):
     result_id = db.SequenceField(primary_key=True) 
     result = db.DynamicField(required=True)
     created= db.BooleanField(required=True, default=False)
-
+    
     
 class RunModel(db.DynamicDocument):
     col_name = 'Run'

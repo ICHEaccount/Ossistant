@@ -159,16 +159,50 @@ chrome.runtime.onInstalled.addListener(() => {
                     label: "Post",
                     keyword: {
                         "writer": response.writer,
-                        "created_date": convertDateFormat(response.created_date, 3),
+                        "created_date": convertDateFormat(response.created_date, 4),
                         "title": response.title,
                         "content": response.content,
-                        "registered": response.registered
                     }
                 };
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
+                let SurfaceUserData = {
+                    label: "SurfaceUser",
+                    keyword: {
+                        "username": response.writer
+                    }
+                };
+
+                datalist.push(SurfaceUserData);
+
+                if (response.emails && Array.isArray(response.emails)) {
+                    response.emails.forEach(emailAddress => {
+                        let PhoneData = {
+                            label: "Email",
+                            keyword: {
+                                "email": emailAddress
+                            }
+                        };
+                        datalist.push(PhoneData);
+                    });
+                }
+
+                if (response.phones && Array.isArray(response.phones)) {
+                    response.phones.forEach(phoneNumber => {
+                        let PhoneData = {
+                            label: "Phone",
+                            keyword: {
+                                "number": phoneNumber
+                            }
+                        };
+                        datalist.push(PhoneData);
+                    });
+                }
+                
+                
+
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -187,15 +221,47 @@ chrome.runtime.onInstalled.addListener(() => {
                         "writer": response.writer,
                         "created_date": convertDateFormat(response.created_date, 3),
                         "title": response.title,
-                        "content": response.content,
-                        "registered": response.registered
+                        "content": response.content
                     }
                 };
 
                 datalist.push(postData);
+                //console.error("date", JSON.stringify(postData))
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
-                    console.error("aa", datalist)
+                let SurfaceUserData = {
+                    label: "SurfaceUser",
+                    keyword: {
+                        "username": response.writer
+                    }
+                };
+
+                datalist.push(SurfaceUserData);
+
+                if (response.emails && Array.isArray(response.emails)) {
+                    response.emails.forEach(emailAddress => {
+                        let PhoneData = {
+                            label: "Email",
+                            keyword: {
+                                "email": emailAddress
+                            }
+                        };
+                        datalist.push(PhoneData);
+                    });
+                }
+
+                if (response.phones && Array.isArray(response.phones)) {
+                    response.phones.forEach(phoneNumber => {
+                        let PhoneData = {
+                            label: "Phone",
+                            keyword: {
+                                "number": phoneNumber
+                            }
+                        };
+                        datalist.push(PhoneData);
+                    });
+                }
+
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -226,7 +292,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: checkUrl(tab.url), data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -236,7 +302,7 @@ chrome.runtime.onInstalled.addListener(() => {
             let selectedText = info.selectionText;        
             let data = { 
                 case_id: globalCaseId,
-                url: checkUrl(tab.url) };
+                url: tab.url };
 
             let parts = info.menuItemId.split('-');
             let parentMenu = parts[0];
@@ -340,7 +406,11 @@ function convertDateFormat(dateTimeStr, type) {
         const time = '00:00:00';
         return `${formattedDate} ${time}`;
     }else if(type == 3){
-        const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
+        //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
+        const parts = dateTimeStr.match(/(\d{4})\.(\d{1,2})\.(\d{1,2}). (\d{1,2}):(\d{2})/);
+        console.error("date", dateTimeStr);
+
+        console.error("aa", parts);
         
         //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
         if (parts === null) {
@@ -359,7 +429,37 @@ function convertDateFormat(dateTimeStr, type) {
         const formattedDate = 
             date.getFullYear() + "-" + 
             ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
-            ("0" + date.getDate()).slice(-2) + " " + 
+            ("0" + date.getDate()).slice(-2) + " " +  
+            ("0" + date.getHours()).slice(-2) + ":" + 
+            ("0" + date.getMinutes()).slice(-2) + ":" + 
+            "00"; 
+    
+        return formattedDate;
+    }else if(type == 4){
+        //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
+        const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2}). (\d{1,2}):(\d{2})/);
+        console.error("date", dateTimeStr);
+
+        console.error("aa", parts);
+        
+        //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
+        if (parts === null) {
+            return parts
+        }
+        
+        const year = parts[1];
+        const month = parts[2];
+        const day = parts[3];
+        const hours = parts[4];
+        const minutes = parts[5];
+    
+        const date = new Date(year, month - 1, day, hours, minutes);
+    
+        // YYYY-mm-dd HH:MM:SS
+        const formattedDate = 
+            date.getFullYear() + "-" + 
+            ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
+            ("0" + date.getDate()).slice(-2) + " " +  
             ("0" + date.getHours()).slice(-2) + ":" + 
             ("0" + date.getMinutes()).slice(-2) + ":" + 
             "00"; 
@@ -367,5 +467,3 @@ function convertDateFormat(dateTimeStr, type) {
         return formattedDate;
     }
 }
-
-

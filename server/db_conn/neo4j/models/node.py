@@ -145,7 +145,7 @@ class SurfaceUser(BaseNode):
     url = StringProperty()
     fake = StringProperty(default="None")
     case_id = StringProperty()
-    registered = ArrayProperty()
+    registered = ArrayProperty(required=False, default=[])
     note = StringProperty()
 
     def to_json(self):
@@ -167,7 +167,7 @@ class DarkUser(BaseNode):
     post_num = IntegerProperty()
     comment_num = IntegerProperty()
     case_id = StringProperty()
-    registered = ArrayProperty()
+    registered = ArrayProperty(required=False, default=[])
     note = StringProperty()
 
     def to_json(self):
