@@ -46,13 +46,13 @@ function RelationGraph(props) {
           const fromNodeId = item.n.id;
           const toNodeId = item.m.id;
           const relationshipId = item.r.id;
-    
+          
           if (!addedEdges.has(relationshipId)) {
             data.edges.add({
               id: relationshipId,
               from: fromNodeId,
               to: toNodeId,
-              label: item.r.properties.label,
+              labelTo: item.r.properties.label,
               arrows: {
                 to: { enabled: true, scaleFactor: 1, type: "arrow" }
               }
