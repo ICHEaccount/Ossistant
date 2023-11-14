@@ -52,7 +52,7 @@ function RelationGraph(props) {
               id: relationshipId,
               from: fromNodeId,
               to: toNodeId,
-              // labelTo: item.r.properties.label,
+              labelTo: item.r.properties.label,
               arrows: {
                 to: { enabled: true, scaleFactor: 1, type: "arrow" }
               }

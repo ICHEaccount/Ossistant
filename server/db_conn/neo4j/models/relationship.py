@@ -155,7 +155,7 @@ class Relationship:
     def delete_relationship(cls, uid):
         if not uid:
             return False, 'Relation uid did not exist'
-        query = "MATCH ()-[r]-() WHERE r.uid = $uid DELETE r"
+        query = "MATCH ()-[r]->() WHERE r.uid = $uid DELETE r"
         try:
             results, meta = db.cypher_query(query, {'uid': uid})
             if results:
@@ -168,7 +168,7 @@ class Relationship:
     def delete_rels_uid(cls, from_uid, to_uid):
         if not from_uid or not to_uid:
             return False, 'UID did not exist'
-        query = "MATCH (n)-[r]-(m) WHERE n.uid = $from_uid AND m.uid = $to_uid DELETE r"
+        query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid DELETE r"
         try:
             results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
             if results:
@@ -182,7 +182,7 @@ class Relationship:
     def modify_relationship(cls, uid, new_label):
         if not uid:
             return False, 'Relation uid did not exist'
-        query = "MATCH ()-[r]-() WHERE r.uid = $uid SET r.label = $new_label RETURN r"
+        query = "MATCH ()-[r]->() WHERE r.uid = $uid SET r.label = $new_label RETURN r"
         try:
             results, meta = db.cypher_query(query, {'uid': uid, 'new_label': new_label})
             if results:
@@ -198,10 +198,10 @@ class Relationship:
             return False, 'Node uid did not exist'
         try:
             if is_label == True:
-                query = "MATCH (n)-[r]-(m) WHERE n.uid = $from_uid AND m.uid = $to_uid RETURN r"
+                query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid RETURN r"
                 results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid})
             elif is_label == False:
-                query = "MATCH (n)-[r]-(m) WHERE n.uid = $from_uid AND m.uid = $to_uid AND r.lable= $r_label RETURN r"
+                query = "MATCH (n)-[r]->(m) WHERE n.uid = $from_uid AND m.uid = $to_uid AND r.lable= $r_label RETURN r"
                 if label is None:
                     return False, "Label did not exist"
                 results, meta = db.cypher_query(query, {'from_uid': from_uid, 'to_uid':to_uid, 'r_label':label})
