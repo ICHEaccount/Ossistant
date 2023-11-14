@@ -34,7 +34,7 @@ function RelationGraph(props) {
         const nodeId = item.n.id;
     
         if (!addedNodes.has(nodeId)) {
-          if(label.length > 20 && group ==="Post"){
+          if(label && label.length > 20 && group ==="Post"){
             label = label.substring(0,15) + "...";
           }
           console.log("Node label : "+label);
@@ -68,7 +68,7 @@ function RelationGraph(props) {
     // Connect Relationship 
     network.on('selectNode', (params) => {
       const { nodes } = params;
-      
+      network.disableEditMode();
       console.log(nodes);
       if (nodes.length > 0) {
         axios.get(`/graph/node/${nodes[0]}`).then((response) =>{
@@ -101,6 +101,7 @@ function RelationGraph(props) {
           }
         })
       }
+      network.disableEditMode();
     });
 
     dispatch(changeBehavior('view'))
