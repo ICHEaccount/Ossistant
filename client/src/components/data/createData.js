@@ -89,7 +89,7 @@ const CreateData = (props) => {
         return(
         <InputGroup className='mb-1'>
                 <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-                <Form.Control as={property==="note"?"textarea":"input"}
+                <Form.Control as={property==="note"||property==="content"?"textarea":"input"}
                 value={formData[label][property]||""}
                 onChange={(e)=>{updateFormValue(property,e.target.value)}}
                 required={title===property}
