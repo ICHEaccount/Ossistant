@@ -144,11 +144,11 @@ const DataCard = (props) => {
                         </Card.Header>
                         
                             {lbs[label].properties.map((key) => {
-                                if(key==="note"){
+                                if(key==="note"||key==="content"){
                                     return (<InputGroup className='mb-1 px-1' >
-                                    <InputGroup.Text id='note'>note</InputGroup.Text>
+                                    <InputGroup.Text id='note'>{key}</InputGroup.Text>
                                     <Form.Control
-                                    value={formData.note}
+                                    value={formData[key]}
                                     disabled={!onEdit}
                                     onChange={(e)=>onChange(key,e.target.value)}
                                     as="textarea" />
