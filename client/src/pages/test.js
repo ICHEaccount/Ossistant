@@ -26,7 +26,7 @@ const Test = () => {
                     </Card.Text>)
                     :(<Card.Text>
                         <p>Tester: Former and Current Cybercrime Investigators </p>
-                        <p>Period: 2023-11-15 ~ 2023-11-21</p>
+                        <p>Period: 15-11-2023 ~ 21-11-2023</p>
                     </Card.Text>)}
                     </Card.Body>
                     <Card.Body>
