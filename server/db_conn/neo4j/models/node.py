@@ -83,7 +83,7 @@ class Email(BaseNode):
     def to_json(self):
         return {
             "uid": self.uid,
-            "url": self.url,
+            "url": self.url,            
             "email": self.email,
             "fake": self.fake,
             "email_domain": self.email_domain,
@@ -93,6 +93,7 @@ class Email(BaseNode):
 @NodeManager
 class Phone(BaseNode):
     uid = UniqueIdProperty()
+    url = StringProperty()
     number = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
@@ -100,6 +101,7 @@ class Phone(BaseNode):
     def to_json(self):
         return {
             "uid": self.uid,
+            "url": self.url,  
             "number": self.number,
             "note": self.note
         }
