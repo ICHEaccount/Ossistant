@@ -382,7 +382,7 @@ def post_function(case_id):
     # regdate 포맷을 변경하고 문자열로 변환합니다.
     for item in processed_data:
         # datetime 객체를 사용하여 날짜만 추출하고 포맷을 변경합니다.
-        item['regdate'] = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S").date().isoformat()
+        item['regdate'] = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S").date().isoformat()
 
     # 결과를 출력합니다.
 #     return processed_data
