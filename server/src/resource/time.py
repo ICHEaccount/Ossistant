@@ -1,15 +1,15 @@
 from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
-from datetime import datetime
+#from datetime import datetime
 import re
 import json
-from datetime import datetime
+import datetime
 from db_conn.neo4j.init import db
 from neo4j import GraphDatabase
 
 bp = Blueprint('timeline', __name__, url_prefix='/timeline')
 
-#@bp.route('/test', methods=['GET'])
+# @bp.route('/test', methods=['GET'])
 @bp.route("/whole/<string:case_id>", methods=["GET"])
 def get_data(case_id):
     # 초기 데이터 구조
@@ -24,9 +24,10 @@ def get_data(case_id):
     for node_type in data.keys():
         if not case_id:
             jsonify({'Error': 'case_id did not exist'}), 404
-        query = query = (
+        query = (
             f"MATCH (n:{node_type})-[*1..]->(connected_node) "
             f"WHERE NOT n = connected_node AND n.case_id = '{case_id}' "
+            "AND (NOT labels(n) = labels(connected_node) OR n:SurfaceUser IS NULL OR connected_node:SurfaceUser IS NULL) "
             "RETURN n AS node, collect(connected_node) AS connected_nodes"
         )
         results, _ = db.cypher_query(query)
@@ -118,32 +119,44 @@ def get_data(case_id):
     # date와 created_date를 regdate로 변환
     for item in data:
         if 'date' in item:
-            item['regdate'] = item('date')
+            item['regdate'] = item.pop('date')
         elif 'created_date' in item:
             item['regdate'] = item.pop('created_date')
 
     # regdate가 있는 딕셔너리만 필터링
     filtered_data = [item for item in data if 'regdate' in item and item['regdate'] is not None]
+
     # return jsonify({'whole':filtered_data, 'type':str(type(filtered_data[0]['regdate']))}),200
     # regdate의 hour 정보를 분리하고, regdate를 날짜만 포함하도록 변환
     for item in filtered_data:
-        # regdate로부터 datetime 객체 생성
-        regdate_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M")
-        # # Hour 정보 추가
+        try:
+            # regdate 문자열을 datetime 객체로 변환
+            regdate_obj = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M")
+        except ValueError:
+            # 시간 정보가 없는 경우, 기본 시간을 추가하고 다시 시도
+            regdate_obj = datetime.datetime.strptime(item['regdate'] + " 00:00", "%Y-%m-%d %H:%M")
+        # Hour 정보 추출
         item['Hour'] = regdate_obj.hour
         # # regdate를 날짜만 포함하는 datetime.date 객체로 변환
-        item['regdate'] = regdate_obj.date()
+        # item['regdate'] = regdate_obj.date()
+        # # regdate를 "YYYY-MM-DD" 형식의 문자열로 다시 변환
+        # item['regdate'] = item['regdate'].strftime("%Y-%m-%d")
 
     # 날짜로 정렬 (오름차순)
     filtered_data.sort(key=lambda x: x['regdate'])
 
-    # regdate를 "YYYY-MM-DD" 형식의 문자열로 변환
     for item in filtered_data:
-        item['regdate'] = item['regdate'].strftime("%Y-%m-%d")
+        # regdate가 datetime.date 객체인지 확인
+        if isinstance(item['regdate'], datetime.date):
+            # regdate를 "YYYY-MM-DD" 형식의 문자열로 변환
+            item['regdate'] = item['regdate'].strftime("%Y-%m-%d")
+        # 이미 문자열인 경우에는 변환을 생략
+
+    # for item in filtered_data:
+    #     # regdate의 날짜 부분만 추출 (첫 10자리)
+    #     item['regdate'] = item['regdate'][:10]
 
     # 결과를 JSON으로 반환
-
-    #return filtered_data
     post_dicts = filtered_data
     return jsonify({'whole_dicts': post_dicts}), 200
 
@@ -282,11 +295,11 @@ def get_surfaceuser_and_connected_nodes(case_id):
     # regdate로 정렬 후 Hour 추가하고 regdate 형식 변경
     for item in data:
         regdate_str = item['regdate']
-        regdate_obj = datetime.strptime(regdate_str, '%Y-%m-%d %H:%M')
+        regdate_obj = datetime.datetime.strptime(regdate_str, '%Y-%m-%d %H:%M')
         item['Hour'] = regdate_obj.hour  # Hour 키에 시간 값 추가
 
     # regdate 기준으로 정렬
-    data.sort(key=lambda x: datetime.strptime(x['regdate'], '%Y-%m-%d %H:%M'))
+    data.sort(key=lambda x: datetime.datetime.strptime(x['regdate'], '%Y-%m-%d %H:%M'))
 
     # regdate 형식을 'YYYY-MM-DD'로 변경
     for item in data:
@@ -360,16 +373,16 @@ def post_function(case_id):
     # regdate의 시간 값을 추출하여 Hour 키를 추가합니다.
     for item in processed_data:
         # datetime 객체를 사용하여 시간을 추출합니다.
-        date_time_obj = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
+        date_time_obj = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
         item['Hour'] = date_time_obj.hour
 
     # regdate 기준으로 정렬합니다.
-    processed_data.sort(key=lambda x: datetime.strptime(x['regdate'], "%Y-%m-%d %H:%M:%S"))
+    processed_data.sort(key=lambda x: datetime.datetime.strptime(x['regdate'], "%Y-%m-%d %H:%M:%S"))
 
     # regdate 포맷을 변경하고 문자열로 변환합니다.
     for item in processed_data:
         # datetime 객체를 사용하여 날짜만 추출하고 포맷을 변경합니다.
-        item['regdate'] = datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S").date().isoformat()
+        item['regdate'] = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S").date().isoformat()
 
     # 결과를 출력합니다.
 #     return processed_data
