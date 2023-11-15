@@ -73,6 +73,7 @@ class Comment(BaseNode):
 @NodeManager
 class Email(BaseNode):
     uid = UniqueIdProperty()
+    url = StringProperty()
     email = StringProperty(unique_index=True)
     fake = StringProperty(default='None')
     email_domain = StringProperty()
@@ -82,6 +83,7 @@ class Email(BaseNode):
     def to_json(self):
         return {
             "uid": self.uid,
+            "url": self.url,
             "email": self.email,
             "fake": self.fake,
             "email_domain": self.email_domain,
