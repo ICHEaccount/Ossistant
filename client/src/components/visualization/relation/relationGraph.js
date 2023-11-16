@@ -11,7 +11,7 @@ import lbs from '../../../labels';
 const focusOptions = {
   scale: 1,
   animation: {
-    duration: 200, 
+    duration: 250,
     easingFunction: 'easeInOutQuad' 
   }
 };
@@ -84,7 +84,7 @@ function RelationGraph(props) {
           const label = resData.property.label;
           delete resData.property.label;
 
-          // network.focus(nodes[0], focusOptions);
+          network.focus(nodes[0], focusOptions);
           dispatch(select({node:resData,label:label}))
           setSelectedNode(nodes[0]);
           network.addEdgeMode();
