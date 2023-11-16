@@ -95,87 +95,91 @@ import BetaToast from '../components/betaToast';
         }, [isDone,selected])
 
         useEffect(() => {
-            if(activeRuns.length && intervalRef.current === null ){
-                    intervalRef.current = setInterval(() => {
-                        Axios.get(`/tools/getToolState/${case_id}`)
-                            .then((res) => {
-                                if(Object.keys(toolResult)&&!isEqual(res.data,prevToolResultRef.current)){
-                                    const newResultList={
-                                        'completed':[],
-                                        'ready':[],
-                                        'running':[],
-                                        'error':[]
-                                    }
-                                    Object.keys(res.data).forEach((status)=>{
-                                        const statusData = res.data[status]
-                                        // console.log(statusData);
-                                        if(toolResult[status]){  
-                                            statusData.forEach((item) => {
-                                                newResultList[status]=[]
-                                                const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
-                                                if (!isOldData) {
-                                                    newResultList[status].push(item);
-                                                }
-                                                if(status==="completed"||status==="error"){
-                                                    let newActiveRuns = activeRuns
-                                                    if(item.run_id in activeRuns){
-                                                        newActiveRuns.filter((i)=> i!==item.run_id)
-                                                    }
-                                                    setactiveRuns(newActiveRuns)
-                                                }
-                                            })
-                                        } else {
-                                            newResultList[status]=statusData
-                                        }
-                                    })
-                                    setnewResult(newResultList)
-                                     // Update the ref with the latest toolResult
-                                    prevToolResultRef.current = res.data;
-                                    
-                                    settoolResult((prevToolResult) => {
-                                        // Update the state only if it's different from the previous state
-                                        if (!isEqual(prevToolResult, res.data)) {
-                                            return res.data;
-                                        }
-                                        return prevToolResult;
-                                    });
-                                    // console.log(newResultList);
-                                    //new completed run exists
-                                    if(newResultList.completed.length){
-                                        setisDone(true);
-                                        // setisnewRun(false)
-                                        setisnewResult(true)
-                                    }
-                                    if(newResultList.error.length){
-                                        setisDone(true);
-                                        // setisnewRun(false)
-                                        setisnewResult(true)
-                                    }
-                                    if(newResultList.ready.length===0 && newResultList.running.length===0){
-                                        clearInterval(intervalRef.current);
-                                        intervalRef.current = null;
-                                        console.log("clear interval");
-                                        // setisnewRun(false);
-                                    }
-                                }
-                                
-                                setisLoaded(true)
-                            })
-                            .catch(error => {
-                                clearInterval(intervalRef.current);
-                                intervalRef.current = null;
-                                console.log(error);
-                                setisLoaded(true)
-                            });
-                    }, 5000); // 3초마다 확인
-                
-
-            }
-                
-            return() =>{
+            if(activeRuns.length){
                 clearInterval(intervalRef.current);
-            }
+                intervalRef.current = setInterval(() => {
+                    console.log(activeRuns);
+                    Axios.get(`/tools/getToolState/${case_id}`)
+                        .then((res) => {
+                            if(Object.keys(toolResult)&&!isEqual(res.data,prevToolResultRef.current)){
+                                const newResultList={
+                                    'completed':[],
+                                    'ready':[],
+                                    'running':[],
+                                    'error':[]
+                                }
+                                Object.keys(res.data).forEach((status)=>{
+                                    const statusData = res.data[status]
+                                    // console.log(statusData);
+                                    if(toolResult[status]){  
+                                        statusData.forEach((item) => {
+                                            newResultList[status]=[]
+                                            const isOldData = toolResult[status].some((oldItem) => oldItem.run_id === item.run_id);
+                                            if (!isOldData) {
+                                                newResultList[status].push(item);
+                                            }
+                                            if(status==="completed"||status==="error"){
+                                                if (activeRuns.includes(item.run_id)) {
+                                                    console.log(item.run_id);
+                                                    setactiveRuns((prevActiveRuns) =>
+                                                        prevActiveRuns.filter((i) => i !== item.run_id)
+                                                    );
+                                                }
+                                                // console.log(item.run_id );
+                                                // console.log(newActiveRuns);
+                                                setactiveRuns(activeRuns)
+                                            }
+                                        })
+                                    } else {
+                                        newResultList[status]=statusData
+                                    }
+                                })
+                                setnewResult(newResultList)
+                                 // Update the ref with the latest toolResult
+                                prevToolResultRef.current = res.data;
+                                
+                                settoolResult((prevToolResult) => {
+                                    // Update the state only if it's different from the previous state
+                                    if (!isEqual(prevToolResult, res.data)) {
+                                        return res.data;
+                                    }
+                                    return prevToolResult;
+                                });
+                                // console.log(newResultList);
+                                //new completed run exists
+                                if(newResultList.completed.length){
+                                    setisDone(true);
+                                    // setisnewRun(false)
+                                    setisnewResult(true)
+                                }
+                                if(newResultList.error.length){
+                                    setisDone(true);
+                                    // setisnewRun(false)
+                                    setisnewResult(true)
+                                }
+                                if(newResultList.ready.length===0 && newResultList.running.length===0){
+                                    clearInterval(intervalRef.current);
+                                    intervalRef.current = null;
+                                    console.log("clear interval");
+                                    // setisnewRun(false);
+                                }
+                            }
+                            
+                            setisLoaded(true)
+                        })
+                        .catch(error => {
+                            clearInterval(intervalRef.current);
+                            intervalRef.current = null;
+                            console.log(error);
+                            setisLoaded(true)
+                        });
+                }, 5000); // 3초마다 확인
+                
 
+            }
+            return () => {
+                clearInterval(intervalRef.current);
+            };
         }, [activeRuns])
         
 
