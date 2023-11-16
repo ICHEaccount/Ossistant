@@ -5,12 +5,21 @@ import logo from '../../images/logo_textless.png';
 
 const RunToast = (props) => {
     const newResult = props.newResult
-    const [showList, setshowList] = useState([])
+    const [showList, setshowList] = useState({})
+
+    const onHide = (run) =>{
+        console.log(showList[run.run_id]);
+        setshowList({
+            ...showList,
+            [run.run_id]:false
+        })
+    }
+
     // console.log(newResult);
-    const toastList = newResult?.completed?.map((result)=> {
+    const toastList = newResult?.completed?.map((result,idx)=> {
         // setisnewRun(false)
         return(
-        <Toast autohide>
+        <Toast key={result.run_id} onClose={(e)=>onHide(result)} show={showList[result.run_id]===undefined} delay={3000} autohide>
             <Toast.Header className="tw-bg-bright-peach">
                 <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>
                 <strong className="me-auto">{`#${result.run_id} ${result.tool_name} Completed`}</strong> 
@@ -22,9 +31,9 @@ const RunToast = (props) => {
         </Toast>
         )
     })
-    const errorToast = newResult?.error?.map((result)=>{
+    const errorToast = newResult?.error?.map((result,idx)=>{
         return(
-        <Toast autohide>
+        <Toast key={result.run_id} onClose={(e)=>onHide(result)} show={showList[result.run_id]===undefined} delay={3000} autohide>
             <Toast.Header className="tw-bg-peach">
                 <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>
                 <strong className="me-auto">{`#${result.run_id} ${result.tool_name} ERROR`}</strong> 
@@ -37,7 +46,7 @@ const RunToast = (props) => {
         )
     })
     return (
-        <ToastContainer position='bottom-end' className='p-2' >
+        <ToastContainer position='bottom-end' className='p-2'>
             {toastList}
             {errorToast}
         </ToastContainer>

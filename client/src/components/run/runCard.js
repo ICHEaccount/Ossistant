@@ -60,7 +60,7 @@ const RunCard = (props) => {
 					return (
 					<InputGroup className='mb-1 px-1'>
 					{/* {type==="error"?null:<InputGroup.Checkbox aria-label="Checkbox for following text input" />} */}
-					<InputGroup.Text className={cls('',{'tw-text-red-500':type==="error"})} >{type}</InputGroup.Text>
+					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
 					<Form.Control
 					placeholder={result.result[type]}
 					disabled
