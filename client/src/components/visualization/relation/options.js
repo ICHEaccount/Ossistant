@@ -26,6 +26,7 @@ const options = {
   manipulation: {
     addEdge : function(edgeData, callback) {
       if (edgeData){
+        console.log("edgeData : " + JSON.stringify(edgeData));
         if (edgeData.from !== edgeData.to){
           const reqData = {
             'type': '0',
@@ -46,8 +47,9 @@ const options = {
     addNode : false,
     deleteNode : false,
     editEdge : function(edgeData , callback) {
+      console.log(JSON.stringify(edgeData));
       if(edgeData){
-        if(edgeData.from !== edgeData.to){
+        if(edgeData.from !== edgeData.to && !edgeData.from.includes("targetNode") && !edgeData.to.includes("targetNode")){
           const reqData = {
             'type' : '0',
             'from': edgeData.from,
@@ -59,10 +61,10 @@ const options = {
             if(response.status === 200){
               callback(edgeData);
             }
-            store.dispatch(changeBehavior('rel-edit'))
           })
         }
       }
+      store.dispatch(changeBehavior('rel-edit'))
     },
     deleteEdge : function(edgeData, callback){
       if(edgeData){
@@ -186,21 +188,18 @@ const options = {
       min: 1,
       max: 15,
     },
-    smooth: {
-      type: 'dynamic',
-    },
+    smooth: { type: 'continuous' },
     arrows: {
       to: { enabled: true, scaleFactor: 1, type: "arrow" }
     },
-    physics: {
-      barnesHut: {
-        springLength: 200
-      }
-    }
+    hideEdgesOnZoom : true
   },    
   interaction: {
     hover: true,
   },
+  animation: {
+    offset: { x: 0, y: 0 },
+  }
 };
 
 export default options;

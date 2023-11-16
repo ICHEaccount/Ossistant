@@ -137,6 +137,7 @@ def create_relationship():
     else:
         return jsonify({'Error':'Invalid func type'}), 404
 
+
 @bp.route('/rel/delete',methods=["POST"])
 def delete_relationship():
     res = request.get_json()
