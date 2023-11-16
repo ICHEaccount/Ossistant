@@ -29,7 +29,7 @@ const RunCard = (props) => {
 	<Container>
     {selectedEventKey==="list"?(list?runList:<p className='tw-text-center'>no run yet</p>):(
 		<Card className='mt-1'>
-		<Card.Header className='mb-1'>
+		<Card.Header className='mb-1 tw-bg-bright-peach'>
 			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list')}}/>	
 			{selectedRun.tool_name}
 			{/* {onEdit?
