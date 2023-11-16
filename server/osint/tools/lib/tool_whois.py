@@ -103,14 +103,19 @@ def run_whois(case_id, run):
 
     except Exception as e:
         run.status = 'error'
-        message = f'Run whois failed. Domain is {run.input_value}. Return code: {e}'
+        message = f'{e}'
+        result = {
+            "message": message
+        }
+        RunModel.create_result(data=result, run_id=run.run_id)
         run.save()
+        return run.run_id
 
 
 def check_whois(run_id):
     regdate_response = None
     run = RunModel.objects.get(_id=run_id)
-    if not run.status == 'completed':
+    if run.status == 'ready' or 'running':
         try:
             with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
                 whois_search = json.load(report)
