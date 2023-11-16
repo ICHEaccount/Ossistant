@@ -138,22 +138,6 @@ def create_relationship():
         return jsonify({'Error':'Invalid func type'}), 404
 
 
-# @bp.route('/rel/modify', methods=["POST"])
-# def create_relationship():
-#     res = request.get_json()
-#     if not res:
-#         return jsonify({'error': 'Invalid request data'}), 404
-#     if not res['from'] or not res['to'] or not res['rel_uid']:
-#         return jsonify({'error': 'Invalid request data'}), 404
-    
-#     check_status, rel_check_status = Relationship.check_relationship(from_uid=res['from'], to_uid=res['to'])
-#     if rel_check_status is True:
-#         del_flag, status = Relationship.delete_relationship(uid=res['rel_uid'])
-#         if del_flag is True:
-
-            
-
-
 @bp.route('/rel/delete',methods=["POST"])
 def delete_relationship():
     res = request.get_json()
