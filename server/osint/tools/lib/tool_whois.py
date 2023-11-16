@@ -97,15 +97,18 @@ def run_whois(case_id, run):
             run.status = 'completed'
         else: 
             run.status = 'error'
-            run.save()
+            message = 'No email match'
+            result = {
+                "message": message
+            }
+            RunModel.create_result(data=result, run_id=run.run_id)
         run.save()
         return run.run_id
 
     except Exception as e:
         run.status = 'error'
-        message = f'{e}'
         result = {
-            "message": message
+            "message": e
         }
         RunModel.create_result(data=result, run_id=run.run_id)
         run.save()
@@ -137,9 +140,6 @@ def check_whois(run_id):
 
     run.save()
     return whois_response
-
-
-
 
 # def run_whois(run):
 #     # 1. Execute
