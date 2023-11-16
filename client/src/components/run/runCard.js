@@ -16,7 +16,7 @@ const RunCard = (props) => {
 		return(<Card className="mt-1" key={run.run_id}>
 		<Card.Body>
 			<Row>
-				<Col xs="10">{`#${run.run_id} ${run.tool_name}`}</Col>
+				<Col xs="10"><strong>{run.tool_name}</strong> <small>{run.runtime}</small></Col>
 				<Col xs="2" className="d-flex align-items-center">
 					<ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>{setSelectedEventKey(`selected-${run.run_id}`);setselectedRun(run)}}/>
 				</Col>
@@ -42,6 +42,8 @@ const RunCard = (props) => {
 					return null
 				}
 				if(key==="tool_id") return null
+				if(key==="run_id") return null
+
                 return(
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text >{key}</InputGroup.Text>

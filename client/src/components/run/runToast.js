@@ -22,8 +22,8 @@ const RunToast = (props) => {
         <Toast key={result.run_id} onClose={(e)=>onHide(result)} show={showList[result.run_id]===undefined} delay={3000} autohide>
             <Toast.Header className="tw-bg-bright-peach">
                 <img src={logo} className="tw-rounded-sm me-2" alt="logo"  height="20" width="20"/>
-                <strong className="me-auto">{`#${result.run_id} ${result.tool_name} Completed`}</strong> 
-                <small>{result.run_time}</small>
+                <strong className="me-auto">{result.tool_name} Completed </strong> 
+                <small>{result.runtime}</small>
             </Toast.Header>
             <Toast.Body>
                 {result.results.length?`Success! ${result.results.length} new data acquired :)`:"Success! But no new data acquired :("}
