@@ -55,7 +55,7 @@ const RunCard = (props) => {
                 )                         
             }
             )}
-			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>Result</p>:null}
+			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>{status==="error"?"Error":"Result"}</p>:null}
 			{
 				selectedRun.results?.map((result)=>{
 					const type = Object.keys(result.result)[0]
@@ -65,6 +65,7 @@ const RunCard = (props) => {
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
 					<Form.Control
 					placeholder={result.result[type]}
+					as={status==="error"?"textarea":"input"}
 					disabled
 					/>
 					</InputGroup>)
