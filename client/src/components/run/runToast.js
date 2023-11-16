@@ -8,7 +8,7 @@ const RunToast = (props) => {
     const [showList, setshowList] = useState({})
 
     const onHide = (run) =>{
-        console.log(showList[run.run_id]);
+        // console.log(showList[run.run_id]);
         setshowList({
             ...showList,
             [run.run_id]:false

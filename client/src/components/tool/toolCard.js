@@ -40,7 +40,7 @@ const ToolCard = (props) => {
         }
 
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
-        console.log(selectedTool);
+        // console.log(selectedTool);
 
         const selectedNodes = {
             case_id: case_id,
@@ -63,7 +63,7 @@ const ToolCard = (props) => {
                 .filter((node) => node !== null), // null이 아닌 항목만 유지
         };
 
-        console.log(selectedNodes);
+        // console.log(selectedNodes);
 
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {

@@ -8,7 +8,6 @@ import DataPanel from '../components/data/dataPanel';
 import VisualPanel from '../components/visualPanel';
 import { useSelector } from 'react-redux';
 import RunToast from '../components/run/runToast';
-import { Button, Toast, ToastContainer } from 'react-bootstrap';
 import BetaToast from '../components/betaToast';
 
 
@@ -29,7 +28,10 @@ import BetaToast from '../components/betaToast';
         const [istoolLoad, setistoolLoad] = useState(false)
         const [tools, settools] = useState([])
         const intervalRef = useRef(null);
+        const prevToolResultRef = useRef(toolResult);
+        const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
 
+        //Get initial data to display data panel
         useEffect(() => {
             Axios.get(`/tools/getToolList`)
                 .then((res)=>{
@@ -43,6 +45,17 @@ import BetaToast from '../components/betaToast';
                 }
                 })
             // settools(dummy)
+            Axios.get(`/tools/getToolState/${case_id}`)
+                .then((res) => {
+                    settoolResult(res.data)
+                    // console.log(res.data);
+                    setisLoaded(true)
+                })
+                .catch(error => {
+                    console.log(error);
+                    setisLoaded(true)
+                });
+            setisDone(false)
         }, [])
         
 
@@ -79,17 +92,14 @@ import BetaToast from '../components/betaToast';
                 }
                 })
             
-        }, [case_id,isDone,selected])
+        }, [isDone,selected])
 
         useEffect(() => {
-            // console.log(isnewRun);
-            if(activeRuns.length){
-                if(intervalRef.current === null){
+            if(activeRuns.length && intervalRef.current === null ){
                     intervalRef.current = setInterval(() => {
                         Axios.get(`/tools/getToolState/${case_id}`)
                             .then((res) => {
-                                // console.log(res.data);
-                                if(Object.keys(toolResult)){
+                                if(Object.keys(toolResult)&&!isEqual(res.data,prevToolResultRef.current)){
                                     const newResultList={
                                         'completed':[],
                                         'ready':[],
@@ -119,6 +129,16 @@ import BetaToast from '../components/betaToast';
                                         }
                                     })
                                     setnewResult(newResultList)
+                                     // Update the ref with the latest toolResult
+                                    prevToolResultRef.current = res.data;
+                                    
+                                    settoolResult((prevToolResult) => {
+                                        // Update the state only if it's different from the previous state
+                                        if (!isEqual(prevToolResult, res.data)) {
+                                            return res.data;
+                                        }
+                                        return prevToolResult;
+                                    });
                                     // console.log(newResultList);
                                     //new completed run exists
                                     if(newResultList.completed.length){
@@ -139,8 +159,6 @@ import BetaToast from '../components/betaToast';
                                     }
                                 }
                                 
-                                settoolResult(res.data)
-                                
                                 setisLoaded(true)
                             })
                             .catch(error => {
@@ -149,24 +167,14 @@ import BetaToast from '../components/betaToast';
                                 console.log(error);
                                 setisLoaded(true)
                             });
-                    }, 3000); // 3초마다 확인
-                }
+                    }, 5000); // 3초마다 확인
+                
 
-            }else{
-                Axios.get(`/tools/getToolState/${case_id}`)
-                    .then((res) => {
-                        settoolResult(res.data)
-                        console.log("case:",toolResult);
-                        setisLoaded(true)
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        setisLoaded(true)
-                    });
-                setisDone(false)
             }
                 
-            
+            return() =>{
+                clearInterval(intervalRef.current);
+            }
 
         }, [activeRuns])
         
