@@ -8,6 +8,14 @@ import node, {select,changeBehavior} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
 
+const focusOptions = {
+  scale: 1,
+  animation: {
+    duration: 200, 
+    easingFunction: 'easeInOutQuad' 
+  }
+};
+
 function RelationGraph(props) {
   const params = useParams();
   const case_id = params.case_id;
@@ -75,7 +83,8 @@ function RelationGraph(props) {
           const resData = response.data;
           const label = resData.property.label;
           delete resData.property.label;
-          console.log(resData);
+
+          // network.focus(nodes[0], focusOptions);
           dispatch(select({node:resData,label:label}))
           setSelectedNode(nodes[0]);
           network.addEdgeMode();
@@ -89,17 +98,30 @@ function RelationGraph(props) {
     // Modify relationship 
     network.on('doubleClick', (properties)=>{
 
-      if (properties.edges.length > 0 && properties.nodes.length === 0) {
+      if (properties && properties.edges && properties.edges.length > 0) {
         var edgeId = properties.edges[0];
-        var clickedEdges = data.edges.get( edgeId );
-        console.log("edit mode : " + JSON.stringify(clickedEdges));
-        
-        const inp_data = { 'type': "rel", "uid": clickedEdges.id };
-        axios.post('/graph/rel/delete',inp_data).then((response) => {
-          if(response.status === 200){
+        var clickedEdge = data.edges.get( edgeId );
+        if (clickedEdge) {
+          const { from, to } = clickedEdge;
+          
+          if (from !== to ) {
+            console.log("edit mode : " + JSON.stringify(clickedEdge));
+            
             network.editEdgeMode();
+            const inp_data = { 'type': "rel", "uid": clickedEdge.id };
+            axios.post('/graph/rel/delete', inp_data)
+              .then((response) => {
+                if (response.status === 200) {
+                  network.editEdgeMode();
+                }
+              })
+              .catch((error) => {
+                console.error("Error deleting relationship:", error);
+              });
+          } else {
+            console.log("Edge connects the node to itself, skipping deletion.");
           }
-        })
+        }
       }
       network.disableEditMode();
     });
