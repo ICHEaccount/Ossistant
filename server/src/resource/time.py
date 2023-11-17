@@ -2,6 +2,7 @@ from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
 #from datetime import datetime
 import re
+import copy
 import json
 import datetime
 from db_conn.neo4j.init import db
@@ -9,7 +10,7 @@ from neo4j import GraphDatabase
 
 bp = Blueprint('timeline', __name__, url_prefix='/timeline')
 
-# @bp.route('/test', methods=['GET'])
+#@bp.route('/test', methods=['GET'])
 @bp.route("/whole/<string:case_id>", methods=["GET"])
 def get_data(case_id):
     # 초기 데이터 구조
@@ -25,7 +26,7 @@ def get_data(case_id):
         if not case_id:
             jsonify({'Error': 'case_id did not exist'}), 404
         query = (
-            f"MATCH (n:{node_type})-[*1..]->(connected_node) "
+            f"MATCH (n:{node_type})-[*1..2]-(connected_node) "
             f"WHERE NOT n = connected_node AND n.case_id = '{case_id}' "
             "AND (NOT labels(n) = labels(connected_node) OR n:SurfaceUser IS NULL OR connected_node:SurfaceUser IS NULL) "
             "RETURN n AS node, collect(connected_node) AS connected_nodes"
@@ -92,27 +93,36 @@ def get_data(case_id):
             # properties 키를 삭제
             del node['properties']
 
-    # 이벤트 카운터 초기화
-    event_counter = 1
+    # Iterate through each key in the dataset (e.g., 'Company', 'Person', etc.)
+    for node_type in data_dict.keys():
+        # Initialize an event counter
+        event_counter = 1
+        # Iterate through each item (which contains 'connected_nodes') in the list associated with the key
+        for item in data_dict[node_type]:
+            # Create a new list for the modified connected nodes
+            modified_connected_nodes = []
+            # Iterate through each dictionary in the 'connected_nodes' list
+            for connected_node in item['connected_nodes']:
+                # Create a copy of the dictionary
+                node_copy = copy.deepcopy(connected_node)
+                # Add the 'Event' key with the current event number to the copied dictionary
+                node_copy['Event'] = f'Event {event_counter}'
+                # Add the modified dictionary to the new list
+                modified_connected_nodes.append(node_copy)
+            # Replace the original connected nodes list with the modified one
+            item['connected_nodes'] = modified_connected_nodes
+            # Increment the event counter after processing each 'connected_nodes' list
+            event_counter += 1
 
-    # 모든 키에 대해 반복합니다.
-    for key in data_dict.keys():
-        # 각 키(예: "Company", "DarkUser", ...)에 대한 리스트를 순회합니다.
-        for entry in data_dict[key]:
-            # connected_nodes 키가 있는지 확인하고 값을 수정합니다.
-            if "connected_nodes" in entry:
-                for node in entry["connected_nodes"]:
-                    node["Event"] = f"Event {event_counter}"
-                event_counter += 1  # 다음 이벤트 번호로 업데이트
-
+    # Initialize an empty list to hold all connected nodes
     all_connected_nodes = []
 
-    # 데이터셋의 각 섹션(Company, DarkUser, 등)을 순회
-    for section in data_dict.values():
-        # 각 섹션에 있는 모든 연결된 노드들을 순회
-        for item in section:
-            # connected_nodes 리스트에 있는 모든 딕셔너리를 추출
-            all_connected_nodes.extend(item.get('connected_nodes', []))
+    # Iterate through each key in the dataset (e.g., 'Company', 'Person', etc.)
+    for node_type in data_dict.keys():
+        # Iterate through each item (which contains 'connected_nodes') in the list associated with the key
+        for item in data_dict[node_type]:
+            # Extend the all_connected_nodes list with the connected_nodes from the current item
+            all_connected_nodes.extend(item['connected_nodes'])
 
     data = all_connected_nodes
 
@@ -152,9 +162,9 @@ def get_data(case_id):
             item['regdate'] = item['regdate'].strftime("%Y-%m-%d")
         # 이미 문자열인 경우에는 변환을 생략
 
-    # for item in filtered_data:
-    #     # regdate의 날짜 부분만 추출 (첫 10자리)
-    #     item['regdate'] = item['regdate'][:10]
+    for item in filtered_data:
+        # regdate의 날짜 부분만 추출 (첫 10자리)
+        item['regdate'] = item['regdate'][:10]
 
     # 결과를 JSON으로 반환
     post_dicts = filtered_data
@@ -373,16 +383,16 @@ def post_function(case_id):
     # regdate의 시간 값을 추출하여 Hour 키를 추가합니다.
     for item in processed_data:
         # datetime 객체를 사용하여 시간을 추출합니다.
-        date_time_obj = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S")
+        date_time_obj = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M")
         item['Hour'] = date_time_obj.hour
 
     # regdate 기준으로 정렬합니다.
-    processed_data.sort(key=lambda x: datetime.datetime.strptime(x['regdate'], "%Y-%m-%d %H:%M:%S"))
+    processed_data.sort(key=lambda x: datetime.datetime.strptime(x['regdate'], "%Y-%m-%d %H:%M"))
 
     # regdate 포맷을 변경하고 문자열로 변환합니다.
     for item in processed_data:
         # datetime 객체를 사용하여 날짜만 추출하고 포맷을 변경합니다.
-        item['regdate'] = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M:%S").date().isoformat()
+        item['regdate'] = datetime.datetime.strptime(item['regdate'], "%Y-%m-%d %H:%M").date().isoformat()
 
     # 결과를 출력합니다.
 #     return processed_data
