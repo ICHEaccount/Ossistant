@@ -19,8 +19,7 @@ const options = {
   layout:{
     hierarchical: {
       enabled:true,
-      sortMethod: 'directed',
-      nodeSpacing : 150
+      nodeSpacing : 200
     }
   },
   manipulation: {
