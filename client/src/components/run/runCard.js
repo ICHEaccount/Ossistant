@@ -29,7 +29,7 @@ const RunCard = (props) => {
 	<Container>
     {selectedEventKey==="list"?(list?runList:<p className='tw-text-center'>no run yet</p>):(
 		<Card className='mt-1'>
-		<Card.Header className='mb-1'>
+		<Card.Header className='mb-1 tw-bg-bright-peach'>
 			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list')}}/>	
 			{selectedRun.tool_name}
 			{/* {onEdit?
@@ -55,7 +55,7 @@ const RunCard = (props) => {
                 )                         
             }
             )}
-			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>Result</p>:null}
+			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>{status==="error"?"Error":"Result"}</p>:null}
 			{
 				selectedRun.results?.map((result)=>{
 					const type = Object.keys(result.result)[0]
@@ -65,6 +65,7 @@ const RunCard = (props) => {
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
 					<Form.Control
 					placeholder={result.result[type]}
+					as={status==="error"?"textarea":"input"}
 					disabled
 					/>
 					</InputGroup>)
