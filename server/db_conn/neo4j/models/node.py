@@ -111,6 +111,7 @@ class Message(BaseNode):
     url = StringProperty()
     content = StringProperty()
     note = StringProperty()
+    date = StringProperty()
     case_id = StringProperty()
 
     def to_json(self):
