@@ -34,9 +34,13 @@ def create_node():
     
     inp = {'case_id':req_arg['case_id'],'url':req['url']}
     check_status, existed_node = NODE_LIST[req_label].check_node(inp)
-    if check_status is True:
-        node = NODE_LIST[req_label].update_node_properties(node_id=existed_node.uid, **req_arg)
-    elif check_status is False: 
+    # validation label
+    if existed_node.__class__.__name__ == req_label:
+        if check_status is True:
+            node = NODE_LIST[req_label].update_node_properties(node_id=existed_node.uid, **req_arg)
+        elif check_status is False: 
+            node = NODE_LIST[req_label].create_node(req_arg)
+    else:
         node = NODE_LIST[req_label].create_node(req_arg)
     
     if node:
