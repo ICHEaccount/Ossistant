@@ -78,6 +78,7 @@ class Email(BaseNode):
     email_domain = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
+    url = StringProperty()
 
     def to_json(self):
         return {
@@ -91,6 +92,7 @@ class Email(BaseNode):
 @NodeManager
 class Phone(BaseNode):
     uid = UniqueIdProperty()
+    url = StringProperty()
     number = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
@@ -106,9 +108,10 @@ class Phone(BaseNode):
 class Message(BaseNode):
     uid = UniqueIdProperty()
     sender = StringProperty(required=True)
-    date = StringProperty()
+    url = StringProperty()
     content = StringProperty()
     note = StringProperty()
+    date = StringProperty()
     case_id = StringProperty()
 
     def to_json(self):

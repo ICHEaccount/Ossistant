@@ -40,7 +40,7 @@ def run_whois(case_id, run):
         regdate = None
         if regdate_response:
             if isinstance(regdate_response, datetime):
-                regdate = regdate_response.strftime('%Y-%m-%d %H:%M:%S')
+                regdate = regdate_response.strftime('%Y-%m-%d %H:%M')
             elif isinstance(regdate_response, str):
                 regdate = regdate_response
 
@@ -97,20 +97,28 @@ def run_whois(case_id, run):
             run.status = 'completed'
         else: 
             run.status = 'error'
-            run.save()
+            message = 'No email match'
+            result = {
+                "message": message
+            }
+            RunModel.create_result(data=result, run_id=run.run_id)
         run.save()
         return run.run_id
 
     except Exception as e:
         run.status = 'error'
-        message = f'Run whois failed. Domain is {run.input_value}. Return code: {e}'
+        result = {
+            "message": e
+        }
+        RunModel.create_result(data=result, run_id=run.run_id)
         run.save()
+        return run.run_id
 
 
 def check_whois(run_id):
     regdate_response = None
     run = RunModel.objects.get(_id=run_id)
-    if not run.status == 'completed':
+    if run.status == 'ready' or 'running':
         try:
             with open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'r') as report:
                 whois_search = json.load(report)
@@ -132,9 +140,6 @@ def check_whois(run_id):
 
     run.save()
     return whois_response
-
-
-
 
 # def run_whois(run):
 #     # 1. Execute

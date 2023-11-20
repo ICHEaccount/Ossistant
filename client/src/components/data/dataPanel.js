@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import { Alert, Button, Nav, Tab } from 'react-bootstrap';
 import DataList from './dataList';
-import { Database , Gear, FileEarmarkText, ArrowRepeat} from 'react-bootstrap-icons';
+import { Database , Gear, FileEarmarkText, ArrowRepeat, Tools} from 'react-bootstrap-icons';
 import ToolList from '../tool/toolList';
 import Report from '../report';
 import Axios  from 'axios';
@@ -34,7 +34,7 @@ const DataPanel = (props) => {
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="tool-list" className='tw-w-full tw-h-full d-flex justify-content-center align-items-center'>
-                            <Gear size="30px"/>
+                            <Tools size="30px"/>
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
@@ -50,7 +50,7 @@ const DataPanel = (props) => {
                 </Nav>
             </Col>
             <Col sm={9}>
-                <Tab.Content className='tw-h-[620px] tw-overflow-y-auto tw-overflow-x-hidden'>
+                <Tab.Content className='tw-ml-[-18px] tw-mr-[-5px] tw-h-[620px] tw-overflow-y-auto tw-overflow-x-hidden'>
                 <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData} newData={newData}/></Tab.Pane>
                 <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} newRun={newRun} toolList={toolList}/></Tab.Pane>
                 <Tab.Pane eventKey="run-list"><RunList case_id={case_id} toolResult={toolResult} /></Tab.Pane>

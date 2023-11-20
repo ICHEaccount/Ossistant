@@ -4,6 +4,7 @@ from flask import request, jsonify,Blueprint
 
 from db_conn.neo4j.init import db
 from db_conn.neo4j.models import *
+from db_conn.neo4j.models.lib.func import format_date_time
 
 bp = Blueprint('extension', __name__, url_prefix='/graph/ext')
 
@@ -22,6 +23,10 @@ def create_node():
     req_arg = {keys[0]: req['keyword'][keys[0]]}
     req_arg['case_id'] = req['case_id']
     req_arg['url'] = req['url']
+    if 'created_date' in req_arg:
+        req_arg['created_date'] = format_date_time(req_arg['created_date'])
+    elif 'regdate' in req_arg:
+        req_arg['regdate'] = format_date_time(req_arg['regdate'])
 
     # create node 
     if req_label not in NODE_LIST:
@@ -68,23 +73,34 @@ def take_snapshot():
             if keyword:
                 keyword['url'] = url
                 keyword['case_id'] = case_id
-                node = NODE_LIST[req_label].get_node(keyword)
-                if node is None:
+                if 'created_date' in keyword:
+                    keyword['created_date'] = format_date_time(keyword['created_date'])
+                elif 'regdate' in keyword:
+                    keyword['regdate'] = format_date_time(keyword['regdate'])
+                
+                node_check_flag, node = NODE_LIST[req_label].check_node(keyword)
+                if node_check_flag is False:
                     node = NODE_LIST[req_label].create_node(keyword)
                 
-                node_dict[NODE_LIST[req_label].get_node_name()] = node
+                node_dict[req_label] = node
     
         # Create Relationship 
         if 'Post' in node_dict:
             post_node = node_dict['Post']
 
             for key, rels in EXTENSION_RELATIONS.items():
-                if key in node_dict:
+                if key in node_dict and node_dict[key]:
                     pos = rels['pos']
                     if pos == "to":
-                        post_node.rel_to.connect(node_dict[key], {'label': rels['label']})
+                        status, check_flag = Relationship.check_relationship(to_uid=node_dict[key].uid, from_uid=post_node.uid)
+                        if status is True and check_flag is False:
+                            post_node.rel_to.connect(node_dict[key], {'label': rels['label']})
+                    elif pos =="from":
+                        status, check_flag = Relationship.check_relationship(to_uid=post_node.uid, from_uid=node_dict[key].uid)
+                        if status is True and check_flag is False:
+                            node_dict[key].rel_to.connect(post_node, {'label': rels['label']})
                     else:
-                        node_dict[key].rel_to.connect(post_node, {'label': rels['label']})
+                        return jsonify({'Error': 'Invalid extension config'}), 500
 
         return jsonify({'Message': 'Success'}), 200
     except KeyError as e:
