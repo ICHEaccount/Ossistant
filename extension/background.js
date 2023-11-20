@@ -1,3 +1,7 @@
+//const testUrl = "http://13.209.168.47"
+const testUrl = "http://127.0.0.1"
+
+
 let globalCaseId = null;
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -57,7 +61,7 @@ chrome.runtime.onInstalled.addListener(() => {
         "Comment": ["name", "content", "created_date"],
         "Email": ["email", "fake"],
         "Phone": ["number"],
-        "Message": ["sender", "content", "date"],
+        //"Message": ["sender", "content", "date"],
         "Wallet": ["wallet", "wallet_type"]
     };
 
@@ -155,16 +159,22 @@ chrome.runtime.onInstalled.addListener(() => {
                     return;
                 }
 
+                let formattedDate = convertDateFormat(response.created_date, 3);
+
                 let postData = {
                     label: "Post",
                     keyword: {
                         "writer": response.writer,
-                        "created_date": convertDateFormat(response.created_date, 4),
                         "title": response.title,
-                        "content": response.content,
+                        "content": response.content
                     }
                 };
-
+                
+                // convertDateFormat 함수가 null을 반환하지 않았다면, created_date를 추가합니다.
+                if (formattedDate !== null) {
+                    postData.keyword.created_date = formattedDate;
+                }
+                
                 datalist.push(postData);
 
                 let SurfaceUserData = {
@@ -215,15 +225,21 @@ chrome.runtime.onInstalled.addListener(() => {
                     return;
                 }
 
+                let formattedDate = convertDateFormat(response.created_date, 3);
+
                 let postData = {
                     label: "Post",
                     keyword: {
                         "writer": response.writer,
-                        "created_date": convertDateFormat(response.created_date, 3),
                         "title": response.title,
                         "content": response.content
                     }
                 };
+
+                // convertDateFormat 함수가 null을 반환하지 않았다면, created_date를 추가합니다.
+                if (formattedDate !== null) {
+                    postData.keyword.created_date = formattedDate;
+                }
 
                 datalist.push(postData);
                 //console.error("date", JSON.stringify(postData))
@@ -274,7 +290,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     return;
                 }
 
-                //telegram username(@)/
+                //telegram username(@)
                 const atSymbolIndex = tab.url.indexOf('@');
                 const hashSymbolIndex = tab.url.indexOf('/#');
                 let extracted = '';
@@ -344,7 +360,7 @@ chrome.runtime.onMessage.addListener(
 
 
 function sendDataToServer(data) {
-    fetch('http://127.0.0.1:5000/graph/ext/create', {
+    fetch(testUrl+':5000/graph/ext/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -363,7 +379,7 @@ function sendDataToServer(data) {
 }
 
 function sendDataToServer2(data) {
-    fetch('http://127.0.0.1:5000/graph/ext/snapshot', {
+    fetch(testUrl+':5000/graph/ext/snapshot', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -382,88 +398,60 @@ function sendDataToServer2(data) {
 }
 
 function convertDateFormat(dateTimeStr, type) {
-    if (type == 1){
+    if (type == 1) {
         const parts = dateTimeStr.split(' в ');
+        if (parts.length !== 2) return null;
+
         const date = parts[0];
         let time = parts[1];
-      
-        const [day, month, year] = date.split('.');
+
+        const dateParts = date.split('.');
+        if (dateParts.length !== 3) return null;
+
+        const [day, month, year] = dateParts;
         const formattedDate = `${year}-${month}-${day}`;
-      
+
         if (!time.includes(':')) {
-          time += ':00';
+            time += ':00';
         }
-      
+
         const timeParts = time.split(':');
         if (timeParts.length === 2) {
-          time = `${time}:00`;
+            time = `${time}:00`;
         }
-    
+
         return `${formattedDate} ${time}`;
-    }else if(type == 2){
-        const [day, month, year] = dateTimeStr.split('.');
+    } else if (type == 2) {
+        const dateParts = dateTimeStr.split('.');
+        if (dateParts.length !== 3) return null;
+
+        const [day, month, year] = dateParts;
         const formattedDate = `${year}-${month}-${day}`;
         const time = '00:00:00';
         return `${formattedDate} ${time}`;
-    }else if(type == 3){
-        //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
-        const parts = dateTimeStr.match(/(\d{4})\.(\d{1,2})\.(\d{1,2}). (\d{1,2}):(\d{2})/);
-        console.error("date", dateTimeStr);
+    } else if (type == 3 || type == 4) {
+        const regex = /(\d{4})\. (\d{1,2})\. (\d{1,2}). (\d{1,2}):(\d{2})/;
+        const parts = dateTimeStr.match(regex);
+        if (!parts) return null;
 
-        console.error("aa", parts);
-        
-        //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
-        if (parts === null) {
-            return parts
-        }
-        
         const year = parts[1];
         const month = parts[2];
         const day = parts[3];
         const hours = parts[4];
         const minutes = parts[5];
-    
-        const date = new Date(year, month - 1, day, hours, minutes);
-    
-        // YYYY-mm-dd HH:MM:SS
-        const formattedDate = 
-            date.getFullYear() + "-" + 
-            ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
-            ("0" + date.getDate()).slice(-2) + " " +  
-            ("0" + date.getHours()).slice(-2) + ":" + 
-            ("0" + date.getMinutes()).slice(-2) + ":" + 
-            "00"; 
-    
-        return formattedDate;
-    }else if(type == 4){
-        //const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2})\. (\d{1,2}):(\d{2})/);
-        const parts = dateTimeStr.match(/(\d{4})\. (\d{1,2})\. (\d{1,2}). (\d{1,2}):(\d{2})/);
-        console.error("date", dateTimeStr);
 
-        console.error("aa", parts);
-        
-        //우클릭 막아둔 경우 날짜 가져오지 못함 null 반환(ex. naver blog)
-        if (parts === null) {
-            return parts
-        }
-        
-        const year = parts[1];
-        const month = parts[2];
-        const day = parts[3];
-        const hours = parts[4];
-        const minutes = parts[5];
-    
         const date = new Date(year, month - 1, day, hours, minutes);
-    
-        // YYYY-mm-dd HH:MM:SS
-        const formattedDate = 
-            date.getFullYear() + "-" + 
-            ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
-            ("0" + date.getDate()).slice(-2) + " " +  
-            ("0" + date.getHours()).slice(-2) + ":" + 
-            ("0" + date.getMinutes()).slice(-2) + ":" + 
-            "00"; 
-    
+
+        const formattedDate =
+            date.getFullYear() + "-" +
+            ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + date.getDate()).slice(-2) + " " +
+            ("0" + date.getHours()).slice(-2) + ":" +
+            ("0" + date.getMinutes()).slice(-2) + ":" +
+            "00";
+
         return formattedDate;
     }
+
+    return null;
 }
