@@ -63,7 +63,7 @@ function CaseCard(props) {
                             <Form.Control required className="m-1 pr-2" size="sm"  value={caseName} defaultValue={data.case_name} onChange={(e)=> {setCaseName(e.target.value);}} placeholder='case name' />
                         </Col>
                         <Col  className="d-flex align-items-center" sm={1}>
-                            <Button type='submit' variant='light' size="sm"><Check/></Button>
+                        <Check className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={onUpdate}/>
                         </Col>
                     </Row>
                     
@@ -106,7 +106,7 @@ function CaseCard(props) {
                                 </Col>
                             </Row>
                         </Card.Subtitle>
-                            <Card.Text>
+                            <Card.Text className='tw-flex'>
                                 {description}
                             </Card.Text>
                 </Card.Link>
@@ -115,9 +115,10 @@ function CaseCard(props) {
 
                 <Col md="1" className="d-flex align-items-center">
                     <Stack className='flex-column justify-content-center align-items-center'>
-                        <Trash onClick={props.onDelete} href="#delete" className='m-1'/>
-                        {!onEdit&&<PencilSquare onClick={(e)=>{setonEdit(!onEdit)}} className='m-1'/>}
-                        <ArrowRightSquare onClick={onMove} className='m-1'/>
+                        <Trash onClick={props.onDelete} href="#delete" className='m-1 hover:tw-cursor-pointer hover:tw-border hover:tw-border-white'/>
+                        {!onEdit&&                        
+                        <PencilSquare onClick={(e)=>{setonEdit(!onEdit)}} className='m-1 hover:tw-cursor-pointer hover:tw-border hover:tw-border-white'/>}
+                        <ArrowRightSquare onClick={onMove} className='m-1 hover:tw-cursor-pointer hover:tw-border hover:tw-border-white'/>
                     </Stack>
                 </Col>
                 </Row>
