@@ -8,6 +8,7 @@ import Loading from '../loading';
 import { useSelector, useDispatch } from 'react-redux'
 import {labelChange, categoryChange} from '../../reducers/node'
 import { Accordion } from 'react-bootstrap';
+import ToolCardBeta from './toolCardBeta';
 
 const ToolList = (props) => {
     const selcted_label = useSelector(state => state.node.label)
@@ -27,7 +28,7 @@ const ToolList = (props) => {
             return <Accordion.Item eventKey={label}>
                 <Accordion.Header>{label}</Accordion.Header>
                 <Accordion.Body className='tw-mx-[-25px] tw-my-[-10px]'>
-                <ToolCard case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} newRun={props.newRun}/>
+                <ToolCardBeta case_id={case_id} labelTools={labelTools!==undefined?labelTools:null} labelData={caseData[label]} label={label} newRun={props.newRun}/>
                 </Accordion.Body>
                 </Accordion.Item>
         })
