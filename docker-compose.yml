@@ -42,7 +42,7 @@ services:
       icheTest:
         ipv4_address: 172.25.0.5
     ports:
-      - 3000:3000
+      - 3000:80
     volumes:
       - ./client:/app
       - /app/node_modules
