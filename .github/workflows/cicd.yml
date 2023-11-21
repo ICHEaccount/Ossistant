@@ -88,5 +88,7 @@ jobs:
             docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_PASSWORD }}
             docker system prune -a --volumes -f
             docker compose pull -q
+            docker run -d --name ossistant-client -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/ossistant-client:latest
             docker compose up --force-recreate -d --quiet-pull 2>log.out
             cat log.out
+      
