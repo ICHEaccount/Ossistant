@@ -1,5 +1,9 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
+    if (request.command === "getPageUrl") {
+        sendResponse({url: window.location.href});
+    }
+    
     const krphoneRegex = /01[016789]-\d{3,4}-\d{4}/g;
     const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 
@@ -62,18 +66,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     }else if(request.command === "getNaverCafeInfo"){
 
-        if (window.top !== window.self) {
-            // iframe 내부에서만 실행됩니다.
-            const title = document.querySelector('.title_area .title_text') ? document.querySelector('.title_area .title_text').textContent.trim() : '';
-            const writer = document.querySelector('.nick_box') ? document.querySelector('.nick_box').innerText : '';
-            const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
-            const content = document.querySelector('.article_viewer') ? document.querySelector('.article_viewer').innerText.trim() : '';
-        
-            console.log("title", title);
-            console.log("writer", writer);
-            console.log("created_date", created_date);
-            console.log("content", content);
+        // iframe 내부에서만 실행됩니다.
+        const title = document.querySelector('.title_area .title_text') ? document.querySelector('.title_area .title_text').textContent.trim() : '';
+        const writer = document.querySelector('.nick_box') ? document.querySelector('.nick_box').innerText : '';
+        const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
+        const content = document.querySelector('.article_viewer') ? document.querySelector('.article_viewer').innerText.trim() : '';
+    
+        console.log("title", title);
+        console.log("writer", writer);
+        console.log("created_date", created_date);
+        console.log("content", content);
 
+        if (title && writer && created_date && content) {
             let phones = []; // 전화번호를 저장할 배열
             let emails = []; // 이메일을 저장할 배열
         
@@ -84,9 +88,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             while ((match = emailRegex.exec(content)) !== null) {
                 emails.push(match[0]);
             }
-    
-            sendResponse({writer, created_date, title, content, phones, emails})
+        
+            console.log("title", title);
+            console.log("writer", writer);
+            console.log("created_date", created_date);
+            console.log("content", content);
+        
+            sendResponse({ writer, created_date, title, content, phones, emails });
         }
+
+
 
     }else if(request.command === "getTelegram"){
         const note = document.querySelectorAll('.bubbles-date-group') ? document.querySelector('.bubbles-date-group').innerText : '';
