@@ -96,7 +96,7 @@ def tool_state(case_id):
     # checking results
     for run in all_run:
         if run['tool_id'] == '01':
-            check_whois(run['run_id'])  # Delete case_id
+            continue  # check_whois(run['run_id'])
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
 

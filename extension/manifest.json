@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Ossistant",
-    "description": "ossistant test",
+    "description": "ossistant Tool",
     "version": "1.0",
     "icons": {
         "16": "image_test/ossistant.png"
@@ -10,13 +10,13 @@
         "default_icon": {              
         "16": "image_test/ossistant.png" 
         },
-        "default_title": "Click test",   
+        "default_title": "OSSISTANT",   
         "default_popup": "popup_create.html"
     },
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["activeTab", "contextMenus", "storage", "downloads"],
+    "permissions": ["activeTab", "contextMenus"],
     "host_permissions": ["http://127.0.0.1:5000/*"],
     "content_scripts": [{
         "matches": ["<all_urls>"],

@@ -14,9 +14,9 @@ const Help = (props) => {
                     <>
                         <strong>Dashboard</strong> <br/>
                         <p className='tw-text-left'>
-                        Check Collected Item
-                        Generate Visualization
-                        Run OSINT tools
+                        Collected Evidence<br/>
+                        Visualization<br/>
+                        OSINT tools
                         </p>
                     </>
 
