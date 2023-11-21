@@ -86,13 +86,13 @@ const Toolbar = () => {
         </Navbar.Brand>
         
         <div className="ml-auto d-flex" >
-            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' onClick={()=>window.location.reload()}/>)}
+            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' onClick={()=>window.location.reload()}/>)}
             {isCasePage &&
             (<Link to="/main">
-                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
+                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' />
             </Link>
             )}
-            <Help location = {location.pathname}/>
+            <Help location = {location.pathname} className="hover:tw-border hover:tw-border-bright-peach"/>
             <NavDropdown id="basic-nav-dropdown" align="end"  menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
                 {case_id?(
                     <div>
