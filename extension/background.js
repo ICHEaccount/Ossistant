@@ -61,7 +61,7 @@ chrome.runtime.onInstalled.addListener(() => {
         "Comment": ["name", "content", "created_date"],
         "Email": ["email", "fake"],
         "Phone": ["number"],
-        //"Message": ["sender", "content", "date"],
+        "Message": ["sender", "content", "date"],
         "Wallet": ["wallet", "wallet_type"]
     };
 
