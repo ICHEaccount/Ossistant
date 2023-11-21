@@ -76,7 +76,7 @@ const Toolbar = () => {
     return (
     <Navbar expand="lg" className="tw-bg-bright-peach tw-border-b-peach justify-content-between">
         <Container>
-        <Navbar.Brand href="/" className='tw-font-bold'>
+        <Navbar.Brand href="/main" className='tw-font-bold'>
             <img
                 alt=""
                 src={logo}
@@ -86,13 +86,13 @@ const Toolbar = () => {
         </Navbar.Brand>
         
         <div className="ml-auto d-flex" >
-            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' onClick={()=>window.location.reload()}/>)}
+            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' onClick={()=>window.location.reload()}/>)}
             {isCasePage &&
-            (<Link to="/">
-                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
+            (<Link to="/main">
+                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' />
             </Link>
             )}
-            <Help location = {location.pathname}/>
+            <Help location = {location.pathname} className="hover:tw-border hover:tw-border-bright-peach"/>
             <NavDropdown id="basic-nav-dropdown" align="end"  menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
                 {case_id?(
                     <div>
@@ -106,11 +106,11 @@ const Toolbar = () => {
                         {created_date}
                     </NavDropdown.ItemText>
                     </div>
-                ):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
+                ):(<NavDropdown.Item href="/main">Create Case</NavDropdown.Item>)}
                 <NavDropdown.Divider />
                 {isload?(caseList):<NavDropdown.ItemText>No Case</NavDropdown.ItemText>}
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
+                <NavDropdown.Item href="/main">
                 About
                 </NavDropdown.Item>
             </NavDropdown>
