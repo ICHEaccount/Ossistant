@@ -36,7 +36,7 @@ services:
     container_name: client
     build:
       context: ./client
-      dockerfile: client.Dockerfile
+      dockerfile: client.test.Dockerfile
     restart: "on-failure"
     networks:
       icheTest:
