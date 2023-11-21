@@ -44,10 +44,19 @@ def run_whois(case_id, run):
             elif isinstance(regdate_response, str):
                 regdate = regdate_response
 
-        if whois_search.get("admin_email"):
-            # 1차 email to username
-            regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
-            pattern = re.compile(regex)
+        # 1차 email to username
+        email = None
+        regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
+        pattern = re.compile(regex)
+
+        if isinstance(whois_search.get("emails"), list):
+            for email in whois_search.get("emails"):
+                match = re.match(pattern, email)
+                if 'abuse' not in match.group(1) and 'whois' not in match.group(1):
+                    break
+                else:
+                    match = None
+        elif whois_search.get("admin_email"):
             # Node
             email = whois_search.get("admin_email")
             match = re.match(pattern, email)
@@ -73,9 +82,11 @@ def run_whois(case_id, run):
                 if status is False:
                     return "Domain update error"
 
-            email_obj = Email.get_node({'email': whois_search.get("admin_email"), 'case_id': case_id})
+            # email_obj = Email.get_node({'email': whois_search.get("admin_email"), 'case_id': case_id})
+            email_obj = Email.get_node({'email': email, 'case_id': case_id})
             if not email_obj:
-                email_obj = Email.create_node({'email': whois_search.get("admin_email"), 'case_id': case_id})
+                # email_obj = Email.create_node({'email': whois_search.get("admin_email"), 'case_id': case_id})
+                email_obj = Email.create_node({'email': email, 'case_id': case_id})
 
             _,register_status= Relationship.check_relationship(from_uid=user.uid, to_uid=domain_obj.uid)
             _,has_status = Relationship.check_relationship(from_uid=user.uid, to_uid=email_obj.uid)
@@ -87,7 +98,7 @@ def run_whois(case_id, run):
             inside = {
                 "domain": domain_response,
                 "regdate": regdate,
-                "email": whois_search.get("admin_email"),
+                "email": email,
                 "admin": whois_search.get("admin_name"),
                 "registrant": whois_search.get("registrant_name")
             }
