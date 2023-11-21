@@ -76,7 +76,7 @@ const Toolbar = () => {
     return (
     <Navbar expand="lg" className="tw-bg-bright-peach tw-border-b-peach justify-content-between">
         <Container>
-        <Navbar.Brand href="/" className='tw-font-bold'>
+        <Navbar.Brand href="/main" className='tw-font-bold'>
             <img
                 alt=""
                 src={logo}
@@ -88,7 +88,7 @@ const Toolbar = () => {
         <div className="ml-auto d-flex" >
             {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' onClick={()=>window.location.reload()}/>)}
             {isCasePage &&
-            (<Link to="/">
+            (<Link to="/main">
                 <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2' />
             </Link>
             )}
@@ -106,11 +106,11 @@ const Toolbar = () => {
                         {created_date}
                     </NavDropdown.ItemText>
                     </div>
-                ):(<NavDropdown.Item href="/">Create Case</NavDropdown.Item>)}
+                ):(<NavDropdown.Item href="/main">Create Case</NavDropdown.Item>)}
                 <NavDropdown.Divider />
                 {isload?(caseList):<NavDropdown.ItemText>No Case</NavDropdown.ItemText>}
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
+                <NavDropdown.Item href="/main">
                 About
                 </NavDropdown.Item>
             </NavDropdown>
