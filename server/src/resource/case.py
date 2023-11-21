@@ -4,6 +4,7 @@ from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
+from db_conn.neo4j.models.lib.func import delete_nodes_by_case
 
 bp = Blueprint('case', __name__, url_prefix='/case')
 
@@ -123,7 +124,11 @@ def delete_case(case_id):
    
     result = CaseModel.objects(case_id=case_id).delete()
     if result:
-        return jsonify({'Message': f'Case with ID {case_id} has been deleted'}), 200
+        del_flag, results = delete_nodes_by_case(case_id=case_id)
+        if del_flag is True:
+            return jsonify({'Message': f'Case with ID {case_id} has been deleted'}), 200
+        else:
+            return jsonify({'Message': 'Node deletion error'}), 500
     else:
         return jsonify({'Message': f'Case with ID {case_id} not found'}), 404
 

@@ -1,6 +1,17 @@
 from ...init import db
 import re
 
+def delete_nodes_by_case(case_id):
+    try:
+        query = """
+            MATCH (n {case_id: $case_id})-[r]-()
+            DELETE r, n
+        """
+        results, _ = db.cypher_query(query, {"case_id": case_id})
+        return True, results
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False, str(e)
 def delete_node(node_id):
     try:
         query = """
