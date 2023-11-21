@@ -30,7 +30,13 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ossistant-client:latest
           push-args: --disable-content-trust
 
-      # Data Docker Build and Push
+      - name: Run Docker Container with Port Forwarding
+        uses: docker://docker/run:v2
+        with:
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/ossistant-client:latest
+          ports: "80:80"
+      
+          # Data Docker Build and Push
       - name: Build and push Data
         uses: docker/build-push-action@v2
         with:
