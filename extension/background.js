@@ -102,18 +102,11 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
         let datalist = [];
 
-        function checkUrl(url){//비동기처리 필요
-            //proxy 4everproxy
-            if(url.startsWith("https://pl.4everproxy.com/")){
-                chrome.tabs.sendMessage(tab.id, { command: "getUrlValue" }, function(response) {
-                    console.error("aaa", response.torurl);
-                    return response.torurl;
-                });
-            }else{
-                return url;
-            }
-            
-        }
+
+        chrome.tabs.sendMessage(tab.id, { command: "getPageUrl" }, function(response) {
+            const currentURL = response.url;
+
+            //console.error("url", currentURL);
 
         if (info.menuItemId === "xss.is"){
             chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
@@ -146,7 +139,7 @@ chrome.runtime.onInstalled.addListener(() => {
                 };
                 datalist.push(darkUserData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -212,7 +205,7 @@ chrome.runtime.onInstalled.addListener(() => {
                 
                 
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -277,7 +270,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     });
                 }
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -308,7 +301,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                 datalist.push(postData);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: tab.url, data: datalist }).then(() => {
+                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
                     console.log('Data has been sent and datalist is now cleared.');
                 }).catch(error => {
                     console.error('Failed to send data:', error);
@@ -318,7 +311,7 @@ chrome.runtime.onInstalled.addListener(() => {
             let selectedText = info.selectionText;        
             let data = { 
                 case_id: globalCaseId,
-                url: tab.url };
+                url: currentURL };
 
             let parts = info.menuItemId.split('-');
             let parentMenu = parts[0];
@@ -343,6 +336,9 @@ chrome.runtime.onInstalled.addListener(() => {
             }
 
         }
+
+        });
+        
 
     });
 });

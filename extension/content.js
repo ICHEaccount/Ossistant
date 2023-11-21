@@ -1,5 +1,9 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
+    if (request.command === "getPageUrl") {
+        sendResponse({url: window.location.href});
+    }
+    
     const krphoneRegex = /01[016789]-\d{3,4}-\d{4}/g;
     const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 
