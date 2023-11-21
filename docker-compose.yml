@@ -36,13 +36,13 @@ services:
     container_name: client
     build:
       context: ./client
-      dockerfile: client.Dockerfile
+      dockerfile: client.test.Dockerfile
     restart: "on-failure"
     networks:
       icheTest:
         ipv4_address: 172.25.0.5
     ports:
-      - 3000:80
+      - 3000:3000
     volumes:
       - ./client:/app
       - /app/node_modules
