@@ -95,14 +95,17 @@ def run_whois(case_id, run):
             if has_status is False:
                 user.rel_to.connect(email_obj, {'label':'HAS'})
             
-            inside = {
+            results = {
                 "domain": domain_response,
                 "regdate": regdate,
                 "email": email,
                 "admin": whois_search.get("admin_name"),
-                "registrant": whois_search.get("registrant_name")
+                "registrant": whois_search.get("registrant_name"),
+                "name": whois_search.get("name")
             }
-            RunModel.create_result(data=inside, run_id=run.run_id)
+            for key, value in results.items():
+                inside = {key: value}
+                RunModel.create_result(data=inside, run_id=run.run_id)
 
             # Change to status -> Completed
             run.status = 'completed'
