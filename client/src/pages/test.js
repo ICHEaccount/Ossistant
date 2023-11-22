@@ -25,11 +25,11 @@ const Test = () => {
                     </Form>
                     {korean?(<Card.Text>
                         <p>테스트 대상: 전/현직 사이버 수사관 </p>
-                        <p>테스트 기간: 2023-11-15 ~ 2023-11-21</p>
+                        <p>테스트 기간: 2023-11-22 ~ 2023-11-25</p>
                     </Card.Text>)
                     :(<Card.Text>
                         <p>Tester: Former and Current Cybercrime Investigators </p>
-                        <p>Period: 15-11-2023 ~ 21-11-2023</p>
+                        <p>Period: 22-11-2023 ~ 25-11-2023</p>
                     </Card.Text>)}
                     </Card.Body>
                     <Card.Body>
