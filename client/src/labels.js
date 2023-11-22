@@ -33,7 +33,7 @@ const labels = {
     "Company":{
         "title":"name",
         "category":"Subject",
-        "properties":["name","fake","business_num","phone_num","note"],
+        "properties":["name","fake","business_num","note"],
         "list":[]
     },
     "Domain":{
