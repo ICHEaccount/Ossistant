@@ -54,7 +54,7 @@ def test(uid):
     if uid:
         result = get_node_properties_by_uid(uid)
         if result:
-            keys_to_remove = ['case_id', 'uid', 'url']
+            keys_to_remove = ['case_id', 'uid']
             for key in keys_to_remove:
                 if key in result:
                     del result[key]
