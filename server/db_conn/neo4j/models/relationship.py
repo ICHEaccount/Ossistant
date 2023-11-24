@@ -15,8 +15,7 @@ AUTO_RELATIONS = {
             "from": Comment,
             "data" : ['username','name'],
             "label":"LEAVE_COMMENT"
-        },
-        
+        },        
     ],
     "DarkUser":[
         {
@@ -42,14 +41,14 @@ AUTO_RELATIONS = {
             "label" : "POST"
         },
         {
-            "to": Comment,
+            "from": Comment,
             "data" : ["url","url"],
             "label" : "HAS_COMMENT"
         }
     ],
     "Comment":[
         {
-            "from": Post,
+            "to": Post,
             "data" : ["url","url"],
             "label" : "HAS_COMMENT"
         },
