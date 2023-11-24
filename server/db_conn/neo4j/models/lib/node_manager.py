@@ -22,14 +22,21 @@ class NodeManager:
     def check_node(self, data):
         label = self.cls.__name__
         key_property = KEY_PROEPRTY[label]
+        inp = dict()
+        if not 'case_id' in data:
+            return False, 'case id did not exist'
+        
         if key_property in data:
-            inp = {
-                "case_id": data['case_id'],
-                key_property: data[key_property]
-            }
+            inp[key_property] = data[key_property]
+            node = self.cls.nodes.first_or_none(**inp)
         else:
-            inp = copy.deepcopy(data)
-        node = self.cls.nodes.first_or_none(**inp)
+            data.pop('case_id')
+            for key, value in data.items():
+                if value is not None:
+                    node = self.cls.nodes.first_or_none({key:value})
+                    if node:
+                        break 
+        
         if node is not None:
             return True, node
         return False, None

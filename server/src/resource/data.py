@@ -33,8 +33,10 @@ def create_data():
         check_status, existed_node = NODE_LIST[node_label].check_node(node_data)
         if check_status is True:
             node1 = existed_node 
-        else: 
+        elif check_status is False and existed_node is None : 
             node1 = NODE_LIST[node_label].create_node(node_data)
+        else:
+            return jsonify({'Error': existed_node}), 500
         
         if node_label in AUTO_RELATIONS:
             rel_status,msg = Relationship.create_auto_relationship(node=node1,node_label=node_label)

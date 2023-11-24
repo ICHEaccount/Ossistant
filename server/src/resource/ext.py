@@ -38,8 +38,10 @@ def create_node():
     if existed_node.__class__.__name__ == req_label:
         if check_status is True:
             node = NODE_LIST[req_label].update_node_properties(node_id=existed_node.uid, **req_arg)
-        elif check_status is False: 
+        elif check_status is False and existed_node is None: 
             node = NODE_LIST[req_label].create_node(req_arg)
+        else:
+            return jsonify({'Error':existed_node}),500
     else:
         node = NODE_LIST[req_label].create_node(req_arg)
     
@@ -69,6 +71,8 @@ def take_snapshot():
         data = req.get('data')
         # snap_type = req.get('type')
         node_dict = dict()
+        if case_id is None:
+            return jsonify({'Error':'case_id did not exist'}), 404
 
         # Create Node 
         for data_node in data:
@@ -83,9 +87,9 @@ def take_snapshot():
                     keyword['regdate'] = format_date_time(keyword['regdate'])
                 
                 node_check_flag, node = NODE_LIST[req_label].check_node(keyword)
-                if node_check_flag is False:
+                if node_check_flag is False and node is None:
                     node = NODE_LIST[req_label].create_node(keyword)
-                
+
                 node_dict[req_label] = node
     
         # Create Relationship 
