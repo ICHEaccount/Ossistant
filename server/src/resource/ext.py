@@ -19,10 +19,18 @@ def create_node():
     if not req_label:
         return jsonify({'Error':'Invalid request'}), 404
     
+    if 'case_id' not in req:
+        return jsonify({'Error':'case id did not exist'}), 404
+    
     keys = list(req['keyword'].keys())
     req_arg = {keys[0]: req['keyword'][keys[0]]}
     req_arg['case_id'] = req['case_id']
     req_arg['url'] = req['url']
+
+    # check case_id
+    if not req_arg['case_id']:
+        return jsonify({'Error':'case id is empty'}), 404
+
     if 'created_date' in req_arg:
         req_arg['created_date'] = format_date_time(req_arg['created_date'])
     elif 'regdate' in req_arg:
@@ -34,11 +42,12 @@ def create_node():
     
     inp = {'case_id':req_arg['case_id'],'url':req['url']}
     check_status, existed_node = NODE_LIST[req_label].check_node(inp)
+
     # validation label
     if existed_node.__class__.__name__ == req_label:
         if check_status is True:
             node = NODE_LIST[req_label].update_node_properties(node_id=existed_node.uid, **req_arg)
-        elif check_status is False and existed_node is None: 
+        elif check_status is False: 
             node = NODE_LIST[req_label].create_node(req_arg)
         else:
             return jsonify({'Error':existed_node}),500
@@ -64,6 +73,9 @@ def take_snapshot():
     if not req:
         return jsonify({'Error':'Invalid request'}), 404
     
+    if 'case_id' not in req:
+        return jsonify({'Error':'case id did not exist'}), 404
+    
     try:
         node = None
         url = req.get('url')
@@ -71,7 +83,7 @@ def take_snapshot():
         data = req.get('data')
         # snap_type = req.get('type')
         node_dict = dict()
-        if case_id is None:
+        if not case_id :
             return jsonify({'Error':'case_id did not exist'}), 404
 
         # Create Node 
@@ -87,7 +99,7 @@ def take_snapshot():
                     keyword['regdate'] = format_date_time(keyword['regdate'])
                 
                 node_check_flag, node = NODE_LIST[req_label].check_node(keyword)
-                if node_check_flag is False and node is None:
+                if node_check_flag is False:
                     node = NODE_LIST[req_label].create_node(keyword)
 
                 node_dict[req_label] = node
@@ -113,7 +125,6 @@ def take_snapshot():
         return jsonify({'Message': 'Success'}), 200
     except KeyError as e:
         return jsonify({'Error': f'KeyError: {str(e)}'}), 400
-
     except Exception as e:
         return jsonify({'Error': f'Error: {str(e)}'}), 500
     

@@ -25,19 +25,16 @@ def create_data():
         node_label = list(data.keys())[1]
         node_data = data.get(node_label) 
         node_data['case_id'] = data['case_id']
-        # if 'created_date' in node_data:
-        #     node_data['created_date'] = format_date_time(node_data['created_date'])
-        # elif 'regdate' in node_data:
-        #     node_data['regdate'] = format_date_time(node_data['regdate'])
 
+        if node_data['case_id'] is None:
+            return jsonify({'error': 'case id is empty'}), 404
+    
         check_status, existed_node = NODE_LIST[node_label].check_node(node_data)
         if check_status is True:
             node1 = existed_node 
-        elif check_status is False and existed_node is None : 
+        elif check_status is False: 
             node1 = NODE_LIST[node_label].create_node(node_data)
-        else:
-            return jsonify({'Error': existed_node}), 500
-        
+
         if node_label in AUTO_RELATIONS:
             rel_status,msg = Relationship.create_auto_relationship(node=node1,node_label=node_label)
             if rel_status is False:
