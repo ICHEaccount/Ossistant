@@ -1,13 +1,40 @@
 from typing import Any
+import copy
 
-
+KEY_PROEPRTY = {
+    "SurfaceUser":"username",
+    "DarkUser":"username",
+    "Post":"title",
+    "Comment":"name",
+    "Person":"name",
+    "Company":"name",
+    "Domain":"domain",
+    "Phone" : "number",
+    "Message" :"sender",
+    "Email":"email",
+    "Wallet":"wallet"
+}
 # Node Decorator 
 class NodeManager:
     def __init__(self, cls) -> None:
         self.cls = cls
 
     def check_node(self, data):
-        node = self.cls.nodes.first_or_none(**data)
+        label = self.cls.__name__
+        key_property = KEY_PROEPRTY[label]
+        inp = dict()
+        inp['case_id'] = data['case_id']
+        if key_property in data:
+            inp[key_property] = data[key_property]
+            node = self.cls.nodes.first_or_none(**inp)
+        else:
+            data.pop('case_id')
+            for key, value in data.items():
+                if value is not None:
+                    node = self.cls.nodes.first_or_none(**{key:value})
+                    if node:
+                        break 
+        
         if node is not None:
             return True, node
         return False, None
