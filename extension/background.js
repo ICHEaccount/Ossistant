@@ -218,7 +218,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     return;
                 }
 
-                let formattedDate = convertDateFormat(response.created_date, 3);
+                let formattedDate = convertDateFormat(response.created_date, 4);
 
                 let postData = {
                     label: "Post",
@@ -425,8 +425,30 @@ function convertDateFormat(dateTimeStr, type) {
         const formattedDate = `${year}-${month}-${day}`;
         const time = '00:00:00';
         return `${formattedDate} ${time}`;
-    } else if (type == 3 || type == 4) {
+    } else if (type == 3) {
         const regex = /(\d{4})\. (\d{1,2})\. (\d{1,2}). (\d{1,2}):(\d{2})/;
+        const parts = dateTimeStr.match(regex);
+        if (!parts) return null;
+
+        const year = parts[1];
+        const month = parts[2];
+        const day = parts[3];
+        const hours = parts[4];
+        const minutes = parts[5];
+
+        const date = new Date(year, month - 1, day, hours, minutes);
+
+        const formattedDate =
+            date.getFullYear() + "-" +
+            ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + date.getDate()).slice(-2) + " " +
+            ("0" + date.getHours()).slice(-2) + ":" +
+            ("0" + date.getMinutes()).slice(-2) + ":" +
+            "00";
+
+        return formattedDate;
+    }else if (type == 4) {
+        const regex = /(\d{4})\.(\d{1,2})\.(\d{1,2}). (\d{1,2}):(\d{2})/;
         const parts = dateTimeStr.match(regex);
         if (!parts) return null;
 
