@@ -7,3 +7,4 @@ Werkzeug==2.2.2
 neo4j==5.12.0
 neomodel==5.1.2
 python-whois
+maigret==0.4.4

@@ -4,6 +4,7 @@ from flask import request, jsonify,Blueprint
 
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
+from db_conn.neo4j.models.lib.func import delete_nodes_by_case
 
 bp = Blueprint('case', __name__, url_prefix='/case')
 
@@ -46,7 +47,7 @@ def check_json_not_null(input):
 
 
 
-@bp.route('/createCase',methods=['POST'])
+@bp.route('/createCase', methods=['POST'])
 def create_case():
 
     case = request.get_json()
@@ -68,6 +69,16 @@ def create_case():
         print('[-] DB Error')
         return jsonify({'Message':'DB Insertion Error'}),500
     return jsonify({'Message':'Success', 'case_id' : caseID }),200
+
+@bp.route('/searchCases', methods=['GET'])
+def search_cases():
+    query = request.args.get('query')
+    if not query:
+        return jsonify([]), 200
+
+    matching_cases = CaseModel.objects(case_name__icontains=query)
+    return jsonify([{"case_name": case.case_name, "case_id": case.case_id} for case in matching_cases]), 200
+
 
 
 @bp.route('/getCaseList')
@@ -113,7 +124,11 @@ def delete_case(case_id):
    
     result = CaseModel.objects(case_id=case_id).delete()
     if result:
-        return jsonify({'Message': f'Case with ID {case_id} has been deleted'}), 200
+        del_flag, results = delete_nodes_by_case(case_id=case_id)
+        if del_flag is True:
+            return jsonify({'Message': f'Case with ID {case_id} has been deleted'}), 200
+        else:
+            return jsonify({'Message': 'Node deletion error'}), 500
     else:
         return jsonify({'Message': f'Case with ID {case_id} not found'}), 404
 
@@ -122,7 +137,7 @@ def delete_case(case_id):
 def edit_case():
     request_data = request.get_json()
 
-    if "case_name" in request_data and "case_number" in request_data and "investigator" in request_data and "description" in request_data:
+    if "case_name" in request_data and "investigator" in request_data:
         caseName = request_data["case_name"]
         caseNum = request_data["case_number"]
         investigator = request_data["investigator"]
@@ -139,7 +154,7 @@ def edit_case():
 
             result = CaseModel.objects(case_id=case_id).update(**updated_data)
 
-            if result['n'] > 0:
+            if result> 0:
                 return "Your modification request was processed successfully.", 200
             else:
                 return "Case not found for the given case_id.", 404

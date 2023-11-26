@@ -11,11 +11,15 @@ const Help = (props) => {
         if(loc.startsWith('/casepage/')){
             const tip = () =>{
                 return(
-                    <p className='tw-text-left'>
-                        Check Collected Item
-                        Generate Visualization
-                        Run OSINT tools
-                    </p>
+                    <>
+                        <strong>Dashboard</strong> <br/>
+                        <p className='tw-text-left'>
+                        Collected Evidence<br/>
+                        Visualization<br/>
+                        OSINT tools
+                        </p>
+                    </>
+
                 )
             }
             settips(tip)

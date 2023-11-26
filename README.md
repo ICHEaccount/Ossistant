@@ -6,20 +6,11 @@ Team ICHE
 1. Run
 ```bash
 docker-compose up
-docker-compose up -d 
 ```
 
 2. Shutdown
 ```bash
 docker-compose down 
-
-```
-
-### Client Version 
-Only Client, Service, Mongodb
-```bash
-docker-compose -f client.docker-compose.yml up
-docker-compose -f client.docker-compose.yml down
 ```
 
 ## stack 
