@@ -47,7 +47,7 @@ const Main = () => {
     const CaseBox = () =>{
         if(search===""){
             return(
-                <Stack gap={2} className='m-3'>
+                <Stack gap={2} className='m-3 tw-flex tw-max-h-full tw-flex-grow'>
                     {isload?caseList:null}
                 </Stack>
             )
@@ -55,7 +55,7 @@ const Main = () => {
             const filteredCases = cases.filter((caseData) =>
             caseData.case_name.toLowerCase().includes(search.toLowerCase()) );
             return(
-                <Stack gap={2} className='m-3 '>
+                <Stack gap={2} className='m-3 tw-flex tw-max-h-full tw-flex-grow'>
                     {isload?(
                         filteredCases?.map((caseData)=>{
                             return (<CaseCard caseData={caseData} onDelete={(e) => {e.preventDefault(); deleteCase(caseData.case_id)}} />)
@@ -84,7 +84,7 @@ const Main = () => {
                 />
                     <Button className='tw-bg-bright-peach hover:tw-bg-peach tw-border-0 tw-text-peach hover:tw-text-black'>Search</Button>
                 </InputGroup>
-                <div className='tw-mt-2 tw-p-1 tw-border tw-rounded-md tw-border-bright-peach tw-flex tw-flex-col tw-h-3/4 tw-overflow-y-auto'>
+                <div className=' tw-flex tw-flex-col tw-mt-2 tw-p-1 tw-border tw-rounded-md tw-border-bright-peach tw-h-[75vh] tw-overflow-y-auto'>
                     <CaseBox/>
                 </div>
             </Col>
