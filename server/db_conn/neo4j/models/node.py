@@ -12,6 +12,7 @@ class Domain(BaseNode):
     regdate = StringProperty()
     status = StringProperty(default="None")
     case_id = StringProperty()
+    leaked = StringProperty()
     note = StringProperty()
 
     def to_json(self):
@@ -20,6 +21,7 @@ class Domain(BaseNode):
             "domain": self.domain,
             "regdate": self.regdate,
             "status": self.status,
+            "leaked":self.leaked,
             "note": self.note
         }
     
@@ -74,7 +76,7 @@ class Comment(BaseNode):
 class Email(BaseNode):
     uid = UniqueIdProperty()
     email = StringProperty(unique_index=True)
-    fake = StringProperty(default='None')
+    leaked = StringProperty(default='None')
     email_domain = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
@@ -84,7 +86,7 @@ class Email(BaseNode):
         return {
             "uid": self.uid,
             "email": self.email,
-            "fake": self.fake,
+            "leaked": self.leaked,
             "email_domain": self.email_domain,
             "note": self.note
         }
@@ -146,7 +148,7 @@ class SurfaceUser(BaseNode):
     uid= UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
-    fake = StringProperty(default="None")
+    imposter = StringProperty(default="None")
     case_id = StringProperty()
     registered = ArrayProperty(required=False, default=[])
     note = StringProperty()
@@ -155,7 +157,7 @@ class SurfaceUser(BaseNode):
         return {
             "uid": self.uid,
             "username": self.username,
-            "fake": self.fake,
+            "imposter": self.imposter,
             "registered": self.registered,
             "note": self.note
         }
@@ -171,6 +173,7 @@ class DarkUser(BaseNode):
     comment_num = IntegerProperty()
     case_id = StringProperty()
     registered = ArrayProperty(required=False, default=[])
+    imposter = StringProperty()
     note = StringProperty()
 
     def to_json(self):
@@ -182,6 +185,7 @@ class DarkUser(BaseNode):
             "post_num": self.post_num,
             "comment_num": self.comment_num,
             "registered": self.registered,
+            "imposter":self.imposter,
             "note": self.note
         }
 
@@ -189,7 +193,7 @@ class DarkUser(BaseNode):
 class Person(BaseNode):
     uid= UniqueIdProperty()
     name = StringProperty()
-    fake = StringProperty()
+    imposter = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
@@ -198,7 +202,7 @@ class Person(BaseNode):
         return  {
             "uid": self.uid,
             "name": self.name,
-            "fake": self.fake,
+            "imposter": self.imposter,
             "note": self.note
         }
 
@@ -207,18 +211,20 @@ class Person(BaseNode):
 class Company(BaseNode):
     uid= UniqueIdProperty()
     name = StringProperty()
-    fake = StringProperty()
+    imposter = StringProperty()
     business_num = StringProperty()
     case_id = StringProperty()
     note = StringProperty()
     url = StringProperty()
+    location = StringProperty()
 
     def to_json(self):
         return {
             "uid": self.uid,
             "name": self.name,
-            "fake": self.fake,
+            "imposter": self.imposter,
             "business_num": self.business_num,
+            "location":self.location,
             "note": self.note
         }
 
