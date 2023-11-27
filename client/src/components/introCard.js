@@ -5,9 +5,7 @@ import CreateCase from './case/createCase.js'
 
 const IntroCard = () => {
     return (
-    <div>
-        <Container className='m-3'>
-        <Card >
+    <Card className='tw-m-3 tw-border-bright-peach'>
         <Card.Body>
             <Card.Title>OSSISTANT</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">OSINT Tool for Cyber Profiling</Card.Subtitle>
@@ -17,11 +15,7 @@ const IntroCard = () => {
             <CreateCase/>
         </Card.Body>
         
-        </Card>          
-            
-        </Container>
-
-    </div>
+    </Card>          
     )
 }
 
