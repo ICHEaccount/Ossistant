@@ -1,11 +1,13 @@
 import os
 
-from db_conn.mongo.models import RunModel, CaseModel
+from db_conn.mongo.models import RunModel, CaseModel, ResultModel
 from db_conn.neo4j.models import *
+
 from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import *
 from .lib.tool_maigret import *
+from .config.tool_result_config import *
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
@@ -130,3 +132,85 @@ def tool_state(case_id):
     }
 
     return jsonify(response), 200
+
+@bp.route('/createResultNode', methods=["POST"])
+def create_result_node():
+    req = request.get_json()
+    error_result_id = None 
+    error_status = None
+    result_node_id_list = list()
+
+    # Error handling about response value 
+    if not req:
+        return jsonify({'Error':'Empty response error'}), 404
+    
+    if not req['case_id']:
+        return jsonify({'Error':'Empty case_id error'}), 404
+    
+    if not req['input_node']:
+        return jsonify({'Error':'Empty input_node error'}), 404
+    
+    if not req['tool_id']:
+        return jsonify({'Error':'Empty tool_id error'}), 404  
+    
+    if not req['result_id']:
+        return jsonify({'Error':'Empty result_id error'}), 404
+    
+    case_id = req['case_id']
+    input_node = req['input_node']
+    result_id_list = req['result_id'] # list 
+
+    # Check node 
+    input_label = TOOL_RESULT_MATCH[req['tool_id']]['input_label']
+    result_node_label = TOOL_RESULT_MATCH[req['tool_id']]['result_label']
+    node_property = TOOL_RESULT_MATCH[req['tool_id']]['property']
+    db_name = TOOL_RESULT_MATCH[req['tool_id']]['db_name']
+    match_type = TOOL_RESULT_MATCH[req['tool_id']]['type']
+    if db_name is None:
+        db_name = node_property
+
+    node_result = input_label.get_node({'case_id':case_id, 'uid':input_node})
+
+    if node_result is None:
+        return jsonify({'Error':f'Invalid input node'}), 500
+
+    for result_id in result_id_list:
+        result_obj = ResultModel.objects(result_id=result_id).first()
+
+        # if result_obj.created is True:
+        #     continue
+
+        if not result_obj:
+            error_result_id = result_id
+            break
+        
+        if match_type is CREATE_NODE:
+            node = result_node_label.create_node({'case_id':case_id,node_property:result_obj[db_name]})
+            if not node:
+                error_status = "Node creation error"
+                break 
+            result_node_id_list.append(node.node_id)
+
+            # Relationship 
+            node_result.rel_to.connect(node,label={'label':'OSINT_TOOL'})
+            auto_rel_flag, msg = Relationship.create_auto_relationship(node=node, node_label=result_node_label)
+
+        elif match_type is UPDATE_PROPERTY:
+            if node_property is 'registered':
+                node_result.registered.append(result_obj.result.get('site') )
+        
+        # result_obj.created = True 
+        result_obj.save()
+        node_result.save()
+        
+    if error_result_id is not None:
+        return jsonify({'Error':f'Invalid result : {error_result_id}'}), 500 
+    
+    if error_status is not None:
+        return jsonify({'Error':error_status}), 500 
+        
+    if match_type is UPDATE_PROPERTY:
+        return jsonify({'node_id':input_node}),200
+    return jsonify({'node_id':result_node_id_list}), 200
+
+
