@@ -22,9 +22,24 @@ function RelationGraph(props) {
   const isDone = props.isDone
   const dispatch = useDispatch()
   const behavior = useSelector(state => state.node.behavior)
-  const visJSRef = useRef(null)
+  const visJSRef = useRef(null);
+  const networkRef = useRef(null);
   const [selectedNode, setSelectedNode] = useState(null); 
+  const canvasImgRef = useRef(null);
 
+  const handleClick = () => {
+    if (canvasImgRef.current && networkRef.current) {
+      networkRef.current.fit(); // 네트워크 레이아웃을 조정합니다.
+
+      // afterDrawing 이벤트 핸들러에서 캔버스 이미지를 다운로드합니다.
+      networkRef.current.once('afterDrawing', (ctx) => {
+        const dataURL = ctx.canvas.toDataURL();
+        canvasImgRef.current.href = dataURL;
+        canvasImgRef.current.download = 'network_image.png';
+        canvasImgRef.current.click();
+      });
+    }
+  };
   useEffect(() => {
     const data = {
       nodes: new DataSet(),
@@ -70,9 +85,10 @@ function RelationGraph(props) {
         }
       });
     });
+
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
-    
-    
+    networkRef.current = network;
+
     // Connect Relationship 
     network.on('selectNode', (params) => {
       const { nodes } = params;
@@ -124,6 +140,7 @@ function RelationGraph(props) {
         }
       }
       network.disableEditMode();
+      
     });
 
     dispatch(changeBehavior('view'))
@@ -131,7 +148,15 @@ function RelationGraph(props) {
 
 
   return (
-      <><div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div>
+      <>
+      <div ref={visJSRef} style={{ height: "370px", width: "800px", position: 'relative'}}></div>
+      <input type="button" value="Download image" onClick={handleClick} />
+      <a
+        ref={canvasImgRef}
+        id="canvasImg"
+        download="filename"
+        style={{ display: 'none' }}
+      ></a>
       </>
   );
 }

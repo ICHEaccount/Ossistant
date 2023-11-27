@@ -198,7 +198,8 @@ const options = {
   },
   animation: {
     offset: { x: 0, y: 0 },
-  }
+  },
+  autoResize: true
 };
 
 export default options;
