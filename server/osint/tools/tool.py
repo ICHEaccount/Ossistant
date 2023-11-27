@@ -214,7 +214,7 @@ def create_result_node():
             if check_rel_dup_flag == True and rel_flag == False:
                 node_result.rel_to.connect(node,{'label':'OSINT_TOOL'})
             if input_label in AUTO_RELATIONS:
-                auto_rel_flag, msg = Relationship.create_auto_relationship(node=node, node_label=result_node_label)
+                auto_rel_flag, msg = Relationship.create_auto_relationship(case_id=case_id, node=node, node_label=result_node_label)
         
         # Update node mode 
         elif match_type is UPDATE_PROPERTY:
