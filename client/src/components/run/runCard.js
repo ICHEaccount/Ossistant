@@ -4,10 +4,12 @@ import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux';
 import {runViewChange,changeResultView} from '../../reducers/node'
+import Axios from 'axios'
 
 const RunCard = (props) => {
 	const list = props.runList?[...props.runList].reverse():null
 	const status = props.status
+	const case_id = props.case_id
 	const dispatch = useDispatch()
     const [selectedEventKey, setSelectedEventKey] = useState('list');
 	// const [selectedRun, setselectedRun] 
@@ -24,12 +26,27 @@ const RunCard = (props) => {
             setshow(!show)
             return;
         }
+		const payload = {
+			case_id:case_id,
+			tool_id:selectedRun.tool_id,
+			input_node:selectedRun.input_node,
+			result_id: selectedResults
+		}
+		console.log(payload);
+		Axios.post('/tools/createResultNode',payload)
+		.then((res)=>{
+			console.log(res);
+			window.location.reload();
+		})
+		.catch((err)=>{
+			console.log(err);
+		})
 
 		console.log(selectedResults);
 	}
 
 	const handleValue = (value) =>{
-		console.log(value);
+		// console.log(value);
 		if(selectedResults.indexOf(value)!==-1){
 			setselectedResults((prev)=>prev.filter((item)=>{return item!==value}))
 		}else{
@@ -56,7 +73,7 @@ const RunCard = (props) => {
     {selectedEventKey==="list"?(list?runList:<p className='tw-text-center'>no run yet</p>):(
 		<Card className='mt-1'>
 		<Card.Header className='mb-1 tw-bg-bright-peach'>
-			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list')}}/>	
+			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list');setselectedResults([])}}/>	
 			{selectedRun.tool_name}
 
 		</Card.Header>
@@ -66,6 +83,7 @@ const RunCard = (props) => {
 					return null
 				}
 				if(key==="tool_id") return null
+				if(key==="input_node") return null
 				if(key==="run_id") return null
 
                 return(

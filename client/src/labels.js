@@ -14,15 +14,15 @@ const labels = {
     "SurfaceUser":{
         "title":"username",
         "category":"Subject",
-        "properties":["username","imposter","note"],
-        "list":[]
+        "properties":["username","imposter","registered","note"],
+        "list":["registered"]
 
     },
     "DarkUser":{
         "title":"username",
         "category":"Subject",
-        "properties":["username","rank","regdate","post_num","comment_num","imposter","note"],
-        "list":[]
+        "properties":["username","rank","regdate","post_num","comment_num","imposter","registered","note"],
+        "list":["registered"]
     },
     "Person":{
         "title":"name",

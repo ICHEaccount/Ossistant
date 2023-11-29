@@ -28,6 +28,8 @@ const ToolCardBeta = (props) => {
             return;
         }
 
+        console.log(selectedValue);
+
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
         // console.log(selectedTool);
         const intoArray = []
@@ -35,10 +37,11 @@ const ToolCardBeta = (props) => {
         const selectedNodes = {
             case_id: case_id,
             tool_id: selectedTool.tool_id,
+            input_node:selectedValue.node,
             properties: intoArray
         };
 
-        // console.log(selectedNodes);
+        console.log(selectedNodes);
 
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {

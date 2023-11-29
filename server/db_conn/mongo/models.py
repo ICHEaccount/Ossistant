@@ -138,12 +138,12 @@ class CaseModel(db.DynamicDocument):
 
     
     @classmethod
-    def create_runs(cls, case_id, tool_id, input_value,status='ready'):
+    def create_runs(cls, case_id, tool_id,input_node, input_value,status='ready'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id,runtime=runtime, status=status, input_value=input_value)
+                run = RunModel(tool_id=tool_id,input_node=input_node,runtime=runtime, status=status, input_value=input_value)
                 run.save()
                 case.runs.append(run)
                 case.save()
@@ -170,6 +170,7 @@ class CaseModel(db.DynamicDocument):
                     "status": run.status,
                     "runtime": run.runtime,
                     "tool_id": run.tool_id,
+                    "input_node":run.input_node,
                     "input_value": run.input_value,
                     "results": RunModel.get_all_results(run_id=run.run_id)[1]
                 })
