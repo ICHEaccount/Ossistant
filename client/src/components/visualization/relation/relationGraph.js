@@ -4,6 +4,7 @@ import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
+import { Download } from 'react-bootstrap-icons'
 import node, {select,changeBehavior} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
@@ -29,9 +30,8 @@ function RelationGraph(props) {
 
   const handleClick = () => {
     if (canvasImgRef.current && networkRef.current) {
-      networkRef.current.fit(); // 네트워크 레이아웃을 조정합니다.
+      networkRef.current.fit(); 
 
-      // afterDrawing 이벤트 핸들러에서 캔버스 이미지를 다운로드합니다.
       networkRef.current.once('afterDrawing', (ctx) => {
         const dataURL = ctx.canvas.toDataURL();
         canvasImgRef.current.href = dataURL;
@@ -149,15 +149,15 @@ function RelationGraph(props) {
 
   return (
       <>
+      <Download onClick={handleClick}/>
+      <a
+          ref={canvasImgRef}
+          id="canvasImg"
+          download="filename"
+          style={{ display: 'none' }}
+        >다운</a>
       {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
       <div ref={visJSRef} className="tw-h-[49vh]"></div>
-      <input type="button" value="Download image" onClick={handleClick} />
-      <a
-        ref={canvasImgRef}
-        id="canvasImg"
-        download="filename"
-        style={{ display: 'none' }}
-      ></a>
       </>
   );
 }
