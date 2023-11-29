@@ -4,6 +4,7 @@ import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
+import { Download } from 'react-bootstrap-icons'
 import node, {select,changeBehavior} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
@@ -22,9 +23,23 @@ function RelationGraph(props) {
   const isDone = props.isDone
   const dispatch = useDispatch()
   const behavior = useSelector(state => state.node.behavior)
-  const visJSRef = useRef(null)
+  const visJSRef = useRef(null);
+  const networkRef = useRef(null);
   const [selectedNode, setSelectedNode] = useState(null); 
+  const canvasImgRef = useRef(null);
 
+  const handleClick = () => {
+    if (canvasImgRef.current && networkRef.current) {
+      networkRef.current.fit(); 
+
+      networkRef.current.once('afterDrawing', (ctx) => {
+        const dataURL = ctx.canvas.toDataURL();
+        canvasImgRef.current.href = dataURL;
+        canvasImgRef.current.download = 'network_image.png';
+        canvasImgRef.current.click();
+      });
+    }
+  };
   useEffect(() => {
     const data = {
       nodes: new DataSet(),
@@ -70,9 +85,10 @@ function RelationGraph(props) {
         }
       });
     });
+
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
-    
-    
+    networkRef.current = network;
+
     // Connect Relationship 
     network.on('selectNode', (params) => {
       const { nodes } = params;
@@ -124,6 +140,7 @@ function RelationGraph(props) {
         }
       }
       network.disableEditMode();
+      
     });
 
     dispatch(changeBehavior('view'))
@@ -132,6 +149,13 @@ function RelationGraph(props) {
 
   return (
       <>
+      <Download onClick={handleClick}/>
+      <a
+          ref={canvasImgRef}
+          id="canvasImg"
+          download="filename"
+          style={{ display: 'none' }}
+        ></a>
       {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
       <div ref={visJSRef} className="tw-h-[49vh]"></div>
       </>
