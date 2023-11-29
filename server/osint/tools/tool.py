@@ -55,6 +55,7 @@ def run_tool():
     # parse basic infos from requested json
     case_id = runtools_requested_json['case_id']
     tool_id = runtools_requested_json['tool_id']
+    input_node = runtools_requested_json['input_node']
 
     # If runtools_requested_json has case_id key
     case = CaseModel.objects(case_id=case_id).first()
@@ -62,7 +63,7 @@ def run_tool():
         return jsonify({'Message': 'Case Not Found'}), 500
 
     # creating run
-    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, status='ready', input_value='query')
+    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, input_node=input_node, status='ready', input_value='query')
     if run is None:
         return jsonify({'Message': 'Run Creation Error'}), 500
 

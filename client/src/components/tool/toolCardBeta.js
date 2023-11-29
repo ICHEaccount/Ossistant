@@ -28,6 +28,8 @@ const ToolCardBeta = (props) => {
             return;
         }
 
+        console.log(selectedValue);
+
         const selectedTool = tools.find((tool, idx) => selectedEventKey === `selected-${idx}`);
         // console.log(selectedTool);
         const intoArray = []
@@ -35,10 +37,11 @@ const ToolCardBeta = (props) => {
         const selectedNodes = {
             case_id: case_id,
             tool_id: selectedTool.tool_id,
+            input_node:selectedValue.node,
             properties: intoArray
         };
 
-        // console.log(selectedNodes);
+        console.log(selectedNodes);
 
         Axios.post('/tools/runTools', selectedNodes)
             .then((response) => {
@@ -99,8 +102,8 @@ const ToolCardBeta = (props) => {
                                     </Form.Group>
                                 ))}
                                 <div className='tw-flex tw-justify-end'>
-                                <div onClick={runTool} ref={runButton} className='hover:tw-cursor-pointer tw-p-1 tw-pl-2 hover:tw-border tw-rounded-md hover:tw-border-navy tw-text-navy'>
-                                    Run <Play className=' tw-inline tw-fill-navy' size={25}/>
+                                <div onClick={runTool} ref={runButton} className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 hover:tw-cursor-pointer tw-fill-peach tw-text-peach tw-p-1 tw-pl-2  tw-rounded-md'>
+                                    Run <Play className=' tw-inline' size={25}/>
                                     {selectedValue?null:(<Overlay target={runButton.current} show={show} placement="right">
                                     {(props) => (
                                         <Tooltip id="overlay-example" {...props}>

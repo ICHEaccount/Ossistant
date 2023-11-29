@@ -1,11 +1,19 @@
 import React, { useState } from 'react'
-import { Toast, ToastContainer } from 'react-bootstrap'
+import { Button, Toast, ToastContainer } from 'react-bootstrap'
 import logo from '../../images/logo_textless.png';
-
+import { useDispatch } from 'react-redux';
+import {changeResultView,panelChange,changeRunView} from '../../reducers/node'
 
 const RunToast = (props) => {
     const newResult = props.newResult
+    const dispatch = useDispatch()
     const [showList, setshowList] = useState({})
+
+    const toResult = (result,status) =>{
+        dispatch(changeResultView({result:result,status:status}))
+        dispatch(panelChange("run-list"))
+        dispatch(changeRunView("details"))
+    }
 
     const onHide = (run) =>{
         // console.log(showList[run.run_id]);
@@ -28,6 +36,7 @@ const RunToast = (props) => {
             <Toast.Body>
                 {result.results.length?`Success! ${result.results.length} new data acquired :)`:"Success! But no new data acquired :("}
             </Toast.Body>
+            <Button variant="disable" className='m-2 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' onClick={()=>toResult(result,"completed")}>Check Result</Button>
         </Toast>
         )
     })
@@ -43,6 +52,7 @@ const RunToast = (props) => {
             <Toast.Body>
             {"Error! Something went wrong :( Check out the error message"}
             </Toast.Body>
+            <Button variant="disable" className='m-2 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' onClick={()=>toResult(result,"error")}>Check Result</Button>
         </Toast>
         )
     })

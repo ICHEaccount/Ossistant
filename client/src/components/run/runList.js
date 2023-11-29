@@ -4,11 +4,11 @@ import { Tab } from 'react-bootstrap';
 import Tabs from 'react-bootstrap/Tabs';
 import RunCard from './runCard';
 import { useSelector, useDispatch } from 'react-redux';
-import {runViewChange} from '../../reducers/node'
+import {runViewChange,changeResultView} from '../../reducers/node'
 
 const RunList = (props) => {
     const dispatch = useDispatch();
-    const view = useSelector(state => state.node.runView)
+    const runCategory = useSelector(state => state.node.runCategory)
     const case_id = props.case_id
     const status = ['ready','running',"completed","error"]
     const [runList, setrunList] = useState(props.toolResult)
@@ -23,13 +23,13 @@ const RunList = (props) => {
     const runCards = status.map((status)=>{
         // console.log(runList);
 
-        return <Tab eventKey={status} title={status}><RunCard runList = {runList[status]?.length?runList[status]:null} status={status}/></Tab>
+        return <Tab eventKey={status} title={status}><RunCard case_id={case_id} runList = {runList[status]?.length?runList[status]:null} status={status}/></Tab>
 
     })
 
     return (
     <div>
-    <Tabs variant='pills' justify activeKey={view} onSelect={(k)=>{dispatch(runViewChange(k))}}>
+    <Tabs variant='pills' justify activeKey={runCategory} onSelect={(k)=>{dispatch(runViewChange('list'));dispatch(changeResultView({result:null,staus:k}))}}>
         {runCards}
     </Tabs>
     </div>
