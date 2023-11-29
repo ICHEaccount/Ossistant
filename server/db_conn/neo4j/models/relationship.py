@@ -12,7 +12,7 @@ AUTO_RELATIONS = {
             "label" : "POST"
         },
         {
-            "from": Comment,
+            "to": Comment,
             "data" : ['username','name'],
             "label":"LEAVE_COMMENT"
         },        
@@ -24,7 +24,7 @@ AUTO_RELATIONS = {
             "label" : "POST"
         },
         {
-            "from": Comment,
+            "to": Comment,
             "data" : ['username','name'],
             "label":"LEAVE_COMMENT"
         },
@@ -53,17 +53,19 @@ AUTO_RELATIONS = {
             "label" : "HAS_COMMENT"
         },
         {
-            "to":SurfaceUser,
+            "from":SurfaceUser,
             "data" : ['name','username'],
-            "label":"LEAVE_COMMENT"
+            "label":"LEAVE_COMMENT",
+            "create":True
         },
         {
-            "to":DarkUser,
+            "from":DarkUser,
             "data" : ['name','username'],
-            "label":"LEAVE_COMMENT"
+            "label":"LEAVE_COMMENT", # SurfaceUser, DarkUser 구분 기준 필요
         }
     ]
 }
+
 
 EXTENSION_RELATIONS = {
     "SurfaceUser":{
@@ -122,7 +124,7 @@ class Relationship:
         
 
     @classmethod
-    def create_auto_relationship(cls, node, node_label):
+    def create_auto_relationship(cls, case_id, node, node_label):
         if node is not None:
             rels_list = AUTO_RELATIONS[node_label]
             for rel_info in rels_list:
@@ -130,7 +132,7 @@ class Relationship:
                 rel_data = rel_info['data']
 
                 pos_key = list(rel_info.keys())[0]
-                if hasattr(node, rel_data[0]):
+                if hasattr(node, rel_data[0]): 
                     if pos_key == 'to':
                         node2 = rel_info['to'].get_node({rel_data[1]:getattr(node, rel_data[0])})
                     elif pos_key == 'from':
@@ -140,6 +142,7 @@ class Relationship:
                         return False,'Invalid node_config'
                 else:
                     return True, 'Success'
+                
                 if node2:
                     rel_check_status, rel_exist_status = cls.check_relationship(from_uid=node.uid, to_uid=node2.uid, is_label=True, label= node_label)
                     if rel_check_status == True and rel_exist_status == False:
@@ -147,6 +150,15 @@ class Relationship:
                             node.rel_to.connect(node2,{'label':node_label})
                         else:
                             node2.rel_to.connect(node,{'label':node_label})
+                elif 'create' in rel_info:
+                    if rel_info['create'] is True:
+                        if hasattr(node, rel_data[0]):
+                            new_node = rel_info[pos_key].create_node({'case_id':case_id, rel_data[1]:getattr(node, rel_data[0])})
+                            if pos_key == "to":
+                                node.rel_to.connect(new_node,{'label':node_label})
+                            else:
+                                new_node.rel_to.connect(node,{'label':node_label})
+                        
                 
             return True, 'Success'
         else:

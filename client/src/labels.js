@@ -6,7 +6,7 @@ const labels = {
         "list":[]
     },
     "Comment":{
-        "title":"name",
+        "title":"content",
         "category":"Site",
         "properties":["name","content","created_date","url"],
         "list":[]
@@ -14,32 +14,32 @@ const labels = {
     "SurfaceUser":{
         "title":"username",
         "category":"Subject",
-        "properties":["username","fake","note"],
+        "properties":["username","imposter","note"],
         "list":[]
 
     },
     "DarkUser":{
         "title":"username",
         "category":"Subject",
-        "properties":["username","rank","regdate","post_num","comment_num","note"],
+        "properties":["username","rank","regdate","post_num","comment_num","imposter","note"],
         "list":[]
     },
     "Person":{
         "title":"name",
         "category":"Subject",
-        "properties":["name","fake","note"],
+        "properties":["name","imposter","note"],
         "list":[]
     },
     "Company":{
         "title":"name",
         "category":"Subject",
-        "properties":["name","fake","business_num","note"],
+        "properties":["name","imposter","business_num","location","note"],
         "list":[]
     },
     "Domain":{
         "title":"domain",
         "category":"Site",
-        "properties":["domain","regdate","status","note"],
+        "properties":["domain","regdate","status","leaked","note"],
         "list":[]
     },
     "Phone":{
@@ -57,7 +57,7 @@ const labels = {
     "Email":{
         "title":"email",
         "category":"Info",
-        "properties":["email","fake","note"],
+        "properties":["email","leaked","note"],
         "list":[]
     },
     "Wallet":{
