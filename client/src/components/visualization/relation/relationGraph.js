@@ -131,7 +131,9 @@ function RelationGraph(props) {
 
 
   return (
-      <><div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div>
+      <>
+      {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
+      <div ref={visJSRef} className="tw-h-[49vh]"></div>
       </>
   );
 }
