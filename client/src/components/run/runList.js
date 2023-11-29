@@ -4,7 +4,7 @@ import { Tab } from 'react-bootstrap';
 import Tabs from 'react-bootstrap/Tabs';
 import RunCard from './runCard';
 import { useSelector, useDispatch } from 'react-redux';
-import {runViewChange} from '../../reducers/node'
+import {runViewChange,changeResultView} from '../../reducers/node'
 
 const RunList = (props) => {
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const RunList = (props) => {
 
     return (
     <div>
-    <Tabs variant='pills' justify activeKey={runCategory} onSelect={(k)=>{dispatch(runViewChange(k))}}>
+    <Tabs variant='pills' justify activeKey={runCategory} onSelect={(k)=>{dispatch(runViewChange('list'));dispatch(changeResultView({result:null,staus:k}))}}>
         {runCards}
     </Tabs>
     </div>
