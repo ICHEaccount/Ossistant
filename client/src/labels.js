@@ -33,7 +33,7 @@ const labels = {
     "Company":{
         "title":"name",
         "category":"Subject",
-        "properties":["name","imposter","business_num","note"],
+        "properties":["name","imposter","business_num","location","note"],
         "list":[]
     },
     "Domain":{
@@ -67,7 +67,6 @@ const labels = {
         "list":[]
     }
 }
-
 
 export const category = {
     "Subject":["SurfaceUser","DarkUser","Company","Person"],
