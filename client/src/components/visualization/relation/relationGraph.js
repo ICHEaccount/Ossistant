@@ -23,6 +23,7 @@ function RelationGraph(props) {
   const isDone = props.isDone
   const dispatch = useDispatch()
   const behavior = useSelector(state => state.node.behavior)
+  const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null);
   const networkRef = useRef(null);
   const [selectedNode, setSelectedNode] = useState(null); 
@@ -40,6 +41,14 @@ function RelationGraph(props) {
       });
     }
   };
+
+  useEffect(() => {
+    const network = networkRef.current
+    if(!selected) return
+    network.focus(selected.node_id,focusOptions)
+  }, [selected])
+  
+
   useEffect(() => {
     const data = {
       nodes: new DataSet(),
