@@ -3,7 +3,7 @@ import { Button, Card, Col, Container, Form, InputGroup, Overlay, Row, Tooltip }
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux';
-import {runViewChange,changeResultView} from '../../reducers/node'
+import {changeRunView,changeResultView} from '../../reducers/node'
 import Axios from 'axios'
 
 const RunCard = (props) => {
@@ -11,7 +11,8 @@ const RunCard = (props) => {
 	const status = props.status
 	const case_id = props.case_id
 	const dispatch = useDispatch()
-    const [selectedEventKey, setSelectedEventKey] = useState('list');
+    // const [selectedEventKey, setSelectedEventKey] = useState('list');
+	const selectedEventKey = useSelector(state=>state.node.runView)
 	// const [selectedRun, setselectedRun] 
 	const selectedRun = useSelector(state=>state.node.result)
 	const [selectedResults, setselectedResults] = useState([])
@@ -61,7 +62,7 @@ const RunCard = (props) => {
 			<Row>
 				<Col xs="10"><strong>{run.tool_name}</strong> <small>{run.runtime}</small></Col>
 				<Col xs="2" className="d-flex align-items-center">
-					<ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>{setSelectedEventKey(`selected-${run.run_id}`);dispatch(changeResultView({result:run,status}))}}/>
+					<ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>{dispatch(changeRunView("details"));dispatch(changeResultView({result:run,status}))}}/>
 				</Col>
 			</Row>
 		</Card.Body>
@@ -73,7 +74,7 @@ const RunCard = (props) => {
     {selectedEventKey==="list"?(list?runList:<p className='tw-text-center'>no run yet</p>):(
 		<Card className='mt-1'>
 		<Card.Header className='mb-1 tw-bg-bright-peach'>
-			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list');setselectedResults([])}}/>	
+			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{dispatch(changeRunView('list'));setselectedResults([])}}/>	
 			{selectedRun.tool_name}
 
 		</Card.Header>

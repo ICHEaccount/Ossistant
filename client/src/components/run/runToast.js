@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Toast, ToastContainer } from 'react-bootstrap'
 import logo from '../../images/logo_textless.png';
 import { useDispatch } from 'react-redux';
-import {changeResultView,panelChange} from '../../reducers/node'
+import {changeResultView,panelChange,changeRunView} from '../../reducers/node'
 
 const RunToast = (props) => {
     const newResult = props.newResult
@@ -10,8 +10,9 @@ const RunToast = (props) => {
     const [showList, setshowList] = useState({})
 
     const toResult = (result,status) =>{
-        dispatch(changeResultView({result,status}))
+        dispatch(changeResultView({result:result,status:status}))
         dispatch(panelChange("run-list"))
+        dispatch(changeRunView("details"))
     }
 
     const onHide = (run) =>{

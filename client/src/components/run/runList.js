@@ -8,7 +8,7 @@ import {runViewChange} from '../../reducers/node'
 
 const RunList = (props) => {
     const dispatch = useDispatch();
-    const view = useSelector(state => state.node.runView)
+    const runCategory = useSelector(state => state.node.runCategory)
     const case_id = props.case_id
     const status = ['ready','running',"completed","error"]
     const [runList, setrunList] = useState(props.toolResult)
@@ -29,7 +29,7 @@ const RunList = (props) => {
 
     return (
     <div>
-    <Tabs variant='pills' justify activeKey={view} onSelect={(k)=>{dispatch(runViewChange(k))}}>
+    <Tabs variant='pills' justify activeKey={runCategory} onSelect={(k)=>{dispatch(runViewChange(k))}}>
         {runCards}
     </Tabs>
     </div>
