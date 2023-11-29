@@ -21,7 +21,7 @@ class RunModel(db.DynamicDocument):
     status = db.StringField(required=True)
     runtime = db.StringField(required=True)
     tool_id = db.StringField(required=True)
-    input_uid = db.StringField()
+    input_node = db.StringField()
     input_value = db.StringField(required=True)
     results = db.ListField(db.ReferenceField('ResultModel'))
 

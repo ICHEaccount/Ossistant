@@ -56,7 +56,7 @@ def create_node():
     
     if node:
         if req_label in AUTO_RELATIONS:
-            creation_status, msg = Relationship.create_auto_relationship(node=node,node_label=req_label)
+            creation_status, msg = Relationship.create_auto_relationship(case_id=req_arg['case_id'], node=node,node_label=req_label)
         else:
             return jsonify({'Status':'Success'}), 200
     
