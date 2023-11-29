@@ -36,7 +36,7 @@ def create_data():
             node1 = NODE_LIST[node_label].create_node(node_data)
 
         if node_label in AUTO_RELATIONS:
-            rel_status,msg = Relationship.create_auto_relationship(node=node1,node_label=node_label)
+            rel_status,msg = Relationship.create_auto_relationship(case_id=data['case_id'], node=node1,node_label=node_label)
             if rel_status is False:
                 return jsonify({'Error':msg}),400
         return jsonify({"state": "success"}), 200

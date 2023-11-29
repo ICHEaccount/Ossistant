@@ -57,7 +57,7 @@ function RelationGraph(props) {
         const nodeId = item.n.id;
     
         if (!addedNodes.has(nodeId)) {
-          if(label && label.length > 20 && group ==="Post"){
+          if(label && label.length > 20 ){
             label = label.substring(0,15) + "...";
           }
           console.log("Node label : "+label);
@@ -149,7 +149,8 @@ function RelationGraph(props) {
 
   return (
       <>
-      <div ref={visJSRef} style={{ height: "370px", width: "800px", position: 'relative'}}></div>
+      {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
+      <div ref={visJSRef} className="tw-h-[49vh]"></div>
       <input type="button" value="Download image" onClick={handleClick} />
       <a
         ref={canvasImgRef}

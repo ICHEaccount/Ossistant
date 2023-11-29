@@ -16,6 +16,7 @@ import {changeBehavior} from '../../../reducers/node'
 
 
 const options = {
+  autoResize:false,
   layout:{
     hierarchical: {
       enabled:true,
