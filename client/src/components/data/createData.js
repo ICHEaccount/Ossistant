@@ -113,7 +113,7 @@ const CreateData = (props) => {
             <Form className='m-1' onSubmit={submitData}>
             {formList}
             <Col md={{ span: 3, offset: 9 }}>
-            <Button variant="outline-primary" type="submit">
+            <Button variant="disable" className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' type="submit">
             Create
             </Button>
             </Col>

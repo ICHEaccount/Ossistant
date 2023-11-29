@@ -10,6 +10,7 @@ export const nodeSlice = createSlice({
         label: "SurfaceUser",
         panel:"data-list",
         runView: "completed",
+        result: null,
         behavior : "view",
     },
     reducers: {
@@ -46,10 +47,14 @@ export const nodeSlice = createSlice({
         changeBehavior:(state,action) =>{
             state.behavior = action.payload
         },
+        changeResultView: (state,action) =>{
+            state.result=action.payload.result
+            state.runView=action.payload.status
+        }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { select , clear, viewChange, labelChange, panelChange,categoryChange,runViewChange,changeBehavior} = nodeSlice.actions
+export const { select , clear, viewChange, labelChange, panelChange,categoryChange,runViewChange,changeBehavior,changeResultView} = nodeSlice.actions
 
 export default nodeSlice.reducer

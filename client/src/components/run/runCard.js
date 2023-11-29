@@ -2,12 +2,16 @@ import React, { useRef, useState } from 'react'
 import { Button, Card, Col, Container, Form, InputGroup, Overlay, Row, Tooltip } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
+import { useSelector, useDispatch } from 'react-redux';
+import {runViewChange,changeResultView} from '../../reducers/node'
 
 const RunCard = (props) => {
 	const list = props.runList?[...props.runList].reverse():null
 	const status = props.status
+	const dispatch = useDispatch()
     const [selectedEventKey, setSelectedEventKey] = useState('list');
-	const [selectedRun, setselectedRun] = useState({})
+	// const [selectedRun, setselectedRun] 
+	const selectedRun = useSelector(state=>state.node.result)
 	const [selectedResults, setselectedResults] = useState([])
     const [show, setshow] = useState(false)
 	const addButton = useRef()
@@ -40,7 +44,7 @@ const RunCard = (props) => {
 			<Row>
 				<Col xs="10"><strong>{run.tool_name}</strong> <small>{run.runtime}</small></Col>
 				<Col xs="2" className="d-flex align-items-center">
-					<ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>{setSelectedEventKey(`selected-${run.run_id}`);setselectedRun(run)}}/>
+					<ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>{setSelectedEventKey(`selected-${run.run_id}`);dispatch(changeResultView({result:run,status}))}}/>
 				</Col>
 			</Row>
 		</Card.Body>
@@ -82,7 +86,7 @@ const RunCard = (props) => {
 					const type = Object.keys(result.result)[0]
 					return (
 					<InputGroup className='mb-1 px-1'>
-					{type==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
+					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
 					<Form.Control
 					placeholder={result.result[type]}
@@ -96,7 +100,7 @@ const RunCard = (props) => {
 			{selectedRun.results.length!==0&&status!=="error"?
 			<Col md={{ span: 2, offset: 9 }}>
 				<div ref={addButton}>
-					<Button  type="submit" variant="outline-primary" className='mb-2 mt-1'>{"Add"}</Button>
+					<Button  type="submit" variant="disable" className='mb-2 mt-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach'>{"Add"}</Button>
 					{selectedResults.length === 0?(<Overlay target={addButton.current} show={show} placement="right">
 					{(props) => (
 						<Tooltip id="overlay-example" {...props}>
