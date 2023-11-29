@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Card, Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
+import React, { useRef, useState } from 'react'
+import { Button, Card, Col, Container, Form, InputGroup, Overlay, Row, Tooltip } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
 
@@ -8,8 +8,30 @@ const RunCard = (props) => {
 	const status = props.status
     const [selectedEventKey, setSelectedEventKey] = useState('list');
 	const [selectedRun, setselectedRun] = useState({})
-
+	const [selectedResults, setselectedResults] = useState([])
+    const [show, setshow] = useState(false)
+	const addButton = useRef()
 	// console.log(list,status);
+
+	const addNode = (e) =>{
+		e.preventDefault()
+
+		if (selectedResults.length === 0) {
+            setshow(!show)
+            return;
+        }
+
+		console.log(selectedResults);
+	}
+
+	const handleValue = (value) =>{
+		console.log(value);
+		if(selectedResults.indexOf(value)!==-1){
+			setselectedResults((prev)=>prev.filter((item)=>{return item!==value}))
+		}else{
+			setselectedResults([...selectedResults,value])
+		}
+	}
 
 	const runList = list?.map((run)=>{
 		// console.log(run);
@@ -32,11 +54,9 @@ const RunCard = (props) => {
 		<Card.Header className='mb-1 tw-bg-bright-peach'>
 			<ChevronLeft className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach' size={20} onClick={()=>{setSelectedEventKey('list')}}/>	
 			{selectedRun.tool_name}
-			{/* {onEdit?
-			<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(false)}}><Check/></Button>
-			:<Button variant="light" size='sm' className='tw-mr-2' onClick={()=>{setonEdit(true)}}><PencilSquare/></Button>} */}
+
 		</Card.Header>
-		<Form>
+		<Form onSubmit={addNode}>
             {Object.keys(selectedRun).map((key) => {
 				if(key==="results"){
 					return null
@@ -58,10 +78,11 @@ const RunCard = (props) => {
 			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>{status==="error"?"Error":"Result"}</p>:null}
 			{
 				selectedRun.results?.map((result)=>{
+					// console.log(result);
 					const type = Object.keys(result.result)[0]
 					return (
 					<InputGroup className='mb-1 px-1'>
-					{/* {type==="error"?null:<InputGroup.Checkbox aria-label="Checkbox for following text input" />} */}
+					{type==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
 					<Form.Control
 					placeholder={result.result[type]}
@@ -72,7 +93,20 @@ const RunCard = (props) => {
 				})
 			}
 			
-			{/* {selectedRun.results.length!==0&&status!=="error"?<Col md={{ span: 3, offset: 9 }}><Button type="submit" variant="outline-primary" >{"Add"}</Button></Col>:null} */}
+			{selectedRun.results.length!==0&&status!=="error"?
+			<Col md={{ span: 2, offset: 9 }}>
+				<div ref={addButton}>
+					<Button  type="submit" variant="outline-primary" className='mb-2 mt-1'>{"Add"}</Button>
+					{selectedResults.length === 0?(<Overlay target={addButton.current} show={show} placement="right">
+					{(props) => (
+						<Tooltip id="overlay-example" {...props}>
+						No items selected
+					</Tooltip>
+					)}
+					</Overlay>):null}
+						</div>
+				
+			</Col>:null}
         </Form>
 	</Card>
 	)}
