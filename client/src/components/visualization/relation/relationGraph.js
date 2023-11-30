@@ -160,9 +160,9 @@ function RelationGraph(props) {
       <>
 
       {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
-      <div ref={visJSRef} className="tw-h-[49vh] tw-grow"></div>
+      <div ref={visJSRef} className="tw-h-[49vh] tw-grow tw-relative" ></div>
       <a href='/' ref={canvasImgRef}id="canvasImg" download="filename" hidden>download</a>
-      <Download onClick={handleClick} className='hover:tw-cursor-pointer tw-justify-self-end tw-m-1 hover:tw-border hover:tw-border-transparent' size="20px"/>
+      <Download onClick={handleClick} className='hover:tw-cursor-pointer tw-justify-self-end tw-m-1 hover:tw-border hover:tw-border-transparent tw-absolute tw-right-6' size="20px"/>
 
       </>
   );
