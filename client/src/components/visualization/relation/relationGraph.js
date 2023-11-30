@@ -5,7 +5,7 @@ import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
 import { Download } from 'react-bootstrap-icons'
-import node, {select,changeBehavior} from '../../../reducers/node'
+import  {select,changeBehavior,clear} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
 
@@ -44,8 +44,8 @@ function RelationGraph(props) {
 
   useEffect(() => {
     const network = networkRef.current
-    if(!selected) return
-    network.focus(selected.node_id,focusOptions)
+    if(selected) network.focus(selected.node_id,focusOptions)
+    // dispatch(clear())
   }, [selected])
   
 
@@ -109,13 +109,14 @@ function RelationGraph(props) {
           const label = resData.property.label;
           delete resData.property.label;
 
-          network.focus(nodes[0], focusOptions);
+          // network.focus(nodes[0], focusOptions);
           dispatch(select({node:resData,label:label}))
-          setSelectedNode(nodes[0]);
+          // setSelectedNode(nodes[0]);
           network.addEdgeMode();
         });
       } else {
-        setSelectedNode(null);
+        // setSelectedNode(null);
+        dispatch(clear());
       }
       network.disableEditMode();
     });
