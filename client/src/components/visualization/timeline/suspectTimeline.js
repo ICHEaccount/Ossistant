@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import 'chart.js/auto';
 import { useParams } from 'react-router-dom';
 import {changeBehavior} from '../../../reducers/node'
 import { useSelector, useDispatch } from 'react-redux'
+import downloadIcon from './download_image.png';
 
 const SuspectTimeline = (props) => {
     const isDone = props.isDone;
@@ -13,6 +14,7 @@ const SuspectTimeline = (props) => {
     const case_id = params.case_id;
     const dispatch = useDispatch()
     const behavior = useSelector(state => state.node.behavior)
+    const chartRef = useRef(null); // 캔버스 참조 생성
 
 
     useEffect(() => {
@@ -65,6 +67,9 @@ const SuspectTimeline = (props) => {
                     }
                     if (suspect.email) {
                         tags['Email'] = suspect.email;
+                    }
+                    if (suspect.domain) {
+                        tags['Domain'] = suspect.domain;
                     }
 
 
@@ -143,8 +148,45 @@ const SuspectTimeline = (props) => {
         },
     };
 
-    return (
-        <Line options={options} data={{ datasets }} height={null} width={null}/>
+    const handleDownload = () => {
+    const chart = chartRef.current;
+    if (chart) {
+        const canvas = chart.canvas;
+        const imageUrl = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = imageUrl;
+        downloadLink.download = 'suspect-timeline.png';
+        document.body.appendChild(downloadLink); // DOM에 추가
+        downloadLink.click(); // 클릭 이벤트 트리거
+        downloadLink.remove(); // 다운로드 후 요소 제거
+    }
+};
+
+  return (
+        <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                    onClick={handleDownload}
+                    style={{
+                        backgroundImage: `url(${downloadIcon})`,
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        width: '25px', // 버튼 크기
+                        height: '25px',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        cursor: 'pointer',
+                        transition: 'transform 0.1s ease' // 애니메이션 효과
+                    }}
+                    onMouseDown={e => e.currentTarget.style.transform = 'scale(0.9)'} // 버튼을 누르는 순간
+                    onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'} // 버튼에서 손을 떼는 순간
+                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} // 버튼에서 마우스가 벗어나는 순간
+                >
+                    {/* 버튼 내 텍스트가 필요없으면 이 부분을 비워 둘 수 있음 */}
+                </button>
+            </div>
+            <Line ref={chartRef} options={options} data={{ datasets }} height={null} width={null} />
+        </>
     );
 }
 
