@@ -158,15 +158,12 @@ function RelationGraph(props) {
 
   return (
       <>
-      <Download onClick={handleClick}/>
-      <a
-          ref={canvasImgRef}
-          id="canvasImg"
-          download="filename"
-          style={{ display: 'none' }}
-        ></a>
+
       {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
-      <div ref={visJSRef} className="tw-h-[49vh]"></div>
+      <div ref={visJSRef} className="tw-h-[49vh] tw-grow"></div>
+      <a href='/' ref={canvasImgRef}id="canvasImg" download="filename" hidden>download</a>
+      <Download onClick={handleClick} className='hover:tw-cursor-pointer tw-justify-self-end tw-m-1 hover:tw-border hover:tw-border-transparent' size="20px"/>
+
       </>
   );
 }
