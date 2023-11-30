@@ -87,7 +87,7 @@ const DataCard = (props) => {
                 </Col>
                 
                 <Col xs="2" className="d-flex align-items-center" >
-                    <ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-white' size={20} onClick={()=>dispatch(select({node,label}))}/>
+                    <ChevronRight className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-transparent' size={20} onClick={()=>dispatch(select({node,label}))}/>
                 </Col>
             </Row>
             

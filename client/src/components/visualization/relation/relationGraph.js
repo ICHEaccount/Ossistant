@@ -5,7 +5,7 @@ import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
 import { Download } from 'react-bootstrap-icons'
-import node, {select,changeBehavior} from '../../../reducers/node'
+import  {select,changeBehavior,clear} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
 
@@ -23,6 +23,7 @@ function RelationGraph(props) {
   const isDone = props.isDone
   const dispatch = useDispatch()
   const behavior = useSelector(state => state.node.behavior)
+  const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null);
   const networkRef = useRef(null);
   const [selectedNode, setSelectedNode] = useState(null); 
@@ -40,6 +41,14 @@ function RelationGraph(props) {
       });
     }
   };
+
+  useEffect(() => {
+    const network = networkRef.current
+    if(selected) network.focus(selected.node_id,focusOptions)
+    // dispatch(clear())
+  }, [selected])
+  
+
   useEffect(() => {
     const data = {
       nodes: new DataSet(),
@@ -100,13 +109,14 @@ function RelationGraph(props) {
           const label = resData.property.label;
           delete resData.property.label;
 
-          network.focus(nodes[0], focusOptions);
+          // network.focus(nodes[0], focusOptions);
           dispatch(select({node:resData,label:label}))
-          setSelectedNode(nodes[0]);
+          // setSelectedNode(nodes[0]);
           network.addEdgeMode();
         });
       } else {
-        setSelectedNode(null);
+        // setSelectedNode(null);
+        dispatch(clear());
       }
       network.disableEditMode();
     });
@@ -149,15 +159,12 @@ function RelationGraph(props) {
 
   return (
       <>
-      <Download onClick={handleClick}/>
-      <a
-          ref={canvasImgRef}
-          id="canvasImg"
-          download="filename"
-          style={{ display: 'none' }}
-        ></a>
+
       {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
-      <div ref={visJSRef} className="tw-h-[49vh]"></div>
+      <div ref={visJSRef} className="tw-h-[49vh] tw-grow tw-relative" ></div>
+      <a href='/' ref={canvasImgRef}id="canvasImg" download="filename" hidden>download</a>
+      <Download onClick={handleClick} className='hover:tw-cursor-pointer tw-justify-self-end tw-m-1 hover:tw-border hover:tw-border-transparent tw-absolute tw-right-6' size="20px"/>
+
       </>
   );
 }
