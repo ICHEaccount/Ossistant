@@ -87,7 +87,7 @@ def run_tool():
             run.input_value = runtools_requested_json['properties'][0]['property'][0]['username']
         except Exception as e:
             return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
-        run_id = run_maigret(run)
+        run_id = run_btc(run)
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
