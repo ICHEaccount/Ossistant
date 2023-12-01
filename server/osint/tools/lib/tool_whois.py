@@ -147,9 +147,12 @@ def report_whois(case_id, run):
         "regdate": regdate,
         "email": results_email,
         "admin": report.get("admin_name"),
+        "admin_email": report.get("admin_email"),
+        "admin_phone": report.get("admin_phone"),
         "registrant": report.get("registrant_name"),
-        "name": report.get("name")
-
+        "name": report.get("name"),
+        "registrar": report.get("registrar"),
+        "organization": report.get("org")
     }
     for key, value in results.items():
         inside = {key: value}
