@@ -82,6 +82,13 @@ def run_tool():
             return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
         run_id = run_maigret(run)
 
+    elif tool_id == '04':  # BTC.com
+        try:
+            run.input_value = runtools_requested_json['properties'][0]['property'][0]['username']
+        except Exception as e:
+            return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
+        run_id = run_maigret(run)
+
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
