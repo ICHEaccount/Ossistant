@@ -136,6 +136,8 @@ def tool_state(case_id):
         # adding 'tool_name'
         if run['tool_id'] == '01':
             run['tool_name'] = 'whois'
+        elif run['tool_id'] == '02':
+            run['tool_name'] = 'theharvester'
         elif run['tool_id'] == '03':
             run['tool_name'] = 'maigret'
         # sorting by status
