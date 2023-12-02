@@ -20,18 +20,19 @@ def run_btc(run):
         print(data)
 
         # 에러 체크
-        if data.get('err_no') == 0:
-            run.status = 'completed'
+        if data.get('err_no') == 0:          
             for key, value in data.items(): #데이터를 몽고DB에 저장. #에러 주의
                 inside = {key: value}
-                RunModel.create_result(data=inside, run_id=run.run_id)    
+                RunModel.create_result(data=inside, run_id=run.run_id) 
 
-            print("success")
+            run.status = 'completed'
             
         else:
+            run.status = 'error'
             print(f"\nError: {data.get('err_msg')}")
 
     except requests.exceptions.RequestException as e:
         print(f"\nError making API request: {e}")
 
+    run.save()
     return run.run_id, data
