@@ -149,18 +149,18 @@ const WholeTimeline = (props) => {
     };
 
     const handleDownload = () => {
-    const chart = chartRef.current;
-    if (chart) {
-        const canvas = chart.canvas;
-        const imageUrl = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        downloadLink.href = imageUrl;
-        downloadLink.download = 'whole-timeline.png';
-        document.body.appendChild(downloadLink); // DOM에 추가
-        downloadLink.click(); // 클릭 이벤트 트리거
-        downloadLink.remove(); // 다운로드 후 요소 제거
-    }
-};
+        const chart = chartRef.current;
+        if (chart) {
+            const canvas = chart.canvas;
+            const imageUrl = canvas.toDataURL('image/png');
+            const downloadLink = document.createElement('a');
+            downloadLink.href = imageUrl;
+            downloadLink.download = 'whole-timeline.png';
+            document.body.appendChild(downloadLink); // DOM에 추가
+            downloadLink.click(); // 클릭 이벤트 트리거
+            downloadLink.remove(); // 다운로드 후 요소 제거
+        }
+    };
 
         return (
         <>

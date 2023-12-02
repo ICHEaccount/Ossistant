@@ -88,27 +88,33 @@ class NodeManager:
             return True
         return False
     
-    def get_all_nodes_list(self, case_id, is_uid = True):
+    def get_all_nodes_list(self, case_id, is_uid = True, is_export=False):
         try:
             nodes = self.cls.nodes.filter(case_id=case_id)
             if not nodes:
                 return True, []
-            
-            if is_uid is True:
-                return True, [node.to_json() for node in nodes]
+            if is_export is False:
+                if is_uid is True:
+                    return True, [node.to_json() for node in nodes]
+                else:
+                    output = []
+                    for node in nodes:
+                        node_info = dict()
+                        node_info['property'] = dict()
+                        for key,value in node.to_json().items():
+                            if key == 'uid':
+                                node_info['node_id'] = value
+                            else:
+                                node_info['property'][key]= value
+                        output.append(node_info)
+                    return True, output
             else:
-                output = []
+                output = list()
                 for node in nodes:
-                    node_info = dict()
-                    node_info['property'] = dict()
-                    for key,value in node.to_json().items():
-                        if key == 'uid':
-                            node_info['node_id'] = value
-                        else:
-                            node_info['property'][key]= value
-                    output.append(node_info)
+                    data = node.to_json()
+                    del data['uid']
+                    output.append(data)
                 return True, output
-
         except Exception as e:
             return False, str(e)
 
@@ -122,6 +128,7 @@ class NodeManager:
     def get_node_name(self):
         return self.cls.__name__
     
+        
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         setattr(self.cls, 'create_node', self.create_node)
         setattr(self.cls, 'get_uid', self.get_uid)
