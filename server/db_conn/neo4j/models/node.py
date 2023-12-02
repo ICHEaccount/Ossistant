@@ -25,6 +25,8 @@ class Domain(BaseNode):
             "note": self.note
         }
     
+    
+    
 
 @NodeManager
 class Post(BaseNode):
