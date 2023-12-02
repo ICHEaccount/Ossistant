@@ -50,22 +50,11 @@ const CreateData = (props) => {
     }
 
 
-    const formList = properties.map((property)=>{
-        if(property.includes("date")||property.includes("Date")){
-            return(<InputGroup className='mb-1'>
-            <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-            <Form.Control 
-            value={formData[label][property]||""}
-            onChange={(e)=>{const value = e.target.value.replace("T"," "); updateFormValue(property,value)}}
-            required={title===property}
-            type='datetime-local'
-            />
-            </InputGroup>)
-        }
-        if(lbs[label].list.includes(property)){
+    const formList = properties.map((p)=>{
+        if(lbs[label].list.includes(p.property)){
             return(
-                <Form.Group className="mb-1" controlId={`${property}`}>
-                    <Form.Label>{property+" "}
+                <Form.Group className="mb-1" controlId={`${p.property}`}>
+                    <Form.Label>{p.property+" "}
                     <Button
                         size='sm'   
                         variant="outline-success"
@@ -85,7 +74,7 @@ const CreateData = (props) => {
                         const newProperty = [...listProperty];
                         newProperty[idx] = e.target.value;
                         setlistProperty(newProperty);
-                        updateFormValue(property, newProperty);
+                        updateFormValue(p.property, newProperty);
                         }}
                         />
                         
@@ -94,19 +83,104 @@ const CreateData = (props) => {
                     
                 </Form.Group>
 
-                
             )
         }
-        return(
-        <InputGroup className='mb-1'>
-                <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-                <Form.Control as={property==="note"||property==="content"?"textarea":"input"}
-                value={formData[label][property]||""}
-                onChange={(e)=>{updateFormValue(property,e.target.value)}}
-                required={title===property}
-                />
-        </InputGroup>
-    )})
+        else if(p.as==="select"){
+            return(
+                <InputGroup className='mb-1'>
+                    <InputGroup.Text id={`${p.property}`}>{p.name}</InputGroup.Text>
+                    <Form.Select
+                    onChange={(e)=>updateFormValue(p.property,e.target.value)}
+                    >
+                    {p.option.map((op)=>{
+                        return(<option value={op}>{op}</option>)
+                    })}
+                    </Form.Select>
+                </InputGroup>
+            )
+        }
+        else if (p.as==="textarea"){
+            return (<InputGroup className='mb-1'>
+            <InputGroup.Text id={`${p.property}`}>{p.name}</InputGroup.Text>
+            <Form.Control as="textarea"
+            value={formData[label][p.property]||""}
+            onChange={(e)=>{updateFormValue(p.property,e.target.value)}}
+            required={title===p.property}
+            />
+            </InputGroup>)
+        }else{ //input
+            return (<InputGroup className='mb-1'>
+            <InputGroup.Text id={`${p.property}`}>{p.name}</InputGroup.Text>
+            <Form.Control as="input"
+            type={p.inputType}
+            value={formData[label][p.property]||""}
+            onChange={(e)=>{
+                let value = e.target.value
+                if(p.inputType==="datetime-local") value = value.replace("T"," ");
+                updateFormValue(p.property,value)
+            }}
+            required={title===p.property}
+            />
+            </InputGroup>)
+        }
+
+        // if(property.includes("date")||property.includes("Date")){
+        //     return(<InputGroup className='mb-1'>
+        //     <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
+        //     <Form.Control 
+        //     value={formData[label][property]||""}
+        //     onChange={(e)=>{const value = e.target.value.replace("T"," "); updateFormValue(property,value)}}
+        //     required={title===property}
+        //     type='datetime-local'
+        //     />
+        //     </InputGroup>)
+        // }
+        // if(lbs[label].list.includes(property)){
+        //     return(
+                // <Form.Group className="mb-1" controlId={`${property}`}>
+                //     <Form.Label>{property+" "}
+                //     <Button
+                //         size='sm'   
+                //         variant="outline-success"
+                //         onClick={(e) => {
+                //         setlistProperty([...listProperty, '']);
+                //         }}
+                //         >
+                //         +
+                //     </Button>
+                //     </Form.Label>
+                    
+                //     {listProperty.map((item, idx) => (
+                //     <div key={idx} className="d-flex mb-1">
+                //         <Form.Control
+                //         value={item}
+                //         onChange={(e) => {
+                //         const newProperty = [...listProperty];
+                //         newProperty[idx] = e.target.value;
+                //         setlistProperty(newProperty);
+                //         updateFormValue(property, newProperty);
+                //         }}
+                //         />
+                        
+                //     </div>
+                //     ))}
+                    
+                // </Form.Group>
+
+                
+        //     )
+        // }
+        // return(
+        // <InputGroup className='mb-1'>
+        //         <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
+        //         <Form.Control as={property==="note"||property==="content"?"textarea":"input"}
+        //         value={formData[label][property]||""}
+        //         onChange={(e)=>{updateFormValue(property,e.target.value)}}
+        //         required={title===property}
+        //         />
+        // </InputGroup>
+        // )
+    })
 
 
     return (
