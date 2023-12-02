@@ -14,6 +14,7 @@ from resource.case import bp as case_bp
 from resource.data import bp as data_bp
 from resource.time import bp as timeline_bp
 from resource.tool import bp as tool_bp
+from resource.export import bp as export_bp 
 
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +36,7 @@ app.register_blueprint(graph_bp)
 app.register_blueprint(timeline_bp)
 app.register_blueprint(data_bp)
 app.register_blueprint(tool_bp)
+app.register_blueprint(export_bp)
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', debug=True, port=5000)
