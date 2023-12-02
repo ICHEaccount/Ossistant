@@ -110,6 +110,8 @@ def tool_state(case_id):
             continue  # check_whois(run['run_id'])
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
+        #elif run['tool_id'] == '04':
+            #check_btc(case_id, run['run_id'])
 
     # making response
     ready = []
@@ -123,6 +125,8 @@ def tool_state(case_id):
             run['tool_name'] = 'whois'
         elif run['tool_id'] == '03':
             run['tool_name'] = 'maigret'
+        elif run['tool_id'] == '04':
+            run['tool_name'] = 'btc'
         # sorting by status
         if run['status'] == 'ready':
             ready.append(run)
