@@ -12,5 +12,12 @@
       "tool_id": "03",
       "apply": ["username"]
     }
+  ],
+  "Wallet": [
+    {
+      "name": "btc",
+      "tool_id": "04",
+      "apply": ["wallet"]
+    }
   ]
 }

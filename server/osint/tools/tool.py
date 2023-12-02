@@ -5,6 +5,7 @@ from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import *
 from .lib.tool_maigret import *
+from .lib.tool_btc import *
 from .config.tool_result_config import *
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
@@ -80,6 +81,14 @@ def run_tool():
             return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
         run_id = run_maigret(run)
 
+    elif tool_id == '04':  # BTC.com
+        try:
+            run.input_value = runtools_requested_json["properties"][0]["property"][0]["wallet"]
+            #run.input_node=input_node #btc의 경우 input_node 필드값=지갑주소. input 에 필요값 하나뿐.
+        except Exception as e:
+            return jsonify({'Message': 'Invalid username', 'Code': e}), 400
+        run_id = run_btc(run)
+
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
@@ -101,6 +110,8 @@ def tool_state(case_id):
             message = check_whois(case_id, run['run_id'])
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
+        elif run['tool_id'] == '04':
+            continue  #check_btc(case_id, run['run_id'])
     if message:
         return jsonify({'Message': message}), 400
 
@@ -116,6 +127,9 @@ def tool_state(case_id):
             run['tool_name'] = 'whois'
         elif run['tool_id'] == '03':
             run['tool_name'] = 'maigret'
+        elif run['tool_id'] == '04':
+            run['tool_name'] = 'btc'
+            
         # sorting by status
         if run['status'] == 'ready':
             ready.append(run)
