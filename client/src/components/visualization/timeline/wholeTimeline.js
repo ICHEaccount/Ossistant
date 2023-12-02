@@ -14,7 +14,7 @@ const WholeTimeline = (props) => {
     const case_id = params.case_id;
     const dispatch = useDispatch()
     const behavior = useSelector(state => state.node.behavior)
-    const chartRef = useRef(null); // 캔버스 참조 생성
+    const chartRef = props.chartRef; // 캔버스 참조 생성
 
     useEffect(() => {
         axios.get(`/timeline/whole/${case_id}`).then((response) => {

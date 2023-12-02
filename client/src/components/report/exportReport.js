@@ -1,20 +1,22 @@
 import React, { useRef, useState } from 'react'
 import { Button, Card, FormControl, InputGroup, Spinner } from 'react-bootstrap'
 import Axios from 'axios'
-
-//dummy
-const createReport = async () =>{
-    return true
-}
+import createReport from '../visualization/createReport'
 
 const ExportReport = (props) => {
     const case_id = props.case_id
     const [filename, setfilename] = useState("")
     const [state, setstate] = useState("ready")
     const download = useRef(null)
+    const visRef = props.visRef
 
     const reqReport = async () =>{
-        const res = await createReport()
+        const relation = createReport(case_id,visRef.relation,1)
+        const whole = createReport(case_id,visRef.whole,2) 
+        const suspect = createReport(case_id,visRef.suspect,3) 
+        const domain = createReport(case_id,visRef.domain,4) 
+        const res = relation &&whole&&suspect&&domain
+
         if(res){
             // const interval = setInterval(()=>{
             //     Axios.get(`/export/getReportState/${case_id}`)
@@ -40,7 +42,7 @@ const ExportReport = (props) => {
             //         clearInterval(interval)
             //     })
             // },3000)
-            setstate("error")
+            setstate("completed")
         }else{
             setstate("error")
         }

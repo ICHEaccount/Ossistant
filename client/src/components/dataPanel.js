@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import { Alert, Button, Nav, Tab } from 'react-bootstrap';
@@ -20,6 +20,8 @@ const DataPanel = (props) => {
     const newData=props.newData
     const newRun = props.newRun
     const toolList = props.toolList
+    const visRef = props.visRef
+
     
     const LeftTabs = () => {
         return (
@@ -54,7 +56,7 @@ const DataPanel = (props) => {
                 <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData} newData={newData}/></Tab.Pane>
                 <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} newRun={newRun} toolList={toolList}/></Tab.Pane>
                 <Tab.Pane eventKey="run-list"><RunList case_id={case_id} toolResult={toolResult} /></Tab.Pane>
-                <Tab.Pane eventKey="report"><Report case_id={case_id} caseData={caseData}/></Tab.Pane>
+                <Tab.Pane eventKey="report"><Report case_id={case_id} caseData={caseData} visRef={visRef}/></Tab.Pane>
                 </Tab.Content>
             </Col>
             </Row>

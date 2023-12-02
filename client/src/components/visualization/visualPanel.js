@@ -7,13 +7,14 @@ import Timeline from './timeline/timeline'
 
 const VisualPanel = (props) => {
     const isDone = props.isDone
+    const visRef = props.visRef
     return (
         <Container className="tw-flex-grow">
         <div className="tw-flex tw-border tw-rounded-md mb-2">
-            <RelationGraph isDone={isDone}/>
+            <RelationGraph isDone={isDone} networkRef={visRef.relation}/>
         </div>
         <div className="tw-border tw-rounded-md tw-flex-grow tw-justify-start tw-mb-2">
-            <Timeline isDone={isDone}/>
+            <Timeline isDone={isDone} visRef={visRef}/>
         </div>
         </Container>
     )

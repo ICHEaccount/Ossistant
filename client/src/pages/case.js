@@ -30,6 +30,14 @@ const Case = () => {
     const intervalRef = useRef(null);
     const prevToolResultRef = useRef(toolResult);
     const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
+
+    const visRef = {
+        relation: useRef(null),
+        whole:useRef(null),
+        suspect: useRef(null),
+        domain: useRef(null)
+    }
+
     //Get initial data to display data panel
     useEffect(() => {
         Axios.get(`/tools/getToolList`)
@@ -185,10 +193,10 @@ const Case = () => {
         {(isLoad&&istoolLoad)&&<Container className='mt-2 mb-3 pb-2 pt-2' fluid>
         <Row>
             <Col lg={4}>
-                <DataPanelMemoized case_id={case_id} caseData={case_data} toolList={tools} toolResult={toolResult} newData={newData} newRun={setactiveRuns}/>
+                <DataPanelMemoized case_id={case_id} caseData={case_data} toolList={tools} toolResult={toolResult} newData={newData} newRun={setactiveRuns} visRef={visRef}/>
             </Col>
             <Col lg={8} className='tw-border-l'>
-                <VisualPanel isDone={isDone}/>
+                <VisualPanel isDone={isDone} visRef={visRef}/>
             </Col>
         </Row>
         </Container>}

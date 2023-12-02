@@ -16,7 +16,7 @@ const DomainTimeline = (props) => {
     const case_id = params.case_id;
     const dispatch = useDispatch()
     const behavior = useSelector(state => state.node.behavior)
-    const chartRef = useRef(null); // 캔버스 참조 생성
+    const chartRef = props.chartRef; // 캔버스 참조 생성
 
     useEffect(() => {
         axios.get(`/timeline/post/${case_id}`).then((response) => {
@@ -103,7 +103,7 @@ const DomainTimeline = (props) => {
 
     // 그래프 옵션
     const options = {
-
+        responsive: false,
         maintainAspectRatio: true,
         aspectRatio: 3,
         showLine: false,
@@ -187,7 +187,7 @@ const DomainTimeline = (props) => {
                     {/* 버튼 내 텍스트가 필요없으면 이 부분을 비워 둘 수 있음 */}
                 </button>
             </div>
-            <Line ref={chartRef} options={options} data={{ datasets }} height={null} width={null} />
+            <Line ref={chartRef} options={options} data={{ datasets }} height={244} width={732} />
         </>
     );
 }
