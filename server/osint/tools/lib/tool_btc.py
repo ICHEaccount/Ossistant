@@ -1,9 +1,10 @@
 import json
 import os.path
 import subprocess
+import requests
 
 from db_conn.mongo.models import RunModel
-from db_conn.neo4j.models import SurfaceUser
+from db_conn.neo4j.models import *
 
 def run_btc(run): 
     bitcoin_address=run.input_node

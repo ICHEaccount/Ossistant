@@ -7,6 +7,7 @@ from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import *
 from .lib.tool_maigret import *
+from .lib.tool_btc import *
 from .config.tool_result_config import *
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
