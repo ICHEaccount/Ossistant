@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import { Alert, Button, Nav, Tab } from 'react-bootstrap';
-import DataList from './dataList';
+import DataList from './data/dataList';
 import { Database , Gear, FileEarmarkText, ArrowRepeat, Tools} from 'react-bootstrap-icons';
-import ToolList from '../tool/toolList';
-import Report from '../report';
+import ToolList from './tool/toolList';
+import Report from './report/report';
 import Axios  from 'axios';
 import { useSelector, useDispatch } from 'react-redux'
-import {panelChange} from '../../reducers/node'
-import RunList from '../run/runList';
+import {panelChange} from '../reducers/node'
+import RunList from './run/runList';
 
 const DataPanel = (props) => {
     const panel = useSelector(state => state.node.panel)

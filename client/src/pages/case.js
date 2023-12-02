@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
-import DataPanel from '../components/data/dataPanel';
+import DataPanel from '../components/dataPanel';
 import VisualPanel from '../components/visualPanel';
 import { useSelector } from 'react-redux';
 import RunToast from '../components/run/runToast';
