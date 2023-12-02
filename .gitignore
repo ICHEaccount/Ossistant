@@ -14,6 +14,6 @@ venv2
 .idea
 
 ## osint tools
-server/osint/tools/lib/maigret
+server/osint/tools/lib/theharvester/
 reports/
 server/osint/reports

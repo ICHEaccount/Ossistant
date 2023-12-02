@@ -1,10 +1,12 @@
 from db_conn.mongo.models import RunModel, CaseModel, ResultModel
 from db_conn.neo4j.models import *
+from core.setup import setup_tool
 
 from flask import request, jsonify, Blueprint
 
 from .lib.tool_whois import *
 from .lib.tool_maigret import *
+from .lib.tool_harvester import *
 from .config.tool_result_config import *
 
 bp = Blueprint('tool', __name__, url_prefix='/tools')
@@ -13,6 +15,10 @@ report_dir = './reports/'
 if not os.path.exists(report_dir):
     os.makedirs(report_dir)
 
+try:
+    setup_tool()
+except Exception as e:
+    setup_error = f'Tool setup error. {e}.'
 
 def check_json_not_null(input_json):
     for value in input_json.values():
@@ -61,7 +67,13 @@ def run_tool():
         return jsonify({'Message': 'Case Not Found'}), 500
 
     # creating run
-    run = CaseModel.create_runs(case_id=case_id, tool_id=tool_id, input_node=input_node, status='ready', input_value='query')
+    run = CaseModel.create_runs(
+        case_id=case_id,
+        tool_id=tool_id,
+        input_node=input_node,
+        status='ready',
+        input_value='query'
+    )
     if run is None:
         return jsonify({'Message': 'Run Creation Error'}), 500
 
@@ -69,15 +81,23 @@ def run_tool():
     if tool_id == '01':  # whois
         try:
             run.input_value = runtools_requested_json['properties'][0]['property'][0]['domain']
-        except Exception as e:
-            return jsonify({'Message': 'Invalid domain', 'Code': {e}}), 400
+        except Exception as e1:
+            return jsonify({'Message': 'Invalid domain', 'Code': e1}), 400
         run_id = run_whois(run=run)  # Add case_id
+
+    elif tool_id == '02':  # theHarvester
+        try:
+            run.input_value = runtools_requested_json['properties'][0]['property'][0]['domain']
+            run.save()
+            run_id = run_harvester(run=run)
+        except Exception as e2:
+            return jsonify({'Run theHarvester error': e2}), 400
 
     elif tool_id == '03':  # maigret
         try:
             run.input_value = runtools_requested_json['properties'][0]['property'][0]['username']
-        except Exception as e:
-            return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
+        except Exception as e3:
+            return jsonify({'Message': 'Invalid username', 'Code': e3}), 400
         run_id = run_maigret(run)
 
     else:
@@ -95,14 +115,16 @@ def tool_state(case_id):
     all_run = CaseModel.get_all_runs(case_id=case_id)[1]
 
     # checking results
-    message = None
+    message = None  # Should be None
     for run in all_run:
         if run['tool_id'] == '01':
             message = check_whois(case_id, run['run_id'])
+        elif run['tool_id'] == '02':
+            message = check_harvester(case_id, run['run_id'])
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
     if message:
-        return jsonify({'Message': message}), 400
+        return jsonify({'Debug': message}), 400
 
     # making response
     ready = []

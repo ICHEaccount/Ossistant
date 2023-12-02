@@ -2,14 +2,12 @@
 
 import os
 import subprocess
-import json 
-
-# print("Current working directory:", os.getcwd())
+import json
 
 # If any tool use setup.py, delete tools.json, too.
 # Expecting usage: theHarvester
-with open('./core/tools.json','r') as jfile:
-    data = json.load(jfile)
+with open('./core/tools.json','r') as j_file:
+    data = json.load(j_file)
 
 domain_data = data["domain"]
 
@@ -25,7 +23,7 @@ def clone_tool(data):
 
 def setup_tool():
     for key, value in domain_data.items():
-        if isinstance(value,dict):
+        if isinstance(value, dict):
             clone_tool(domain_data[key])
 
         else:
