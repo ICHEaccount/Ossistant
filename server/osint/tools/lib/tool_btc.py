@@ -35,4 +35,4 @@ def run_btc(run):
         print(f"\nError making API request: {e}")
 
     run.save()
-    return run.run_id, data
+    return run.run_id #, data
