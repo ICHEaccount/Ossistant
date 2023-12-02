@@ -9,7 +9,7 @@ def run_harvester(run):
     try:
         subprocess.Popen([
             'python',
-            './tools/lib/theharvester/theHarvester.py',
+            './tools/lib/clone/theharvester/theHarvester.py',
             '-d', run.input_value,
             '-f', f'./reports/hrv_{run.input_value}_{run.run_id}.',
             '-b', 'bing'
@@ -56,7 +56,7 @@ def report_harvester(case_id, run):
             }
             RunModel.create_result(data=inside, run_id=run.run_id)
 
-    if report['emails']:
+    if "emails" in report:
         for email in report['emails']:
             inside = {
                 "email": email
