@@ -30,13 +30,13 @@ function RelationGraph(props) {
   const canvasImgRef = useRef(null);
 
   const handleClick = () => {
+    // createReport(`${case_id}`,networkRef,1);
     if (canvasImgRef.current && networkRef.current) {
       networkRef.current.fit(); 
 
       networkRef.current.once('afterDrawing', (ctx) => {
         const dataURL = ctx.canvas.toDataURL();
         canvasImgRef.current.href = dataURL;
-        console.log(dataURL);
         canvasImgRef.current.download = 'network_image.png';
         canvasImgRef.current.click();
       });

@@ -1,5 +1,3 @@
-import os
-
 from db_conn.mongo.models import RunModel, CaseModel, ResultModel
 from db_conn.neo4j.models import *
 
@@ -74,7 +72,7 @@ def run_tool():
             run.input_value = runtools_requested_json['properties'][0]['property'][0]['domain']
         except Exception as e:
             return jsonify({'Message': 'Invalid domain', 'Code': {e}}), 400
-        run_id = run_whois(case_id=case_id,run=run) # Add case_id
+        run_id = run_whois(run=run)  # Add case_id
 
     elif tool_id == '03':  # maigret
         try:
@@ -88,7 +86,7 @@ def run_tool():
             run.input_value = runtools_requested_json["properties"][0]["property"][0]["wallet"]
             #run.input_node=input_node #btc의 경우 input_node 필드값=지갑주소. input 에 필요값 하나뿐.
         except Exception as e:
-            return jsonify({'Message': 'Invalid username', 'Code': {e}}), 400
+            return jsonify({'Message': 'Invalid username', 'Code': e}), 400
         run_id = run_btc(run)
 
     else:
@@ -106,13 +104,16 @@ def tool_state(case_id):
     all_run = CaseModel.get_all_runs(case_id=case_id)[1]
 
     # checking results
+    message = None
     for run in all_run:
         if run['tool_id'] == '01':
-            continue  # check_whois(run['run_id'])
+            message = check_whois(case_id, run['run_id'])
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
         elif run['tool_id'] == '04':
             continue  #check_btc(case_id, run['run_id'])
+    if message:
+        return jsonify({'Message': message}), 400
 
     # making response
     ready = []
@@ -128,6 +129,7 @@ def tool_state(case_id):
             run['tool_name'] = 'maigret'
         elif run['tool_id'] == '04':
             run['tool_name'] = 'btc'
+            
         # sorting by status
         if run['status'] == 'ready':
             ready.append(run)
@@ -147,6 +149,7 @@ def tool_state(case_id):
 
     return jsonify(response), 200
 
+
 @bp.route('/createResultNode', methods=["POST"])
 def create_result_node():
     req = request.get_json()
@@ -156,19 +159,19 @@ def create_result_node():
 
     # Error handling about response value 
     if not req:
-        return jsonify({'Error':'Empty response error'}), 404
+        return jsonify({'Error': 'Empty response error'}), 404
     if not req['case_id']:
-        return jsonify({'Error':'Empty case_id error'}), 404
+        return jsonify({'Error': 'Empty case_id error'}), 404
     if not req['input_node']:
-        return jsonify({'Error':'Empty input_node error'}), 404
+        return jsonify({'Error': 'Empty input_node error'}), 404
     if not req['tool_id']:
-        return jsonify({'Error':'Empty tool_id error'}), 404  
+        return jsonify({'Error': 'Empty tool_id error'}), 404
     if not req['result_id']:
-        return jsonify({'Error':'Empty result_id error'}), 404
+        return jsonify({'Error': 'Empty result_id error'}), 404
     
     case_id = req['case_id']
     input_node = req['input_node']
-    result_id_list = req['result_id'] # list 
+    result_id_list = req['result_id']  # list
 
     # GET info to create node from result 
     input_label = TOOL_RESULT_MATCH[req['tool_id']]['input_label']
@@ -181,8 +184,8 @@ def create_result_node():
 
     # Check surfaceUser or darkUser
     if req['tool_id'] == '03':
-        surface_node = SurfaceUser.get_node({'case_id':case_id, 'uid':input_node})
-        dark_node = DarkUser.get_node({'case_id':case_id, 'uid':input_node})
+        surface_node = SurfaceUser.get_node({'case_id': case_id, 'uid': input_node})
+        dark_node = DarkUser.get_node({'case_id': case_id, 'uid': input_node})
         if surface_node and not dark_node:
             node_result = surface_node
             input_label = SurfaceUser
@@ -192,12 +195,12 @@ def create_result_node():
             input_label = DarkUser
             result_node_label = DarkUser
         else:
-            return jsonify({'Error':'User check error'}), 500
+            return jsonify({'Error': 'User check error'}), 500
             
     else:
-        node_result = input_label.get_node({'case_id':case_id, 'uid':input_node})
+        node_result = input_label.get_node({'case_id': case_id, 'uid': input_node})
         if node_result is None:
-            return jsonify({'Error':'Invalid input node'}), 500
+            return jsonify({'Error': 'Invalid input node'}), 500
 
     for result_id in result_id_list:
         result_obj = ResultModel.objects(result_id=result_id).first()
@@ -212,9 +215,9 @@ def create_result_node():
         
         # Create node mode 
         if match_type is CREATE_NODE:
-            check_node_flag, node = result_node_label.check_node({'case_id':case_id, node_property:result_obj.result.get(db_property_name)})
+            check_node_flag, node = result_node_label.check_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name)})
             if check_node_flag is False:
-                node = result_node_label.create_node({'case_id':case_id,node_property:result_obj.result.get(db_property_name)})
+                node = result_node_label.create_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name)})
             
             if not node:
                 error_status = "Node creation error"
@@ -224,30 +227,28 @@ def create_result_node():
             # Relationship 
 
             # Error : DId not work check_relationship 
-            check_rel_dup_flag, rel_flag =Relationship.check_relationship(from_uid=node_result.uid, to_uid=node.uid, is_label=True, label='OSINT_TOOL')
+            check_rel_dup_flag, rel_flag = Relationship.check_relationship(from_uid=node_result.uid, to_uid=node.uid, is_label=True, label='OSINT_TOOL')
             if check_rel_dup_flag == True and rel_flag == False:
-                node_result.rel_to.connect(node,{'label':'OSINT_TOOL'})
+                node_result.rel_to.connect(node, {'label': 'OSINT_TOOL'})
             if input_label in AUTO_RELATIONS:
                 auto_rel_flag, msg = Relationship.create_auto_relationship(case_id=case_id, node=node, node_label=result_node_label)
         
         # Update node mode 
         elif match_type is UPDATE_PROPERTY:
-            if req['tool_id'] == '03': # Only for maigret 
-                node_result.registered.append(result_obj.result.get('site') )
+            if req['tool_id'] == '03':  # Only for maigret
+                node_result.registered.append(result_obj.result.get('site'))
         
         result_obj.created = True 
         result_obj.save()
         
     if error_result_id is not None:
-        return jsonify({'Error':f'Invalid result : {error_result_id}'}), 500 
+        return jsonify({'Error': f'Invalid result : {error_result_id}'}), 500
     
     if error_status is not None:
-        return jsonify({'Error':error_status}), 500 
+        return jsonify({'Error': error_status}), 500
     
     if match_type is UPDATE_PROPERTY:
         node_result.save()
-        return jsonify({'node_id':input_node}),200        
+        return jsonify({'node_id': input_node}), 200
         
-    return jsonify({'node_id':result_node_id_list}), 200
-
-
+    return jsonify({'node_id': result_node_id_list}), 200

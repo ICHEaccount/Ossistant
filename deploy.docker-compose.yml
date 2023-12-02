@@ -78,6 +78,8 @@ services:
       - ./server/src:/app
       - ./server/db_conn/mongo:/db_conn/mongo
       - ./server/db_conn/neo4j:/db_conn/neo4j
+      - ./server/src/docs/report:/app/docs/report
+      - ./server/src/docs/excel:/app/docs/excel
     networks:
       icheTest:
         ipv4_address: 172.25.0.6

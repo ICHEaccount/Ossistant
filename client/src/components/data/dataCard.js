@@ -143,90 +143,165 @@ const DataCard = (props) => {
                             
                         </Card.Header>
                         
-                            {lbs[label].properties.map((key) => {
-                                if(key==="note"||key==="content"){
-                                    return (<InputGroup className='mb-1 px-1' >
-                                    <InputGroup.Text id='note'>{key}</InputGroup.Text>
-                                    <Form.Control
-                                    value={formData[key]}
-                                    disabled={!onEdit}
-                                    onChange={(e)=>onChange(key,e.target.value)}
-                                    as="textarea" />
-                                    </InputGroup>)
+                            {lbs[label].properties.map((p) => {
+                                if(lbs[label].list.includes(p.property)){
+                                    return(
+                                        <Form.Group className="mb-1 px-1" controlId={`${p.property}`}>
+                                            <Form.Label className='ml-1'>{p.name+" "}
+                                            <Button
+                                                size='sm'
+                                                // disabled={!onEdit}
+                                                variant="outline-success"
+                                                onClick={(e) => {
+                                                setlistProperty([...listProperty, '']);
+                                                setonEdit(true)
+                                                }}
+                                                >
+                                                +
+                                            </Button>
+                                            </Form.Label>
+                                            <div className={cls("",{"tw-max-h-32 tw-overflow-y-auto":listProperty})}>
+                                            {listProperty?.map((item, idx) => (
+                                            <div key={idx} className="d-flex mb-1">
+                                                <Form.Control
+                                                className='tw-rounded-r-none'
+                                                value={item}
+                                                disabled={!onEdit}
+                                                onChange={(e) => {
+                                                const newProperty = [...listProperty];
+                                                newProperty[idx] = e.target.value;
+                                                setlistProperty(newProperty);
+                                                onChange(p.property, newProperty);
+                                                }}
+                                                />
+                                                <Button
+                                                    className='tw-rounded-l-none'
+                                                    variant="outline-danger"
+                                                    // disabled={!onEdit}
+                                                    onClick={(e) => {
+                                                    const newProperty = listProperty.filter((_, index) => index !== idx);
+                                                    setlistProperty(newProperty);
+                                                    onChange(p.property, newProperty);
+                                                    setonEdit(true)
+                                                    }}
+                                                >
+                                                    -
+                                                </Button>
+                                            </div>
+                                            ))}
+                                            </div>
+                                                
+                                                
+                                        </Form.Group>
+                        
+                                    )
                                 }
-                                if(key.includes("date")||key.includes("Date")){
-                                    return(<InputGroup className='mb-1 px-1' >
-                                    <InputGroup.Text id='note'>{key}</InputGroup.Text>
-                                    <Form.Control
-                                    value={formData[key]}
+                                else if(p.as==="select"){
+                                    return(
+                                        <InputGroup className='mb-1 px-1'>
+                                        <InputGroup.Text id={`${p.property}`}>{p.name}</InputGroup.Text>
+                                            <Form.Select
+                                            onChange={(e)=>onChange(p.property,e.target.value)}
+                                            value={formData[p.property]}
+                                            disabled={!onEdit}
+                                            >
+                                            {p.option.map((op)=>{
+                                                return(<option value={op}>{op}</option>)
+                                            })}
+                                            </Form.Select>
+                                        </InputGroup>
+                                    )
+                                }
+                                else if (p.as==="textarea"){
+                                    return (<InputGroup className='mb-1 px-1'>
+                                    <InputGroup.Text id={`${p.property}`}>{p.name}</InputGroup.Text>
+                                    <Form.Control as="textarea"
+                                    value={formData[p.property]}
+                                    onChange={(e)=>{onChange(p.property,e.target.value)}}
+                                    required={title===p.property}
                                     disabled={!onEdit}
-                                    onChange={(e)=>{const value = e.target.value.replace("T"," ");onChange(key,value)}}
-                                    type='datetime-local'
+                                    />
+                                    </InputGroup>)
+                                }else{ //input
+                                    return (<InputGroup className='mb-1 px-1'>
+                                    <InputGroup.Text id={`${p.property}`}>{p.name}</InputGroup.Text>
+                                    <Form.Control 
+                                    as="input"
+                                    type={p.inputType}
+                                    value={formData[p.property]}
+                                    onChange={(e)=>{
+                                        let value = e.target.value
+                                        if(p.inputType==="datetime-local") value = value.replace("T"," ");
+                                        onChange(p.property,value)
+                                    }}
+                                    required={title===p.property}
+                                    disabled={!onEdit}
                                     />
                                     </InputGroup>)
                                 }
-                                if(lbs[label].list.includes(key)){
-                                    // setlistProperty(formData[key])
-                                    return(<Form.Group className="mb-1 px-1">
-                                    <Form.Label className='ml-1'>{key+" "}
-                                    <Button
-                                        size='sm'
-                                        // disabled={!onEdit}
-                                        variant="outline-success"
-                                        onClick={(e) => {
-                                        setlistProperty([...listProperty, '']);
-                                        setonEdit(true)
-                                        }}
-                                        >
-                                        +
-                                    </Button>
-                                    </Form.Label>
-                                    <div className={cls("",{"tw-max-h-32 tw-overflow-y-auto":listProperty})}>
-                                    {listProperty?.map((item, idx) => (
-                                    <div key={idx} className="d-flex mb-1">
-                                        <Form.Control
-                                        className='tw-rounded-r-none'
-                                        value={item}
-                                        disabled={!onEdit}
-                                        onChange={(e) => {
-                                        const newProperty = [...listProperty];
-                                        newProperty[idx] = e.target.value;
-                                        setlistProperty(newProperty);
-                                        onChange(key, newProperty);
-                                        }}
-                                        />
-                                        <Button
-                                            className='tw-rounded-l-none'
-                                            variant="outline-danger"
-                                            // disabled={!onEdit}
-                                            onClick={(e) => {
-                                            const newProperty = listProperty.filter((_, index) => index !== idx);
-                                            setlistProperty(newProperty);
-                                            onChange(key, newProperty);
-                                            setonEdit(true)
-                                            }}
-                                        >
-                                            -
-                                        </Button>
-                                    </div>
-                                    ))}
-                                    </div>
+
+                                // if(lbs[label].list.includes(key)){
+                                //     // setlistProperty(formData[key])
+                                //     return(<Form.Group className="mb-1 px-1">
+                                //     <Form.Label className='ml-1'>{key+" "}
+                                //     <Button
+                                //         size='sm'
+                                //         // disabled={!onEdit}
+                                //         variant="outline-success"
+                                //         onClick={(e) => {
+                                //         setlistProperty([...listProperty, '']);
+                                //         setonEdit(true)
+                                //         }}
+                                //         >
+                                //         +
+                                //     </Button>
+                                //     </Form.Label>
+                                //     <div className={cls("",{"tw-max-h-32 tw-overflow-y-auto":listProperty})}>
+                                //     {listProperty?.map((item, idx) => (
+                                //     <div key={idx} className="d-flex mb-1">
+                                //         <Form.Control
+                                //         className='tw-rounded-r-none'
+                                //         value={item}
+                                //         disabled={!onEdit}
+                                //         onChange={(e) => {
+                                //         const newProperty = [...listProperty];
+                                //         newProperty[idx] = e.target.value;
+                                //         setlistProperty(newProperty);
+                                //         onChange(key, newProperty);
+                                //         }}
+                                //         />
+                                //         <Button
+                                //             className='tw-rounded-l-none'
+                                //             variant="outline-danger"
+                                //             // disabled={!onEdit}
+                                //             onClick={(e) => {
+                                //             const newProperty = listProperty.filter((_, index) => index !== idx);
+                                //             setlistProperty(newProperty);
+                                //             onChange(key, newProperty);
+                                //             setonEdit(true)
+                                //             }}
+                                //         >
+                                //             -
+                                //         </Button>
+                                //     </div>
+                                //     ))}
+                                //     </div>
                                     
                                     
-                                </Form.Group>)
+                                // </Form.Group>)
                                     
-                                }
-                                return(
-                                    <InputGroup className='mb-1 px-1'>
-                                    <InputGroup.Text >{key}</InputGroup.Text>
-                                    <Form.Control
-                                    value={formData[key]|| ""}
-                                    onChange={(e)=>onChange(key,e.target.value)}
-                                    disabled={!onEdit}
-                                    required={title===key}
-                                    />
-                                    </InputGroup>
-                                )                         
+                                // }
+                                // return(
+                                //     <InputGroup className='mb-1 px-1'>
+                                //     <InputGroup.Text >{key}</InputGroup.Text>
+                                //     <Form.Control
+                                //     value={formData[key]|| ""}
+                                //     onChange={(e)=>onChange(key,e.target.value)}
+                                //     disabled={!onEdit}
+                                //     required={title===key}
+                                //     />
+                                //     </InputGroup>
+                                // )                         
                             }
                             )}                     
                         </Form>
