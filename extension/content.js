@@ -3,6 +3,60 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.command === "getPageUrl") {
         sendResponse({url: window.location.href});
     }
+
+    if (request.command === "createNoteInput") {
+        // 선택한 텍스트의 위치를 가져오기
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+
+        // 하이라이팅 함수
+        highlightSelection(range);
+
+        // 입력창을 포함할 div 생성
+        const inputDiv = document.createElement("div");
+        inputDiv.style.position = "absolute";
+        inputDiv.style.left = `${rect.left}px`;
+        inputDiv.style.top = `${rect.bottom + window.scrollY}px`; // 페이지 스크롤 고려
+
+        // textarea 요소 생성
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "input memo"; // 기본 텍스트 설정
+        textarea.style.width = "200px"; // 크기 조정 필요
+        textarea.style.height = "100px"; // 크기 조정 필요
+        textarea.onclick = function() {
+            if (textarea.value === "input memo") {
+                textarea.value = "";
+            }
+        };
+
+        // textarea 더블클릭 이벤트 추가
+        textarea.ondblclick = function() {
+            if(textarea.style.height !== '0px') {
+                textarea.style.height = '0px';  // textarea 접기
+            } else {
+                textarea.style.height = '100px'; // textarea 펼치기
+            }
+        };        // textarea 더블클릭 이벤트 추가
+        textarea.ondblclick = function() {
+            if(textarea.style.height !== '0px') {
+                textarea.style.height = '0px';  // textarea 접기
+            } else {
+                textarea.style.height = '100px'; // textarea 펼치기
+            }
+        };
+
+        textarea.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 's') {
+                event.preventDefault(); // 기본 동작 방지
+                sendResponse({note: textarea.value});
+            }
+    });
+
+        // div에 textarea 추가하고 문서에 div 추가
+        inputDiv.appendChild(textarea);
+        document.body.appendChild(inputDiv);
+    }
     
     const krphoneRegex = /01[016789]-\d{3,4}-\d{4}/g;
     const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
@@ -112,3 +166,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 
 }); 
+
+// 하이라이팅
+function highlightSelection(range) {
+    const highlightSpan = document.createElement('span');
+    highlightSpan.style.backgroundColor = 'pink'; 
+    highlightSpan.classList.add('highlighted-text'); 
+
+    try {
+        range.surroundContents(highlightSpan);
+    } catch (e) {
+        console.error('Error in highlighting:', e);
+    }
+}
