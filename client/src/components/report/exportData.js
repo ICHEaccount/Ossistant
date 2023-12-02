@@ -4,7 +4,7 @@ import Axios from 'axios'
 
 const ExportData = (props) => {
     const case_id=props.case_id
-    const [filename, setfilename] = useState("")
+    const [filename, setfilename] = useState("export")
     const reqExcel = () =>{
         // console.log(filename);
         const config = {
