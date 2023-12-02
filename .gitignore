@@ -14,6 +14,5 @@ venv2
 .idea
 
 ## osint tools
-server/osint/tools/lib/theharvester/
-reports/
+server/osint/tools/lib/clone
 server/osint/reports

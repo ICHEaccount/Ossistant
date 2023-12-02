@@ -12,8 +12,11 @@ from .config.tool_result_config import *
 bp = Blueprint('tool', __name__, url_prefix='/tools')
 
 report_dir = './reports/'
+clone_dir = './tools/lib/clone'
 if not os.path.exists(report_dir):
     os.makedirs(report_dir)
+if not os.path.exists(clone_dir):
+    os.makedirs(clone_dir)
 
 try:
     setup_tool()
