@@ -5,7 +5,7 @@ import { Alert, Button, Nav, Tab } from 'react-bootstrap';
 import DataList from './data/dataList';
 import { Database , Gear, FileEarmarkText, ArrowRepeat, Tools} from 'react-bootstrap-icons';
 import ToolList from './tool/toolList';
-import Report from './report/report';
+import Report from './report/reportPanel';
 import Axios  from 'axios';
 import { useSelector, useDispatch } from 'react-redux'
 import {panelChange} from '../reducers/node'
