@@ -2,68 +2,375 @@ const labels = {
     "Post":{
         "title":"title",
         "category":"Site",
-        "properties":["title","writer","url","content","created_date","note"],
+        "properties":[
+            {
+                "property":"title",
+                "name": "Title",
+                "inputType": "text",
+                "as":"input"
+            },
+            {
+                "property":"writer",
+                "name": "Writer",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"created_date",
+                "name": "Created Date",
+                "inputType":"datetime-local",
+                "as":"input"
+            },
+            {
+                "property":"url",
+                "name": "URL",
+                "inputType": "url",
+                "as":"input"
+            },
+            {
+                "property":"content",
+                "name": "Content",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+        ],
         "list":[]
     },
     "Comment":{
         "title":"content",
         "category":"Site",
-        "properties":["name","content","created_date","url"],
+        "properties":[
+            {
+                "property":"name",
+                "name": "Writer",
+                "inputType": "text",
+                "as":"input"
+            },
+            {
+                "property":"created_date",
+                "name": "Created Date",
+                "inputType":"datetime-local",
+                "as":"input"
+            },
+            {
+                "property":"url",
+                "name": "URL",
+                "inputType": "url",
+                "as":"input"
+            },
+            {
+                "property":"content",
+                "name": "Content",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+        ],
         "list":[]
     },
     "SurfaceUser":{
         "title":"username",
         "category":"Subject",
-        "properties":["username","imposter","registered","note"],
+        "properties":[
+            {
+                "property":"username",
+                "name": "Username",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"imposter",
+                "name": "Imposter",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
+                "property":"registered",
+                "name": "Registered",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":["registered"]
 
     },
     "DarkUser":{
         "title":"username",
         "category":"Subject",
-        "properties":["username","rank","regdate","post_num","comment_num","imposter","registered","note"],
+        "properties":[
+            {
+                "property":"username",
+                "name": "Username",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"imposter",
+                "name": "Imposter",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
+                "property":"rank",
+                "name": "Rank",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"regdate",
+                "name": "Register Date",
+                "inputType":"datetime-local",
+                "as":"input"
+            },
+            {
+                "property":"post_num",
+                "name": "Post",
+                "inputType":"number",
+                "as":"input"
+            },
+            {
+                "property":"comment_num",
+                "name": "Comment",
+                "inputType":"number",
+                "as":"input"
+            },
+            {
+                "property":"registered",
+                "name": "Registered",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":["registered"]
     },
     "Person":{
         "title":"name",
         "category":"Subject",
-        "properties":["name","imposter","note"],
+        "properties":[
+            {
+                "property":"name",
+                "name": "Name",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"imposter",
+                "name": "Imposter",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":[]
     },
     "Company":{
         "title":"name",
         "category":"Subject",
-        "properties":["name","imposter","business_num","location","note"],
+        "properties":[
+            {
+                "property":"name",
+                "name": "Name",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"imposter",
+                "name": "Imposter",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
+                "property":"business_num",
+                "name": "Business Number",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"location",
+                "name": "Location",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":[]
     },
     "Domain":{
         "title":"domain",
         "category":"Site",
-        "properties":["domain","regdate","status","leaked","note"],
+        "properties":[
+            {
+                "property":"domain",
+                "name": "Domain",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"regdate",
+                "name": "Register Date",
+                "inputType":"datetime-local",
+                "as":"input"
+            },
+            {
+                "property":"status",
+                "name": "Status",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Active","Inactive"]
+            },
+            {
+                "property":"leaked",
+                "name": "Leaked",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":[]
     },
     "Phone":{
         "title":"number",
         "category":"Info",
-        "properties":["number","note"],
+        "properties":[
+            {
+                "property":"number",
+                "name": "Number",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":[]
     },
     "Message":{
         "title":"sender",
         "category":"Info",
-        "properties":["sender","content","date","note"],
+        "properties":[
+            {
+                "property":"sender",
+                "name": "Sender",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"date",
+                "name": "Date",
+                "inputType":"datetime-local",
+                "as":"input"
+            },
+            {
+                "property":"content",
+                "name": "Content",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+        ],
         "list":[]
     },
     "Email":{
         "title":"email",
         "category":"Info",
-        "properties":["email","leaked","note"],
+        "properties":[
+            {
+                "property":"email",
+                "name": "Email",
+                "inputType":"email",
+                "as":"input"
+            },
+            {
+                "property":"leaked",
+                "name": "Leaked",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+        ],
         "list":[]
     },
     "Wallet":{
         "title":"wallet",
         "category":"Info",
-        "properties":["wallet","wallet_type","note"],
+        "properties":[
+            {
+                "property":"wallet",
+                "name": "Address",
+                "inputType":"text",
+                "as":"input"
+            },
+            {
+                "property":"wallet_type",
+                "name": "Type",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","BTC","ETH","USDT","BNB","XRP","Others"]
+            },
+            {
+                "property":"note",
+                "name": "Note",
+                "inputType":"textarea",
+                "as":"textarea"
+            },
+            ],
         "list":[]
     }
 }
