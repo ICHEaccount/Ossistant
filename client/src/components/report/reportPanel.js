@@ -1,13 +1,15 @@
 import React from 'react'
-import { Cone } from 'react-bootstrap-icons'
 import ExportData from './exportData'
+import ExportReport from './exportReport'
+import { Stack } from 'react-bootstrap'
 
 const Report = (props) => {
     const case_id = props.case_id
     return (
-        <div>
+        <Stack gap={2}>
             <ExportData case_id={case_id}/>
-        </div>
+            <ExportReport case_id={case_id}/>
+        </Stack>
     )
 }
 
