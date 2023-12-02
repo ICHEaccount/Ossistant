@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/esm/Button';
 import { Fingerprint,PersonVcard,FileText,Icon123 } from 'react-bootstrap-icons';
 import Col from 'react-bootstrap/esm/Col';
 import cls from 'classnames'
+import { Card } from 'react-bootstrap';
 
 
 const CreateCase = () => {
@@ -45,13 +46,12 @@ const CreateCase = () => {
 
 
     return (
-    <Accordion defaultActiveKey="0" className='mt-2'>
-        <Accordion.Item eventKey="0">
-        <Accordion.Header>Create New Case</Accordion.Header>
-        <Accordion.Body>
+    <Card className='mt-3 tw-border-navy'>
+        <Card.Header className='tw-bg-navy tw-border-0 tw-text-white'>Create New Case</Card.Header>
+        <Card.Body>
         <Form  onSubmit={submitCase}>
-            <InputGroup className={cls("mb-3",{"tw-border-red-500":errors.caseName})}>
-                <InputGroup.Text id="basic-addon1"><Fingerprint/></InputGroup.Text>
+            <InputGroup className={cls("mb-1",{"tw-border-red-500":errors.caseName})}>
+                <InputGroup.Text id="basic-addon1" className='tw-bg-navy tw-border-navy tw-fill-'><Fingerprint className='tw-fill-white'/></InputGroup.Text>
                 <Form.Control
                 value={caseName}
                 onChange={(e) => {setCaseName(e.target.value);}}
@@ -59,53 +59,57 @@ const CreateCase = () => {
                 aria-label="Case name"
                 aria-describedby="basic-addon1"
                 required
+                className='tw-border-navy'
                 />
             </InputGroup>
 
-            <InputGroup className={cls("mb-3",{"tw-border-red-500":errors.caseName})}>
-                <InputGroup.Text id="basic-addon2"><Icon123/></InputGroup.Text>
+            <InputGroup className={cls("mb-1",{"tw-border-red-500":errors.caseName})}>
+                <InputGroup.Text id="basic-addon2" className='tw-bg-navy tw-border-navy'><Icon123 className='tw-fill-white'/></InputGroup.Text>
                 <Form.Control
                 value={caseNumber}
                 onChange={(e) => {setCaseNumber(e.target.value);}}
                 placeholder="Case number"
                 aria-label="Case number"
                 aria-describedby="basic-addon2"
+                className='tw-border-navy'
                 />
             </InputGroup>
 
-            <InputGroup className={cls("mb-3",{"tw-border-red-500":errors.caseName})}>
-                <InputGroup.Text id="basic-addon3"><PersonVcard/></InputGroup.Text>
+            <InputGroup className={cls("mb-1",{"tw-border-red-500":errors.caseName})}>
+                <InputGroup.Text id="basic-addon3" className='tw-bg-navy tw-border-navy'><PersonVcard className='tw-fill-white'/></InputGroup.Text>
                 <Form.Control
                 value={investigator}
                 onChange={(e) => {setInvestigator(e.target.value);}}
                 placeholder="Investigator"
                 aria-label="Investigator"
                 aria-describedby="basic-addon3"
+                className='tw-border-navy'
                 />
             </InputGroup>
 
-            <InputGroup className={cls("mb-3",{"tw-border-red-500":errors.caseName})}>
-                <InputGroup.Text><FileText/></InputGroup.Text>
+            <InputGroup className={cls("mb-1",{"tw-border-red-500":errors.caseName})}>
+                <InputGroup.Text className='tw-bg-navy tw-border-navy'><FileText className='tw-fill-white'/></InputGroup.Text>
                 <Form.Control
                 value={description}
                 onChange={(e) => {setDescription(e.target.value);}}
                 as="textarea" 
                 aria-label="Description" 
-                placeholder='Description' />
+                placeholder='Description' 
+                className='tw-border-navy'
+                />
             </InputGroup>
 
-            <Col md={{ span: 3, offset: 10 }}>
-            <Button variant="outline-primary" type="submit">
+            <div className='tw-flex tw-justify-end'>
+            <Button variant="disable" className='tw-bg-navy hover:tw-bg-dark-navy tw-border-0 tw-text-white hover:tw-text-white' type="submit">
             Create
             </Button>
-            </Col>
+            </div>
             
         </Form>
         
-        </Accordion.Body>
-        </Accordion.Item>
+        </Card.Body>
     
-    </Accordion>
+    </Card>
     )
 }
 

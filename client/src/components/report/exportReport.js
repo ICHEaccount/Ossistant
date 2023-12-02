@@ -66,7 +66,7 @@ const ExportReport = (props) => {
             readOnly={state==="running"}
             />
             <InputGroup.Text className='tw-bg-white'>.docx</InputGroup.Text>
-            <Button variant="disable" disabled={state==="running"} className='disabled:tw-bg-bright-peach tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' onClick={reqReport}>create</Button>
+            <Button variant="disable" disabled={state==="running"} className='disabled:tw-bg-bright-peach tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach' onClick={reqReport}>create</Button>
         </InputGroup>
         {state!=="ready"&&(
                     <div className='mt-2 tw-flex tw-justify-center'>
@@ -75,7 +75,7 @@ const ExportReport = (props) => {
                             Creating...
                             <Spinner animation="border" role="status" size='sm'><span className="visually-hidden">Loading...</span></Spinner>
                         </div>}
-                        {state==="completed"&&<Button variant="disable" onClick={downloadReport} className=' disabled:tw-bg-bright-peach tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' download={`${filename}.docx`}>Download</Button>}
+                        {state==="completed"&&<Button variant="disable" onClick={downloadReport} className=' disabled:tw-bg-bright-peach tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach' download={`${filename}.docx`}>Download</Button>}
                         {state==="error"&&<p className='tw-text-peach'>Something went Wrong :( Try Again</p>}
                     </div>
             

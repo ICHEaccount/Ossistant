@@ -38,7 +38,7 @@ const ExportData = (props) => {
             onChange={(e)=>setfilename(e.target.value)}
             />
             <InputGroup.Text className='tw-bg-white'>.xlsx</InputGroup.Text>
-            <Button variant="disable" className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' onClick={reqExcel}>export</Button>
+            <Button variant="disable" className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach' onClick={reqExcel}>export</Button>
             </InputGroup>
         </Card.Body>
     </Card>

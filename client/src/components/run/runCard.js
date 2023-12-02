@@ -119,7 +119,7 @@ const RunCard = (props) => {
 			{selectedRun.results.length!==0&&status!=="error"?
 			<Col md={{ span: 2, offset: 9 }}>
 				<div ref={addButton}>
-					<Button  type="submit" variant="disable" className='mb-2 mt-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach'>{"Add"}</Button>
+					<Button  type="submit" variant="disable" className='mb-2 mt-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach'>{"Add"}</Button>
 					{selectedResults.length === 0?(<Overlay target={addButton.current} show={show} placement="right">
 					{(props) => (
 						<Tooltip id="overlay-example" {...props}>

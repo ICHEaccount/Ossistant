@@ -8,7 +8,7 @@ import SuspectTimeline from './suspectTimeline'
 const Timeline = (props) => {
     const isDone = props.isDone
     return (
-    <Tab.Container defaultActiveKey="whole">
+    <Tab.Container defaultActiveKey="whole" transition={false}>
         <Row>
         <Col md={2} className=''>
             <Nav variant="pills" fill justify className="flex-column p-1">
