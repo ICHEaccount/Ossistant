@@ -5,7 +5,8 @@ import subprocess
 from db_conn.mongo.models import RunModel
 from db_conn.neo4j.models import SurfaceUser
 
-def run_btc(bitcoin_address): 
+def run_btc(run): 
+    bitcoin_address=run.input_node
     api_url = f'https://chain.api.btc.com/v3/address/{bitcoin_address}'
     
     try:
@@ -19,6 +20,13 @@ def run_btc(bitcoin_address):
 
         # 에러 체크
         if data.get('err_no') == 0:
+
+            for key, value in data.items(): #데이터를 몽고DB에 저장. #에러 주의
+                inside = {key: value}
+                RunModel.create_result(data=inside, run_id=run.run_id)
+
+            run.status = 'completed'
+
             print("success")
             
         else:
@@ -26,3 +34,5 @@ def run_btc(bitcoin_address):
 
     except requests.exceptions.RequestException as e:
         print(f"\nError making API request: {e}")
+
+    return run.run_id
