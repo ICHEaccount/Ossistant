@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = (app) => {
     app.use(
-        ["/data","/case","/graph","/timeline"],
+        ["/data","/case","/graph","/timeline","/export"],
     createProxyMiddleware({
         target: 'http://172.25.0.6:5000',
         changeOrigin: true,
