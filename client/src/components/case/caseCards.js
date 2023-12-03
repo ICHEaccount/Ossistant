@@ -56,7 +56,7 @@ function CaseCard(props) {
     return (
         <div>
             {onEdit?
-            (<Card >
+            (<Card className='tw-shadow-sm'>
                 <Form  onSubmit={onUpdate} className='tw-pr-2'>
                     <Row>
                         <Col sm={11}>
@@ -86,7 +86,7 @@ function CaseCard(props) {
                 </Form>
                 </Card>
             ):(
-            <Card>
+            <Card className='tw-shadow-sm'>
                 <Row className='m-2'>
                 <Col md="11">
                 <Card.Link href={`/casepage/${data.case_id}`}>

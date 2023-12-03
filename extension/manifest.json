@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Ossistant",
     "description": "ossistant Tool",
-    "version": "1.0",
+    "version": "0.3",
     "icons": {
         "16": "image_test/ossistant.png"
     },

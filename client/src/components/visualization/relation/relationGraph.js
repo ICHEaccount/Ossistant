@@ -25,7 +25,7 @@ function RelationGraph(props) {
   const behavior = useSelector(state => state.node.behavior)
   const selected = useSelector(state => state.node.selected)
   const visJSRef = useRef(null);
-  const networkRef = useRef(null);
+  const networkRef = props.networkRef;
   const [selectedNode, setSelectedNode] = useState(null); 
   const canvasImgRef = useRef(null);
 

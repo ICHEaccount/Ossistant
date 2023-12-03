@@ -6,5 +6,34 @@ python-dotenv==1.0.0
 Werkzeug==2.2.2
 neo4j==5.12.0
 neomodel==5.1.2
-python-whois
+python-whois==0.8.0
 maigret==0.4.4
+
+
+# requirements for theHarvester 4.4.4
+# Some conflicts with maigret 0.4.4
+# comments behind version is form the original theHarvester 4.4.4.
+
+aiodns==3.0.0  # 3.1.1
+aiofiles==23.2.1
+aiohttp==3.8.1  # 3.9.1
+aiomultiprocess==0.9.0
+aiosqlite==0.19.0
+beautifulsoup4==4.12.2
+censys==2.1.9  # 2.2.9
+certifi==2022.6.15  # 2023.7.22
+dnspython==2.4.2
+fastapi==0.98.0  # 0.104.1
+lxml==4.9.1  # 4.9.3
+netaddr==0.9.0
+ujson==5.8.0
+pyppeteer==1.0.2
+PyYAML==6.0.1
+python-dateutil==2.8.2
+requests==2.28.1  # 2.31.0
+retrying==1.3.4
+setuptools==68.2.2
+shodan==1.30.1
+slowapi==0.1.8
+uvicorn==0.24.0.post1
+uvloop==0.19.0; platform_system != "Windows"

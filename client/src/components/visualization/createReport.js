@@ -7,7 +7,7 @@ const RELATION = 1
 // whole = 2, suspect = 3, domain = 4
 // Example : createReport(`${case_id}`,networkRef,1);
 
-function createReport(case_id, graphRef, graphType){
+async function createReport(case_id, graphRef, graphType){
     if(graphType === RELATION){
         // graphRef should be 
         if(graphRef.current){
@@ -19,24 +19,31 @@ function createReport(case_id, graphRef, graphType){
                 console.log(dataURL);
                 axios.post('/export/upload/img', inpData).then((response) => {
                   if(response.status === 200){
-                    console.log('Success');
+                    console.log('Success',graphType);
+                    return true
                   }
                 }).catch((error) => {
                   console.log('Error : ' + error);
+                  return false
                 })
               });
         }
     }else{
         const chart = graphRef.current;
+        console.log(chart);
         const canvas = chart.canvas;
+        console.log(canvas);
         const dataURL = canvas.toDataURL('image/png');
         const inpData = {'case_id' : case_id, 'type':graphType, 'img':dataURL};
+        console.log(dataURL);
         axios.post('/export/upload/img', inpData).then((response) => {
             if(response.status === 200){
-              console.log('Success');
+              console.log('Success',graphType);
+              return true
             }
           }).catch((error) => {
-            console.log('Error : ' + error);
+            console.log('Error : ' + error,graphType);
+            return false
           })
     }
 }

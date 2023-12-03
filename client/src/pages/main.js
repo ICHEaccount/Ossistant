@@ -4,7 +4,7 @@ import Loading from '../components/loading';
 import CaseCard from '../components/case/caseCards';
 import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
-import IntroCard from '../components/introCard';
+import IntroCard from '../components/case/introCard';
 import { BreadcrumbItem, Button, Container, FormControl, Row, Spinner, Toast, ToastContainer, Form, InputGroup } from 'react-bootstrap';
 
 
@@ -74,17 +74,17 @@ const Main = () => {
                     <IntroCard/>
             </Col>
             <Col lg={6}>
-                <InputGroup className='tw-px-1 tw-mt-4'>
+                <InputGroup className='tw-mt-4'>
                 <FormControl
                     type="text"
                     value={search === "" ? null : search}
                     placeholder="Case name"
-                    className="mr-sm-2"
+                    className="mr-sm-2 tw-border-navy"
                     onChange={(e) => setsearch(e.target.value)}
                 />
-                    <Button className='tw-bg-bright-peach hover:tw-bg-peach tw-border-0 tw-text-peach hover:tw-text-black'>Search</Button>
+                    <Button variant='disabled' className='tw-bg-navy hover:tw-bg-dark-navy tw-border-0 tw-text-white hover:tw-text-white'>Search</Button>
                 </InputGroup>
-                <div className=' tw-flex tw-flex-col tw-mt-2 tw-p-1 tw-border tw-rounded-md tw-border-bright-peach tw-h-[75vh] tw-overflow-y-auto'>
+                <div className='tw-flex tw-flex-col tw-mt-2 tw-p-1 tw-border-0 tw-rounded-md tw-h-[75vh] tw-overflow-y-auto'>
                     <CaseBox/>
                 </div>
             </Col>

@@ -4,6 +4,11 @@
       "name": "whois",
       "tool_id": "01",
       "apply": ["domain"]
+    },
+    {
+      "name": "theharvester",
+      "tool_id": "02",
+      "apply": ["domain"]
     }
   ],
   "SurfaceUser": [
@@ -11,6 +16,13 @@
       "name": "maigret",
       "tool_id": "03",
       "apply": ["username"]
+    }
+  ],
+  "Wallet": [
+    {
+      "name": "btc",
+      "tool_id": "04",
+      "apply": ["wallet"]
     }
   ]
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DomainTimeline from './domainTimeline'
 import { Col, Nav, Row, Tab } from 'react-bootstrap'
 import { Archive, Globe2, PersonCircle } from 'react-bootstrap-icons'
@@ -7,8 +7,10 @@ import SuspectTimeline from './suspectTimeline'
 
 const Timeline = (props) => {
     const isDone = props.isDone
+    const visRef = props.visRef
+    const [activeKey, setactiveKey] = useState("whole")
     return (
-    <Tab.Container defaultActiveKey="whole">
+    <Tab.Container activeKey={activeKey} onSelect={(key)=>setactiveKey(key)} transition={false} mountOnEnter={false} unmountOnExit={false}>
         <Row>
         <Col md={2} className=''>
             <Nav variant="pills" fill justify className="flex-column p-1">
@@ -31,9 +33,9 @@ const Timeline = (props) => {
         </Col >
         <Col md={10} className='flex tw-border-l tw-mx-[-10px]'>
             <Tab.Content className='tw-grow tw-pr-5 tw-pb-1 tw-pt-2'>
-            <Tab.Pane eventKey="whole"><WholeTimeline isDone={isDone}/></Tab.Pane>
-            <Tab.Pane eventKey="suspect"><SuspectTimeline isDone={isDone}/></Tab.Pane>
-            <Tab.Pane eventKey="domain"><DomainTimeline isDone={isDone}/></Tab.Pane>
+            <Tab.Pane eventKey="whole"><WholeTimeline isDone={isDone} chartRef={visRef.whole}/></Tab.Pane>
+            <Tab.Pane eventKey="suspect"><SuspectTimeline isDone={isDone} chartRef={visRef.suspect}/></Tab.Pane>
+            <Tab.Pane eventKey="domain"><DomainTimeline isDone={isDone} chartRef={visRef.domain}/></Tab.Pane>
             </Tab.Content>
         </Col>
         </Row>

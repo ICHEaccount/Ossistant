@@ -102,7 +102,7 @@ const ToolCardBeta = (props) => {
                                     </Form.Group>
                                 ))}
                                 <div className='tw-flex tw-justify-end'>
-                                <div onClick={runTool} ref={runButton} className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 hover:tw-cursor-pointer tw-fill-peach tw-text-peach tw-p-1 tw-pl-2  tw-rounded-md'>
+                                <div onClick={runTool} ref={runButton} className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 hover:tw-cursor-pointer tw-fill-peach tw-text-peach tw-p-1 tw-pl-2  tw-rounded-md'>
                                     Run <Play className=' tw-inline' size={25}/>
                                     {selectedValue?null:(<Overlay target={runButton.current} show={show} placement="right">
                                     {(props) => (
