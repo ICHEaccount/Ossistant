@@ -136,6 +136,18 @@ def get_data(case_id):
     # regdate가 있는 딕셔너리만 필터링
     filtered_data = [item for item in data if 'regdate' in item and item['regdate'] is not None]
 
+    # 'Event' 필드에서 숫자만 추출하고 이를 기준으로 정렬
+    event_numbers = sorted(set(int(item["Event"].split()[1]) for item in filtered_data))
+
+    # 'Event' 숫자를 빠진 숫자 없이 재할당하기
+    reassigned_event_numbers = {event_number: i + 1 for i, event_number in enumerate(event_numbers)}
+
+    # 데이터셋의 'Event' 업데이트
+    for item in filtered_data:
+        original_event_number = int(item["Event"].split()[1])
+        new_event_number = reassigned_event_numbers[original_event_number]
+        item["Event"] = f"Event {new_event_number}"
+
     # return jsonify({'whole':filtered_data, 'type':str(type(filtered_data[0]['regdate']))}),200
     # regdate의 hour 정보를 분리하고, regdate를 날짜만 포함하도록 변환
     for item in filtered_data:

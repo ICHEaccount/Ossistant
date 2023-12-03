@@ -16,6 +16,36 @@ const SuspectTimeline = (props) => {
     const behavior = useSelector(state => state.node.behavior)
     const chartRef = props.chartRef; // 캔버스 참조 생성
 
+    const getColorForEvent = (() => {
+        const colorMap = {};
+        let lastAssignedColor = 0;
+        const colors = [
+            'rgba(255, 197, 191, 0.4)',
+            'rgba(153, 204, 255, 0.4)',
+            'rgba(51, 255, 204, 0.4)',
+            'rgba(255, 149, 0, 0.4)',
+            'rgba(153, 51, 255, 0.4)',
+            'rgba(51, 102, 102, 0.4)',
+            'rgba(255, 255, 51, 0.4)',
+            'rgba(255, 102, 153, 0.4)',
+            'rgba(0, 255, 255, 0.4)',
+            'rgba(51, 153, 51, 0.4)',
+            'rgba(255, 181, 38, 0.4)',
+            'rgba(204, 153, 255, 0.4)',
+            'rgba(204, 204, 153, 0.4)',
+            'rgba(204, 204, 0, 0.4)',
+            // ... 여기에 더 많은 색상 추가 가능 ...
+        ];
+
+        return (event) => {
+            if (!colorMap[event]) {
+                colorMap[event] = colors[lastAssignedColor % colors.length];
+                lastAssignedColor++;
+            }
+            return colorMap[event];
+        };
+    })();
+
 
     useEffect(() => {
         axios.get(`/timeline/suspect/${case_id}`).then((response) => {
@@ -28,6 +58,7 @@ const SuspectTimeline = (props) => {
 
                 const datasets = data.map((suspect) => {
                     // 해당 username의 출현 횟수를 업데이트하거나 초기화
+                    const color = getColorForEvent(suspect.username);
                     if (userAppearanceCount[suspect.username]) {
                         userAppearanceCount[suspect.username] += 1;
                     } else {
@@ -81,8 +112,8 @@ const SuspectTimeline = (props) => {
                             y: suspect.Hour,
                             tag: tags
                         }],
-                        backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`,
-                        borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`,
+                        backgroundColor: color,
+                        borderColor: color.replace('0.4', '1'), // 테두리는 더 진한 색
                         borderWidth: 2,
                         pointRadius: 7,
                         fill: false,
@@ -147,6 +178,31 @@ const SuspectTimeline = (props) => {
                     },
                 },
             },
+
+            legend: {
+            onClick: (e, legendItem, legend) => {
+                const chart = legend.chart;
+
+                // 클릭된 레이블의 'Event' 부분 추출
+                const clickedEventPrefix = legendItem.text.split(' - ')[0];
+
+                // 클릭된 데이터셋의 현재 상태 확인
+                const clickedDatasetIndex = legendItem.datasetIndex;
+                const clickedDatasetMeta = chart.getDatasetMeta(clickedDatasetIndex);
+                const isClickedDatasetHidden = !clickedDatasetMeta.hidden;
+
+                // 동일한 'Event'를 가진 모든 데이터셋의 시각화 상태 토글
+                chart.data.datasets.forEach((dataset, index) => {
+                    const meta = chart.getDatasetMeta(index);
+
+                    if (dataset.label.startsWith(clickedEventPrefix)) {
+                        // 클릭된 데이터셋과 동일한 'Event'를 가진 데이터셋을 토글
+                        meta.hidden = isClickedDatasetHidden;
+                    }
+                });
+                chart.update();
+            }
+        },
         },
     };
 
