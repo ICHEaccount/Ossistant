@@ -13,17 +13,17 @@ def run_btc(run):
     try:
         response = requests.get(api_url)
         response.raise_for_status()  # Check if the request was successful
-        data = response.json() #받아온 정보 JSON
-        
+        res_data = response.json() #받아온 정보 JSON
+        data = res_data['data']
         # Print the entire JSON response
         print("Full JSON Response:")
         print(data)
 
         # 에러 체크
-        if data.get('err_no') == 0:          
-            for key, value in data.items(): #데이터를 몽고DB에 저장. #에러 주의
-                inside = {key: value}
-                RunModel.create_result(data=inside, run_id=run.run_id) 
+        if res_data.get('err_no') == 0:          
+            # for key, value in data.items(): #데이터를 몽고DB에 저장. #에러 주의
+            #     inside = {key: value}
+            RunModel.create_result(data=data, run_id=run.run_id) 
 
             run.status = 'completed'
             

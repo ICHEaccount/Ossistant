@@ -21,7 +21,7 @@ def parse_email(content):
         return None
 
 def parse_domain(content):
-    domain_netlocs = urlparse(content).netloc
+    parsed_domain = urlparse(content).netloc
 
     if parsed_domain:
         return parsed_domain

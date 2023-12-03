@@ -205,8 +205,8 @@ def create_result_node():
     node_property = TOOL_RESULT_MATCH[req['tool_id']]['property']
     db_property_name = TOOL_RESULT_MATCH[req['tool_id']]['db_property_name']
     match_type = TOOL_RESULT_MATCH[req['tool_id']]['type']
-    if db_property_name is None:
-        db_property_name = node_property
+    # if db_property_name is None:
+    #     db_property_name = node_property
 
     # Check surfaceUser or darkUser
     if req['tool_id'] == '03':
@@ -241,6 +241,9 @@ def create_result_node():
         
         # Create node mode 
         if match_type is CREATE_NODE:
+            if result_node_label is LABEL_DEFINE:
+                result_node_label = NODE_LIST[result_obj.result.get('type')]
+
             if isinstance(db_property_name,list):
                 check_node_flag, node = result_node_label.check_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name[0]).get(db_property_name[1])})
             else:
@@ -265,7 +268,11 @@ def create_result_node():
         
         # Update node mode 
         elif match_type is UPDATE_PROPERTY:
-            node_result.registered.append(result_obj.result.get(db_property_name))
+            if req['tool_id'] == '02':
+                node_result.registered.append(result_obj.result.get(db_property_name))
+            else:
+                # Save in note
+                node_result.note = result_obj.get('result')
         
         result_obj.created = True 
         result_obj.save()
