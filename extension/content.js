@@ -3,6 +3,112 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.command === "getPageUrl") {
         sendResponse({url: window.location.href});
     }
+
+    if (request.command === "createNoteInput") {
+        // 선택한 텍스트의 위치를 가져오기
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+
+        // 하이라이팅 함수
+        highlightSelection(range);
+
+        // 입력창을 포함할 div 생성
+        const inputDiv = document.createElement("div");
+        inputDiv.style.position = "absolute";
+        inputDiv.style.left = `${rect.right}px`;
+        inputDiv.style.top = `${rect.bottom + window.scrollY}px`; // 페이지 스크롤 고려
+
+
+
+        // textarea 요소 생성
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "input memo"; // 기본 텍스트 설정
+        textarea.style.width = "200px"; // 크기 조정
+        textarea.style.height = "100px"; // 크기 조정
+        textarea.style.backgroundColor = "#ffffcc"; // 연한 노랑색 배경
+        textarea.style.border = "1px solid #ffd700"; // 테두리 설정
+        textarea.style.borderRadius = "8px"; // 둥근 모서리
+        textarea.style.boxShadow = "0px 0px 10px rgba(0, 0, 0, 0.2)"; // 그림자 효과
+        textarea.style.padding = "10px"; // 내부 여백
+        textarea.onclick = function() {
+            if (textarea.value === "input memo") {
+                textarea.value = "";
+            }
+        };
+
+        // 체크 버튼 생성 및 설정
+        const checkButton = document.createElement("button");
+        checkButton.innerText = "✔️"; // 이모지 아이콘 사용
+        checkButton.style.position = "absolute";
+        checkButton.style.right = "5px";
+        checkButton.style.top = "5px";
+        checkButton.style.cursor = "pointer";
+        checkButton.style.background = "none";
+        checkButton.style.border = "none";
+        checkButton.style.outline = "none";
+        checkButton.style.transition = "transform 0.2s ease";
+
+        // 체크 버튼 클릭 이벤트 핸들러
+        checkButton.addEventListener('click', function() {
+            sendResponse({note: textarea.value});
+            // 아이콘 크기 변경 애니메이션
+            checkButton.style.transform = "scale(0.8)";
+            setTimeout(function() {
+                checkButton.style.transform = "scale(1)";
+            }, 200);
+        });
+
+        // 메모 아이콘 생성 (span 태그 사용)
+        const memoIcon = document.createElement("span");
+        memoIcon.textContent = "📝"; // 메모 이모지
+        memoIcon.style.display = "none"; // 기본적으로 숨김
+        memoIcon.style.position = "absolute";
+        memoIcon.style.left = `${rect.right}px`;
+        memoIcon.style.top = `${rect.bottom + window.scrollY}px`;
+        memoIcon.style.cursor = "pointer";
+        memoIcon.style.fontSize = "20px"; // 아이콘 크기 조정
+
+         // textarea 접기/펼치기 기능
+         let isCollapsed = false;
+         textarea.addEventListener('dblclick', function() {
+             if (!isCollapsed) {
+                 textarea.style.height = "0";
+                 textarea.style.padding = "0";
+                 textarea.style.border = "none";
+                 memoIcon.style.display = "block";
+                 checkButton.style.display = "none";
+                 isCollapsed = true;
+             } else {
+                 textarea.style.height = "100px";
+                 textarea.style.padding = "10px";
+                 textarea.style.border = "1px solid #ffd700";
+                 memoIcon.style.display = "none";
+                 checkButton.style.display = "block";
+                 isCollapsed = false;
+             }
+         });
+ 
+         // 메모 아이콘 클릭 시 펼치기
+         memoIcon.addEventListener('click', function() {
+             if (isCollapsed) {
+                 textarea.dispatchEvent(new Event('dblclick'));
+             }
+         });
+
+        textarea.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 's') {
+                event.preventDefault(); // 기본 동작 방지
+                sendResponse({note: textarea.value});
+            }
+        });
+
+        // div에 textarea 추가하고 문서에 div 추가
+        inputDiv.appendChild(textarea);
+        inputDiv.appendChild(checkButton);
+        document.body.appendChild(inputDiv);
+        document.body.appendChild(memoIcon);
+    }
     
     const krphoneRegex = /01[016789]-\d{3,4}-\d{4}/g;
     const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
@@ -112,3 +218,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 
 }); 
+
+// 하이라이팅
+function highlightSelection(range) {
+    const highlightSpan = document.createElement('span');
+    highlightSpan.style.backgroundColor = 'pink'; // 하이라이팅 색상 설정
+    highlightSpan.classList.add('highlighted-text'); // 필요한 경우 클래스 추가
+
+    try {
+        range.surroundContents(highlightSpan);
+    } catch (e) {
+        console.error('Error in highlighting:', e);
+    }
+}
