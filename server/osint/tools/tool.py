@@ -201,7 +201,11 @@ def create_result_node():
         
         # Create node mode 
         if match_type is CREATE_NODE:
-            check_node_flag, node = result_node_label.check_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name)})
+            if isinstance(db_property_name,list):
+                check_node_flag, node = result_node_label.check_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name[0]).get(db_property_name[1])})
+            else:
+                check_node_flag, node = result_node_label.check_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name)})
+
             if check_node_flag is False:
                 node = result_node_label.create_node({'case_id': case_id, node_property: result_obj.result.get(db_property_name)})
             
@@ -221,8 +225,7 @@ def create_result_node():
         
         # Update node mode 
         elif match_type is UPDATE_PROPERTY:
-            if req['tool_id'] == '03':  # Only for maigret
-                node_result.registered.append(result_obj.result.get('site'))
+            node_result.registered.append(result_obj.result.get(db_property_name))
         
         result_obj.created = True 
         result_obj.save()

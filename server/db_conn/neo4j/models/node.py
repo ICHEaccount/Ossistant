@@ -98,6 +98,7 @@ class Phone(BaseNode):
     uid = UniqueIdProperty()
     url = StringProperty()
     number = StringProperty()
+    imposter = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
 
@@ -105,6 +106,7 @@ class Phone(BaseNode):
         return {
             "uid": self.uid,
             "number": self.number,
+            "imposter":self.imposter,
             "note": self.note
         }
 

@@ -15,14 +15,14 @@ TOOL_RESULT_MATCH = {
         'input_label': None,
         'result_label' : None,
         'property': 'registered',
-        'db_property_name' : None
+        'db_property_name' :'site'
     },
     # Sample for create_node mode 
     "04": {
         'type':CREATE_NODE,
-        'input_label':SurfaceUser,
+        'input_label':Wallet,
         'result_label' : Wallet,
-        'property': 'wallet',
-        'db_property_name': None
+        'property': 'address',
+        'db_property_name': ['data','address']
     }
 }

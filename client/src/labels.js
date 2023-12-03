@@ -282,6 +282,13 @@ const labels = {
                 "as":"input"
             },
             {
+                "property":"imposter",
+                "name": "Imposter",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
                 "property":"note",
                 "name": "Note",
                 "inputType":"textarea",
