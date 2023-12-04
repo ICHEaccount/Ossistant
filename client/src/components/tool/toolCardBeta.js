@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { Button, Card, Container, Form, Overlay, Tooltip } from 'react-bootstrap';
+import { Button, Card, Container, Form, FormCheck, Overlay, Tooltip } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
 import Axios from 'axios';
 import { useDispatch } from 'react-redux';
 import {viewChange} from '../../reducers/node'
+import FormCheckLabel from 'react-bootstrap/esm/FormCheckLabel';
+import FormCheckInput from 'react-bootstrap/esm/FormCheckInput';
 
 
 const ToolCardBeta = (props) => {
@@ -13,6 +15,7 @@ const ToolCardBeta = (props) => {
     const tools = props.labelTools;
     const labelData = props.labelData;
     const case_id = props.case_id;
+    const label = props.label;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     // const [selectedItems, setSelectedItems] = useState({});
     const [selectedValue, setselectedValue] = useState({node:null,value:null,key:null})
@@ -88,14 +91,16 @@ const ToolCardBeta = (props) => {
                                             // console.log(labelData);
                                             if (p in node.property) {
                                                 return (
-                                                    <Form.Check
+                                                    <FormCheck> 
+                                                    <FormCheckInput  
                                                         key={`${node.node_id}-${p}`}
                                                         type="radio"
-                                                        label={node.property[p]}
                                                         checked={selectedValue.node===node.node_id}
                                                         // checked={selectedItems[node.node_id] && selectedItems[node.node_id][p]}
                                                         onChange={() => setselectedValue({node:node.node_id,value:node.property[p], key:p})}
                                                     />
+                                                    <FormCheckLabel className='tw-inline'>{node.property[p]}</FormCheckLabel>
+                                                    </FormCheck>
                                                 );
                                             } else return `require ${p}`;
                                         })}
@@ -117,7 +122,7 @@ const ToolCardBeta = (props) => {
 
                                 
                             </Form>
-                        ) : "Unavailable"}
+                        ) : `No ${label} Data`}
                     </Card.Body>
                 </Card>
         ) : null;
