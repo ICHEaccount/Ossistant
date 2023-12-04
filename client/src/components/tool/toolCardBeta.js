@@ -18,7 +18,7 @@ const ToolCardBeta = (props) => {
     const label = props.label;
     const [selectedEventKey, setSelectedEventKey] = useState('list');
     // const [selectedItems, setSelectedItems] = useState({});
-    const [selectedValue, setselectedValue] = useState({node:null,value:null,key:null})
+    const [selectedValue, setselectedValue] = useState(labelData&&labelData.length&&tools?{node:labelData[0].node_id,value:labelData[0].property[tools[0].apply[0]],key:tools[0].apply[0]}:{node:null,value:null,key:null})
     const [show, setshow] = useState(false)
     const runButton = useRef(null)
 
@@ -118,8 +118,6 @@ const ToolCardBeta = (props) => {
                                     </Overlay>)}
                                     </div>
                                 </div>
-
-
                                 
                             </Form>
                         ) : `No ${label} Data`}
