@@ -3,7 +3,7 @@ import { Button, Card, Col, Container, Form, InputGroup, Overlay, Row, Tooltip }
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux';
-import {changeRunView,changeResultView} from '../../reducers/node'
+import {changeRunView,changeResultView, changeBehavior} from '../../reducers/node'
 import Axios from 'axios'
 
 const RunCard = (props) => {
@@ -37,7 +37,21 @@ const RunCard = (props) => {
 		Axios.post('/tools/createResultNode',payload)
 		.then((res)=>{
 			console.log(res);
-			window.location.reload();
+			dispatch(changeBehavior("add result"))
+			console.log("changed");
+			let changeSelectedRun = selectedRun.results.map(result=>{
+				if(selectedResults.includes(result.result_id)){
+					return{
+						...result,
+						created:false
+					}
+				}else return result
+			});
+			// console.log(changeSelectedRun);
+			// dispatch(changeResultView({result:changeSelectedRun,status}))
+			dispatch(changeRunView('list'))
+			setselectedResults([])
+			// window.location.reload();
 		})
 		.catch((err)=>{
 			console.log(err);
