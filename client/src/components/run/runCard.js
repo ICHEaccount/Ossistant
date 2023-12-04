@@ -103,6 +103,7 @@ const RunCard = (props) => {
 				selectedRun.results?.map((result)=>{
 					// console.log(result);
 					const type = Object.keys(result.result)[0]
+					if(result.result[type]===null | result.result[type]==="") return null
 					return (
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
