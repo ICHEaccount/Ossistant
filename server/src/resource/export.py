@@ -12,6 +12,7 @@ from flask import Blueprint, jsonify, send_file, request
 from db_conn.neo4j.init import db
 from db_conn.neo4j.models import *
 from db_conn.mongo.models import CaseModel
+from .report import report
 
 bp = Blueprint('export', __name__, url_prefix='/export')
 
@@ -20,7 +21,8 @@ DOCS_BASE_PATH = os.path.abspath('./docs')
 EXCEL_PATH = os.path.join(DOCS_BASE_PATH,'excel')
 REPORT_PATH = os.path.join(DOCS_BASE_PATH,'report')
 
-## Image name 
+
+# Image name
 RELATION = 1
 WHOLE = 2
 SUSPECT = 3
@@ -32,6 +34,7 @@ IMAGE_NAME = {
     SUSPECT : 'suspect.png',
     DOMAIN : 'domain.png'
 }
+
 
 def create_case_path(case_id, base_path):
     try:
@@ -49,12 +52,27 @@ def create_case_path(case_id, base_path):
     except OSError as e:
         return False, "path" + str(e)
 
+
 def get_case_name_from_id(case_id):
     case_obj = CaseModel.objects.get(case_id=case_id)   
     if not case_obj:
         return None
     else:
         return case_obj.case_name
+
+
+@bp.route('/report/<string:case_id>', methods=['GET'])
+def export_docx(case_id):
+    if not case_id:
+        return jsonify({'Error': 'case_id did not exist'}), 404
+    case = CaseModel.objects(case_id=case_id).first()
+    if not case:
+        return jsonify({'Message': 'Case Not Found'}), 500
+
+    io_stream = report(case)
+    io_stream.seek(0)
+
+    return send_file(io_stream, as_attachment=True, download_name='example.docx')
 
 
 @bp.route('/excel/<string:case_id>', methods=['GET'])
