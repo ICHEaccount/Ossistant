@@ -99,7 +99,7 @@ const Case = () => {
             }
             })
         
-    }, [isDone,selected])
+    }, [isDone,selected,behavior])
 
     useEffect(() => {
         if(activeRuns.length){
