@@ -40,14 +40,6 @@ const RunCard = (props) => {
 			console.log(res);
 			dispatch(changeBehavior("add result"))
 			console.log("changed");
-			let changeSelectedRun = selectedRun.results.map(result=>{
-				if(selectedResults.includes(result.result_id)){
-					return{
-						...result,
-						created:false
-					}
-				}else return result
-			});
 			// console.log(changeSelectedRun);
 			// dispatch(changeResultView({result:changeSelectedRun,status}))
 			dispatch(changeRunView('list'))
@@ -117,15 +109,15 @@ const RunCard = (props) => {
 			{
 				selectedRun.results?.map((result,idx)=>{
 					// console.log(result);
-					const type = Object.keys(result.result)[0]
-					if(result.result[type]===null | result.result[type]==="") return null
+					const type = result.result.type
+					if(result.result.value===null | result.result.value==="") return null
 					return (
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
-					<OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result[type]}</Tooltip>}>
+					<OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result.valeu}</Tooltip>}>
 					<Form.Control
-					placeholder={result.result[type]}
+					placeholder={result.result.value}
 					as={status==="error"?"textarea":"input"}
 					disabled
 					className='tw-inline'
