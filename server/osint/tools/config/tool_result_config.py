@@ -13,20 +13,20 @@ LABEL_DEFINE = 0
 
 
 TOOL_RESULT_MATCH = {
+    "01" : {
+        'type': CREATE_NODE,
+        'input_label' : Domain
+    },
     "02" : {
-        'type' : CREATE_NODE,
-        'input_label' : Domain,
-        'result_label': LABEL_DEFINE,
-        'property' : 'domain',
-        'db_property_name' : 'subdomain'
+        'type':UPDATE_PROPERTY
     },
-    "03" : { # 
+    "03" : {
         'type': UPDATE_PROPERTY,
-        'input_label': None,
-        'result_label' : None,
-        'property': 'registered',
-        'db_property_name' :'site'
     },
+    "04" : {
+        'type':UPDATE_PROPERTY,
+    }
+    
     # "04": { # BTC
     #     'type':UPDATE_PROPERTY,
     #     'input_label':Wallet,

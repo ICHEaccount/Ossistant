@@ -1,4 +1,5 @@
-from neomodel import StructuredNode, UniqueIdProperty,StringProperty,IntegerProperty, ArrayProperty
+from neomodel import StructuredNode, UniqueIdProperty,StringProperty,IntegerProperty, ArrayProperty, JSONProperty
+import json 
 from ..init import db
 
 from .lib.node_manager import NodeManager
@@ -14,6 +15,7 @@ class Domain(BaseNode):
     case_id = StringProperty()
     leaked = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -22,7 +24,8 @@ class Domain(BaseNode):
             "regdate": self.regdate,
             "status": self.status,
             "leaked":self.leaked,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
     
     
@@ -39,6 +42,7 @@ class Post(BaseNode):
     post_type = StringProperty() # Blog, Cafe ... 
     case_id = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -49,7 +53,8 @@ class Post(BaseNode):
             "content": self.content,
             "created_date": self.created_date,
             "post_type":self.post_type,
-            "note":self.note
+            "note":self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 
@@ -62,6 +67,7 @@ class Comment(BaseNode):
     created_date = StringProperty()
     case_id = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -70,7 +76,8 @@ class Comment(BaseNode):
             "name": self.name,
             "content": self.content,
             "created_date": self.created_date,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
     
 
@@ -83,14 +90,16 @@ class Email(BaseNode):
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
-
+    others = JSONProperty()
+    
     def to_json(self):
         return {
             "uid": self.uid,
             "email": self.email,
             "leaked": self.leaked,
             "email_domain": self.email_domain,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 @NodeManager
@@ -101,13 +110,15 @@ class Phone(BaseNode):
     imposter = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
             "uid": self.uid,
             "number": self.number,
             "imposter":self.imposter,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 @NodeManager
@@ -119,6 +130,7 @@ class Message(BaseNode):
     note = StringProperty()
     date = StringProperty()
     case_id = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -126,7 +138,8 @@ class Message(BaseNode):
             "sender": self.sender,
             "date": self.date,
             "content": self.content,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 @NodeManager
@@ -137,6 +150,7 @@ class Wallet(BaseNode):
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
+    others = JSONProperty()
     
     def to_json(self):
         return {
@@ -144,6 +158,7 @@ class Wallet(BaseNode):
             "wallet": self.wallet,
             "wallet_type": self.wallet_type,
             "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 
@@ -156,6 +171,7 @@ class SurfaceUser(BaseNode):
     case_id = StringProperty()
     registered = ArrayProperty(required=False, default=[])
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -163,7 +179,8 @@ class SurfaceUser(BaseNode):
             "username": self.username,
             "imposter": self.imposter,
             "registered": self.registered,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 @NodeManager    
@@ -179,6 +196,7 @@ class DarkUser(BaseNode):
     registered = ArrayProperty(required=False, default=[])
     imposter = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -190,7 +208,8 @@ class DarkUser(BaseNode):
             "comment_num": self.comment_num,
             "registered": self.registered,
             "imposter":self.imposter,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 @NodeManager
@@ -201,13 +220,15 @@ class Person(BaseNode):
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return  {
             "uid": self.uid,
             "name": self.name,
             "imposter": self.imposter,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 
@@ -221,6 +242,7 @@ class Company(BaseNode):
     note = StringProperty()
     url = StringProperty()
     location = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -229,7 +251,8 @@ class Company(BaseNode):
             "imposter": self.imposter,
             "business_num": self.business_num,
             "location":self.location,
-            "note": self.note
+            "note": self.note,
+            "others": json.loads(self.others) if self.others else {}
         }
 
 

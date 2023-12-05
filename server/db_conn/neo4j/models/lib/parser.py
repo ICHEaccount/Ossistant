@@ -38,7 +38,7 @@ PARSE_CONFIG = {
         "key":'email'
     },
     Domain : {
-        "regex":None,
+        "regex": r'(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?""]))',
         "key": "domain"
     }
 }
@@ -47,15 +47,23 @@ PARSE_CONFIG = {
 def content_parser(case_id, input_node, content):
     
     input_uid = input_node.uid
+    parsed_data_list = list()
 
     for node_label, value in PARSE_CONFIG.items():
         error_msg = None
         if value['regex'] is None:
-            parsed_data_list = parse_domain(content=content)
+            data_list = parse_domain(content=content)
         else:
-            parsed_data_list = re.findall(value['regex'], content)
-        if not parsed_data_list:
+            data_list = re.findall(value['regex'], content)
+        if not data_list:
             continue
+        
+        if isinstance(data_list[0],tuple):
+            for parsed_data in data_list:
+                parsed_data_list.append(parsed_data[0])
+        else:
+            parsed_data_list = data_list.copy()
+
         for parsed_data in parsed_data_list:
             # Create node 
             inp_data = {'case_id':case_id, value['key']:parsed_data}
@@ -72,8 +80,6 @@ def content_parser(case_id, input_node, content):
                     break 
         if error_msg is not None:
             break
-
-    
     if error_msg:
         return error_msg
     else:
