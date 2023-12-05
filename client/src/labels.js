@@ -39,6 +39,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -76,6 +79,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -108,6 +114,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":["registered"]
 
@@ -165,6 +174,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":["registered"]
     },
@@ -191,6 +203,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -229,6 +244,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -268,6 +286,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -294,6 +315,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -325,6 +349,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -351,6 +378,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -377,6 +407,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     }
