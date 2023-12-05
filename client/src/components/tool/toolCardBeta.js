@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Button, Card, Container, Form, FormCheck, Overlay, Tooltip } from 'react-bootstrap';
+import { Button, Card, Container, Form, FormCheck, ListGroup, ListGroupItem, Overlay, Tooltip } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
-import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
+import { ChevronLeft, ChevronRight, List, Play } from 'react-bootstrap-icons';
 import Axios from 'axios';
 import { useDispatch } from 'react-redux';
 import {viewChange} from '../../reducers/node'
@@ -82,6 +82,11 @@ const ToolCardBeta = (props) => {
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
+                    <Card.Subtitle className='text-muted tw-mb-0.5'>
+                            {tool.desc}
+                    </Card.Subtitle>
+                    <ListGroup className='tw-border-0'>
+                        <ListGroupItem className='tw-border-0'>
                         {labelData?.length ? (
                             <Form onSubmit={runTool}>
                                 {tool.apply.map((p, idx) => (
@@ -120,7 +125,10 @@ const ToolCardBeta = (props) => {
                                 </div>
                                 
                             </Form>
-                        ) : `No ${label} Data`}
+                        ) : <p className='tw-text-peach tw-text-center'>{`No ${label} Data Available`}</p>}
+                        </ListGroupItem>
+                    </ListGroup>
+                        
                     </Card.Body>
                 </Card>
         ) : null;

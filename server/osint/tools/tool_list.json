@@ -3,26 +3,30 @@
     {
       "name": "whois",
       "tool_id": "01",
-      "apply": ["domain"]
+      "apply": ["domain"],
+      "desc": "Get registration imformation of given domain name"
     },
     {
       "name": "theharvester",
       "tool_id": "02",
-      "apply": ["domain"]
+      "apply": ["domain"],
+      "desc": "Get subdomain of given domain name"
     }
   ],
   "SurfaceUser": [
     {
       "name": "maigret",
       "tool_id": "03",
-      "apply": ["username"]
+      "apply": ["username"],
+      "desc": "Get registered sites of given username"
     }
   ],
   "Wallet": [
     {
       "name": "btc",
       "tool_id": "04",
-      "apply": ["wallet"]
+      "apply": ["wallet"],
+      "desc": "Get transaction information of given wallet address"
     }
   ]
 }
