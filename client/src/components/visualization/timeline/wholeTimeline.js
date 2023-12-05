@@ -180,30 +180,52 @@ const WholeTimeline = (props) => {
             },
 
             legend: {
-            onClick: (e, legendItem, legend) => {
-                const chart = legend.chart;
+                labels: {
+            // 레전드 라벨을 커스터마이즈하기 위한 함수
+            generateLabels: function(chart) {
+                // 현재 존재하는 모든 이벤트 유형을 추출
+                const eventTypes = chart.data.datasets.map(dataset => {
+                    return dataset.label.split(' - ')[0];
+                }).filter((value, index, self) => self.indexOf(value) === index); // 중복 제거
 
-                // 클릭된 레이블의 'Event' 부분 추출
-                const clickedEventPrefix = legendItem.text.split(' - ')[0];
+                // 각 이벤트 유형에 대한 레전드 라벨 생성
+                return eventTypes.map(eventType => {
+                    const dataset = chart.data.datasets.find(ds => ds.label.startsWith(eventType));
+                    const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(dataset));
 
-                // 클릭된 데이터셋의 현재 상태 확인
-                const clickedDatasetIndex = legendItem.datasetIndex;
-                const clickedDatasetMeta = chart.getDatasetMeta(clickedDatasetIndex);
-                const isClickedDatasetHidden = !clickedDatasetMeta.hidden;
-
-                // 동일한 'Event'를 가진 모든 데이터셋의 시각화 상태 토글
-                chart.data.datasets.forEach((dataset, index) => {
-                    const meta = chart.getDatasetMeta(index);
-
-                    if (dataset.label.startsWith(clickedEventPrefix)) {
-                        // 클릭된 데이터셋과 동일한 'Event'를 가진 데이터셋을 토글
-                        meta.hidden = isClickedDatasetHidden;
-                    }
+                    return {
+                        text: eventType,
+                        fillStyle: dataset.backgroundColor,
+                        // 숨겨진 데이터셋에 대해 스타일 적용
+                        hidden: meta.hidden,
+                        // 다른 필요한 스타일 옵션...
+                        lineCap: meta.hidden ? 'line-through' : 'none' // 숨겨진 데이터셋일 경우 선을 그어줌
+                    };
                 });
-                chart.update();
             }
         },
+        onClick: (e, legendItem, legend) => {
+            const chart = legend.chart;
+            const clickedEventType = legendItem.text;
+
+            // 클릭된 이벤트 유형에 해당하는 모든 데이터셋의 시각화 상태 토글
+            chart.data.datasets.forEach((dataset, index) => {
+                const meta = chart.getDatasetMeta(index);
+                if (dataset.label.startsWith(clickedEventType)) {
+                    meta.hidden = !meta.hidden;
+                }
+            });
+            chart.update();
+            legend.chart.options.plugins.legend.labels.generateLabels(legend.chart);
+        }
+        },
       },
+//            // 애니메이션 옵션 추가
+//            animation: {
+//                duration: 1000, // 애니메이션 지속 시간 (밀리초 단위)
+//                easing: 'easeInOutQuart', // 애니메이션 효과 (서서히 시작하여 서서히 끝나는 효과)
+//                // 필요한 경우 추가적인 애니메이션 설정 가능
+//            },
     };
 
     const handleDownload = () => {
