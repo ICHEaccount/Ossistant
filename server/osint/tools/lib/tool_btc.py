@@ -14,10 +14,10 @@ def run_btc(run):
         response = requests.get(api_url)
         response.raise_for_status()  # Check if the request was successful
         data = response.json() #받아온 정보 JSON
-        
+
         # Print the entire JSON response
-        print("Full JSON Response:")
-        print(data)
+        # print("Full JSON Response:")
+        # print(data)
 
         # 에러 체크
         if data.get('err_no') == 0:          
