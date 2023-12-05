@@ -52,7 +52,7 @@ def report_maigret(case_id, run):  # status is COMPLETED
         # }
         inside = {
             "label": "SurfaceUser",
-            "property": "others",
+            "property": "registered",
             "type": "site",
             "value": result_site[i]
         }
