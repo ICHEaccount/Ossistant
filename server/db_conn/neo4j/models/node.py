@@ -25,7 +25,7 @@ class Domain(BaseNode):
             "status": self.status,
             "leaked":self.leaked,
             "note": self.note,
-            "others": json.loads(json.dumps(self.others))
+            "others": self.others
         }
     
 @NodeManager
@@ -51,7 +51,7 @@ class Post(BaseNode):
             "created_date": self.created_date,
             "post_type":self.post_type,
             "note":self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 
@@ -74,7 +74,7 @@ class Comment(BaseNode):
             "content": self.content,
             "created_date": self.created_date,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
     
 
@@ -96,7 +96,7 @@ class Email(BaseNode):
             "leaked": self.leaked,
             "email_domain": self.email_domain,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 @NodeManager
@@ -115,7 +115,7 @@ class Phone(BaseNode):
             "number": self.number,
             "imposter":self.imposter,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 @NodeManager
@@ -136,7 +136,7 @@ class Message(BaseNode):
             "date": self.date,
             "content": self.content,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 @NodeManager
@@ -155,7 +155,7 @@ class Wallet(BaseNode):
             "wallet": self.wallet,
             "wallet_type": self.wallet_type,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 
@@ -177,7 +177,7 @@ class SurfaceUser(BaseNode):
             "imposter": self.imposter,
             "registered": self.registered,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 @NodeManager    
@@ -206,7 +206,7 @@ class DarkUser(BaseNode):
             "registered": self.registered,
             "imposter":self.imposter,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others": self.others
         }
 
 @NodeManager
@@ -225,7 +225,7 @@ class Person(BaseNode):
             "name": self.name,
             "imposter": self.imposter,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 
@@ -249,7 +249,7 @@ class Company(BaseNode):
             "business_num": self.business_num,
             "location":self.location,
             "note": self.note,
-            "others":  json.loads(json.dumps(self.others))
+            "others":  self.others
         }
 
 
