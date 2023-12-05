@@ -152,7 +152,7 @@ def report_whois(case_id, run):
 
     # Output works
     results = {
-        "domain": domain_response,
+        # "domain": domain_response,
         "regdate": regdate,
         "email": results_email,
         "admin": report.get("admin_name"),
@@ -171,10 +171,10 @@ def report_whois(case_id, run):
             "value": value
         }
         if value:
-            if key == 'domain':
-                inside['label'] = 'Domain'
-                inside['property'] = 'domain'
-            elif key == 'regdate':
+            # if key == 'domain':
+            #     inside['label'] = 'Domain'
+            #     inside['property'] = 'domain'
+            if key == 'regdate':
                 inside['label'] = 'Domain'
                 inside['property'] = 'regdate'
             elif key in ['email', 'admin_email']:
