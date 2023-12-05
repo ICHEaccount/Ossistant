@@ -132,7 +132,9 @@ const DataCard = (props) => {
                             </Col>
                             <Col xs="1">
                             {onEdit?
-                            <Check onClick={editData} type='submit' className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20}/>
+                            <button type='submit' className='tw-bg-transparent'>
+                            <Check  className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20}/>
+                            </button>
                             :<PencilSquare className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20} onClick={(e)=>{e.preventDefault(); setonEdit(true)}}/>
                             }
                             </Col>

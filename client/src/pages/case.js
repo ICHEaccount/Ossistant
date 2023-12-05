@@ -13,6 +13,7 @@ import BetaToast from '../components/betaToast';
 
 const Case = () => {
     const selected = useSelector(state => state.node.selected)
+    const behavior = useSelector(state => state.node.behavior)
     const params = useParams();
     const case_id = params.case_id;
     const [case_data, setcase_data] = useState({})
@@ -63,7 +64,7 @@ const Case = () => {
                 setisLoaded(true)
             });
         setisDone(false)
-    }, [])
+    }, [behavior])
     
     useEffect(() => {
         Axios.get(`/data/getData/${case_id}`)
@@ -98,7 +99,7 @@ const Case = () => {
             }
             })
         
-    }, [isDone,selected])
+    }, [isDone,selected,behavior])
 
     useEffect(() => {
         if(activeRuns.length){
@@ -201,7 +202,7 @@ const Case = () => {
         </Row>
         </Container>}
         {isLoaded?<RunToast newResult={newResult} isnewRun={isnewResult}/>:null}
-        <BetaToast/>
+        {/* <BetaToast/> */}
         
     </div>
     )
