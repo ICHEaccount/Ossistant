@@ -86,9 +86,9 @@ const Toolbar = () => {
 
 
     return (
-    <Navbar expand="lg" className="tw-bg-bright-peach tw-border-b-peach justify-content-between">
+    <Navbar expand="lg" className="tw-bg-gradient-to-r tw-from-navy tw-to-peach justify-content-between">
         <Container>
-        <Navbar.Brand href="/main" className='tw-font-bold'>
+        <Navbar.Brand href="/main" className='tw-font-bold tw-text-white hover:tw-text-white'>
             <img
                 alt=""
                 src={logo}
@@ -98,15 +98,15 @@ const Toolbar = () => {
         </Navbar.Brand>
         
         <div className="ml-auto d-flex" >
-            {isCasePage&&(<DoorOpen className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach tw-p-1' onClick={()=>setshow(true)}/>)}
-            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' onClick={()=>window.location.reload()}/>)}
+            {isCasePage&&(<DoorOpen className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-dark-navy tw-text-white tw-mr-2 hover:tw-border hover:tw-border-transparent tw-p-1' onClick={()=>setshow(true)}/>)}
+            {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-dark-navy tw-text-white tw-mr-2 hover:tw-border hover:tw-border-transparent' onClick={()=>window.location.reload()}/>)}
             {isCasePage &&
             (<Link to="/main">
-                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' />
+                <House className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-dark-navy tw-text-white tw-mr-2 hover:tw-border hover:tw-border-transparent' />
             </Link>
             )}
-            <Help location = {location.pathname} className="hover:tw-border hover:tw-border-bright-peach"/>
-            <NavDropdown id="basic-nav-dropdown" align="end"  menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-ml-2' />} >
+            <Help location = {location.pathname} className="hover:tw-border hover:tw-border-transparent"/>
+            <NavDropdown id="basic-nav-dropdown" align="end"  menuVariant="light" title={<List className='tw-inline-block tw-text-3xl tw-rounded-md tw-bg-dark-navy tw-text-white tw-ml-2' />} >
                 {case_id?(
                     <div>
                     <NavDropdown.ItemText >{case_name}</NavDropdown.ItemText>
