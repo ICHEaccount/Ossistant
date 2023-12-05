@@ -115,7 +115,7 @@ const RunCard = (props) => {
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
-					<OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result.valeu}</Tooltip>}>
+					<OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result.value}</Tooltip>}>
 					<Form.Control
 					placeholder={result.result.value}
 					as={status==="error"?"textarea":"input"}
