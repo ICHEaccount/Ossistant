@@ -5,7 +5,7 @@ import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux';
 import {changeRunView,changeResultView, changeBehavior} from '../../reducers/node'
 import Axios from 'axios'
-import '../../custom.css'
+
 
 const RunCard = (props) => {
 	const list = props.runList?[...props.runList].reverse():null
