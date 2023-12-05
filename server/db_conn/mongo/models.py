@@ -6,16 +6,16 @@ import datetime
 
 class ResultModel(db.DynamicDocument):
     col_name = 'Result'
-    meta = {'collection':col_name}
+    meta = {'collection': col_name}
 
     result_id = db.SequenceField(primary_key=True) 
     result = db.DynamicField(required=True)
-    created= db.BooleanField(required=True, default=False)
+    created = db.BooleanField(required=True, default=False)
     
     
 class RunModel(db.DynamicDocument):
     col_name = 'Run'
-    meta = {'collection':col_name}
+    meta = {'collection': col_name}
     
     run_id = db.SequenceField(primary_key=True) 
     status = db.StringField(required=True)
@@ -49,16 +49,16 @@ class RunModel(db.DynamicDocument):
             if not run:
                 return None, 'Run data did not exist'
             
-            if isinstance(data,dict):
+            if isinstance(data, dict):
                 result_obj = ResultModel(result=data)
                 result_obj.save()
 
                 run.results.append(result_obj)
-            elif isinstance(data,list):
-                    for item in data:
-                        result_obj = ResultModel(result=item)
-                        result_obj.save()
-                        run.results.append(result_obj)
+            elif isinstance(data, list):
+                for item in data:
+                    result_obj = ResultModel(result=item)
+                    result_obj.save()
+                    run.results.append(result_obj)
             else:
                 return None, "Invalid data type"
             
@@ -70,7 +70,7 @@ class RunModel(db.DynamicDocument):
 
 class ToolModel(db.DynamicDocument):
     col_name = 'Tool'
-    meta = {'collection':col_name}
+    meta = {'collection': col_name}
 
     tool_id = db.StringField(required=True)
     tool = db.StringField(required=True)
@@ -136,14 +136,13 @@ class CaseModel(db.DynamicDocument):
             print(f'{cls.col_name} : Modification Error: {e}')
             return False
 
-    
     @classmethod
-    def create_runs(cls, case_id, tool_id,input_node, input_value,status='ready'):
+    def create_runs(cls, case_id, tool_id, input_node, input_value, status='ready'):
         try:
             case = cls.objects(case_id=case_id).first()
             if case:
                 runtime = datetime.datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-                run = RunModel(tool_id=tool_id,input_node=input_node,runtime=runtime, status=status, input_value=input_value)
+                run = RunModel(tool_id=tool_id, input_node=input_node, runtime=runtime, status=status, input_value=input_value)
                 run.save()
                 case.runs.append(run)
                 case.save()

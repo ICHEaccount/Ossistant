@@ -120,7 +120,7 @@ def report_whois(case_id, run):
         match = re.match(pattern, email)
         if match:  # SHOULD match.
             username = match.group(1)
-            domain = match.group(2)
+            domain = match.group(2)  # It's "gmail", not "gmail.com".
             if domain in email_domain:
                 node_created.append(email)
                 user = SurfaceUser.get_node({'username': username, 'case_id': case_id})
@@ -190,7 +190,7 @@ def report_whois(case_id, run):
                 inside['label'] = 'Domain'
                 inside['property'] = 'others'
 
-        if inside['value'] in node_created:  # for email
+        if inside['value'] in node_created:  # For Email/email
             result_obj = ResultModel(result=inside, created=True)
         else:
             result_obj = ResultModel(result=inside, created=False)

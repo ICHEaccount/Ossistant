@@ -106,7 +106,7 @@ def run_tool():
     elif tool_id == '04':  # BTC.com
         try:
             run.input_value = runtools_requested_json["properties"][0]["property"][0]["wallet"]
-            #run.input_node=input_node #btc의 경우 input_node 필드값=지갑주소. input 에 필요값 하나뿐.
+            # run.input_node=input_node #btc의 경우 input_node 필드값=지갑주소. input 에 필요값 하나뿐.
         except Exception as e:
             return jsonify({'Message': 'Invalid username', 'Code': e}), 400
         run_id = run_btc(run)
@@ -135,7 +135,7 @@ def tool_state(case_id):
         elif run['tool_id'] == '03':
             check_maigret(case_id, run['run_id'])
         elif run['tool_id'] == '04':
-            continue  #check_btc(case_id, run['run_id'])
+            continue  # check_btc(case_id, run['run_id'])
     if message:
         return jsonify({'Debug': message}), 400
 
