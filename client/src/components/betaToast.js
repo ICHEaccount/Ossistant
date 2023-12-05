@@ -30,7 +30,7 @@ const BetaToast = () => {
             <small>Team ICHE</small>
             </Toast.Header>
             <Toast.Body>
-                <Button onClick={endTest} variant="outline-primary" >
+                <Button onClick={endTest} variant="disable" className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach' >
                 Finish Beta Test
                 </Button>
             </Toast.Body>

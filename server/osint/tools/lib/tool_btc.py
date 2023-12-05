@@ -20,10 +20,11 @@ def run_btc(run):
         print(data)
 
         # 에러 체크
-        if res_data.get('err_no') == 0:          
-            # for key, value in data.items(): #데이터를 몽고DB에 저장. #에러 주의
-            #     inside = {key: value}
-            RunModel.create_result(data=data, run_id=run.run_id) 
+
+        if data.get('err_no') == 0:          
+            for key, value in data.get('data').items(): #데이터를 몽고DB에 저장. #에러 주의 #^^ by RINM
+                inside = {key: value}
+                RunModel.create_result(data=inside, run_id=run.run_id) 
 
             run.status = 'completed'
             

@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { Button, Card, Col, Container, Form, InputGroup, Overlay, Row, Tooltip } from 'react-bootstrap'
+import { Button, Card, Col, Container, Form, InputGroup, Overlay, OverlayTrigger, Row, Tooltip } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 import cls from 'classnames'
 import { useSelector, useDispatch } from 'react-redux';
-import {changeRunView,changeResultView} from '../../reducers/node'
+import {changeRunView,changeResultView, changeBehavior} from '../../reducers/node'
 import Axios from 'axios'
+
 
 const RunCard = (props) => {
 	const list = props.runList?[...props.runList].reverse():null
@@ -37,7 +38,21 @@ const RunCard = (props) => {
 		Axios.post('/tools/createResultNode',payload)
 		.then((res)=>{
 			console.log(res);
-			window.location.reload();
+			dispatch(changeBehavior("add result"))
+			console.log("changed");
+			let changeSelectedRun = selectedRun.results.map(result=>{
+				if(selectedResults.includes(result.result_id)){
+					return{
+						...result,
+						created:false
+					}
+				}else return result
+			});
+			// console.log(changeSelectedRun);
+			// dispatch(changeResultView({result:changeSelectedRun,status}))
+			dispatch(changeRunView('list'))
+			setselectedResults([])
+			// window.location.reload();
 		})
 		.catch((err)=>{
 			console.log(err);
@@ -100,18 +115,23 @@ const RunCard = (props) => {
             )}
 			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>{status==="error"?"Error":"Result"}</p>:null}
 			{
-				selectedRun.results?.map((result)=>{
+				selectedRun.results?.map((result,idx)=>{
 					// console.log(result);
 					const type = Object.keys(result.result)[0]
+					if(result.result[type]===null | result.result[type]==="") return null
 					return (
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
+					<OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result[type]}</Tooltip>}>
 					<Form.Control
 					placeholder={result.result[type]}
 					as={status==="error"?"textarea":"input"}
 					disabled
+					className='tw-inline'
 					/>
+					</OverlayTrigger>
+
 					</InputGroup>)
 				})
 			}
