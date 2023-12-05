@@ -66,7 +66,6 @@ AUTO_RELATIONS = {
     ]
 }
 
-
 EXTENSION_RELATIONS = {
     "SurfaceUser":{
         "pos":"from",
