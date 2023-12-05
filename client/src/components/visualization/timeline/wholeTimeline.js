@@ -220,12 +220,12 @@ const WholeTimeline = (props) => {
         }
         },
       },
-            // 애니메이션 옵션 추가
-            animation: {
-                duration: 1000, // 애니메이션 지속 시간 (밀리초 단위)
-                easing: 'easeInOutQuart', // 애니메이션 효과 (서서히 시작하여 서서히 끝나는 효과)
-                // 필요한 경우 추가적인 애니메이션 설정 가능
-            },
+//            // 애니메이션 옵션 추가
+//            animation: {
+//                duration: 1000, // 애니메이션 지속 시간 (밀리초 단위)
+//                easing: 'easeInOutQuart', // 애니메이션 효과 (서서히 시작하여 서서히 끝나는 효과)
+//                // 필요한 경우 추가적인 애니메이션 설정 가능
+//            },
     };
 
     const handleDownload = () => {
