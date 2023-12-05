@@ -5,7 +5,7 @@ import whois
 
 from datetime import datetime
 
-from db_conn.mongo.models import RunModel
+from db_conn.mongo.models import RunModel, ResultModel
 from db_conn.neo4j.models import *
 
 
@@ -180,7 +180,10 @@ def report_whois(case_id, run):
             else:
                 inside['label'] = 'Domain'
                 inside['property'] = 'others'
-        RunModel.create_result(data=inside, run_id=run.run_id)
+
+        result_obj = ResultModel(result=inside, created=False)
+        result_obj.save()
+        run.results.append(result_obj)
 
     run.save()
 
