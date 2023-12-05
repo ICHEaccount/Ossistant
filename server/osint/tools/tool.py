@@ -216,16 +216,24 @@ def create_result_node():
 
         # Check node 
         if update_type is UPDATE_PROPERTY:
+            
             # check node exist 
             check_flag, existed_node = NODE_LIST[resnode_label].check_node({'case_id' : case_id, 'uid':input_node})
             if check_flag is False:
                 error_flag = True
                 error_msg = 'Input node did not exist'
                 break 
-            if req['tool_id'] == '02':
-                existed_node.registered.append(resnode_obj.result.get(resnode_type))
+            if resnode_property is 'others':
+                others_flag, other_msg = NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                if others_flag is False:
+                    error_flag = True
+                    error_msg = other_msg
+                    break
             else:
-                update_flag, msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                if req['tool_id'] == '02':
+                    existed_node.registered.append(resnode_obj.result.get(resnode_type))
+                else:
+                    update_flag, msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
 
             if update_flag is False:
                 error_flag = True 
