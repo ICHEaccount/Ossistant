@@ -155,7 +155,31 @@ def report_whois(case_id, run):
         "organization": report.get("org")
     }
     for key, value in results.items():
-        inside = {key: value}
+        inside = {
+            "label": None,
+            "property": None,
+            "type": key,
+            "value": value
+        }
+        if value:
+            if key == 'domain':
+                inside['label'] = 'Domain'
+                inside['property'] = 'domain'
+            elif key == 'regdate':
+                inside['label'] = 'Domain'
+                inside['property'] = 'regdate'
+            elif key in ['email', 'admin_email']:
+                inside['label'] = 'Email'
+                inside['property'] = 'email'
+            elif key == 'admin_phone':
+                inside['label'] = 'Phone'
+                inside['property'] = 'number'
+            elif key in ['registrar', 'organization']:
+                inside['label'] = 'Company'
+                inside['property'] = 'name'
+            else:
+                inside['label'] = 'Domain'
+                inside['property'] = 'others'
         RunModel.create_result(data=inside, run_id=run.run_id)
 
     run.save()
