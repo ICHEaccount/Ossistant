@@ -52,16 +52,22 @@ def report_harvester(case_id, run):
     if report['hosts']:
         for subdomain in report['hosts']:
             inside = {
-                "subdomain": subdomain
+                "label": "Domain",
+                "property": "others",
+                "type": "subdomain",
+                "value": subdomain
             }
             RunModel.create_result(data=inside, run_id=run.run_id)
 
-    if "emails" in report:
-        for email in report['emails']:
-            inside = {
-                "email": email
-            }
-            RunModel.create_result(data=inside, run_id=run.run_id)
+    # if "emails" in report:
+    #     for email in report['emails']:
+    #         inside = {
+    #             "label": "Email",
+    #             "property": "email",
+    #             "type": "email",
+    #             "value": email
+    #         }
+    #         RunModel.create_result(data=inside, run_id=run.run_id)
 
     return None
 
