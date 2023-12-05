@@ -223,12 +223,7 @@ def create_result_node():
                 error_flag = True
                 error_msg = 'Input node did not exist'
                 break 
-            if resnode_property is 'others':
-                others_flag, other_msg = NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
-                if others_flag is False:
-                    error_flag = True
-                    error_msg = other_msg
-                    break
+
             else:
                 if req['tool_id'] == '02':
                     existed_node.registered.append(resnode_obj.result.get(resnode_type))
@@ -241,26 +236,32 @@ def create_result_node():
                 break
             
         else:
-            
-            input_label =  TOOL_RESULT_MATCH[req['tool_id']]['input_label']
-            check_flag, existed_node = input_label.check_node({'case_id' : case_id, 'uid':input_node})
-            if check_flag is False:
-                error_flag = True
-                error_msg = 'Input node did not exist'
-                break 
+            if resnode_property is 'others':
+                others_flag, other_msg = NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                if others_flag is False:
+                    error_flag = True
+                    error_msg = other_msg
+                    break
+            else: 
+                input_label =  TOOL_RESULT_MATCH[req['tool_id']]['input_label']
+                check_flag, existed_node = input_label.check_node({'case_id' : case_id, 'uid':input_node})
+                if check_flag is False:
+                    error_flag = True
+                    error_msg = 'Input node did not exist'
+                    break 
 
-            check_flag, node = NODE_LIST[resnode_label].check_node({'case_id' : case_id, resnode_property:resnode_value})
-            if check_flag is False:
-                node = NODE_LIST[resnode_label].create_node({'case_id' : case_id, resnode_property:resnode_value})
+                check_flag, node = NODE_LIST[resnode_label].check_node({'case_id' : case_id, resnode_property:resnode_value})
+                if check_flag is False:
+                    node = NODE_LIST[resnode_label].create_node({'case_id' : case_id, resnode_property:resnode_value})
 
-            # Make relationship 
-            check_rel_dup_flag, rel_flag = Relationship.check_relationship(from_uid=existed_node.uid, to_uid=node.uid, is_label=True, label='OSINT_TOOL')
-            if check_rel_dup_flag == True and rel_flag == False:
-                existed_node.rel_to.connect(node, {'label': 'OSINT_TOOL'})
-            if input_label in AUTO_RELATIONS:
-                auto_rel_flag, msg = Relationship.create_auto_relationship(case_id=case_id, node=node, node_label=resnode_label)
+                # Make relationship 
+                check_rel_dup_flag, rel_flag = Relationship.check_relationship(from_uid=existed_node.uid, to_uid=node.uid, is_label=True, label='OSINT_TOOL')
+                if check_rel_dup_flag == True and rel_flag == False:
+                    existed_node.rel_to.connect(node, {'label': 'OSINT_TOOL'})
+                if input_label in AUTO_RELATIONS:
+                    auto_rel_flag, msg = Relationship.create_auto_relationship(case_id=case_id, node=node, node_label=resnode_label)
 
-            output_node_list.append(node.uid)
+                output_node_list.append(node.uid)
 
         # set mongoDB
         resnode_obj.created = True 
