@@ -5,10 +5,10 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Form, Link, useLocation} from 'react-router-dom';
 import logo from '../images/logo.png';
-import {List, House, PersonVcard, Calendar, ArrowClockwise} from 'react-bootstrap-icons';
+import {List, House, PersonVcard, Calendar, ArrowClockwise, DoorOpen} from 'react-bootstrap-icons';
 import Axios from "axios";
 import Help from './help';
-import { Col, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, Col, Modal, Row } from 'react-bootstrap';
 
 
 const Toolbar = () => {
@@ -21,6 +21,18 @@ const Toolbar = () => {
     const [cases, setcases] = useState([])
     const [isload, setisload] = useState(false)
     const [isCasePage, setisCasePage] = useState(false)
+    const [show, setshow] = useState(false)
+
+    const endTest = () =>{
+        Axios.get(`/case/deleteCase/${case_id}`)
+        .then((res)=>{
+            console.log('res',res);
+            window.location.href = "/"
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
 
     useEffect(() => {
         //check if the current location is case page
@@ -86,6 +98,7 @@ const Toolbar = () => {
         </Navbar.Brand>
         
         <div className="ml-auto d-flex" >
+            {isCasePage&&(<DoorOpen className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach tw-p-1' onClick={()=>setshow(true)}/>)}
             {isCasePage&&(<ArrowClockwise className='hover:tw-cursor-pointer tw-inline-block tw-text-3xl tw-rounded-md tw-bg-black tw-text-white tw-mr-2 hover:tw-border hover:tw-border-bright-peach' onClick={()=>window.location.reload()}/>)}
             {isCasePage &&
             (<Link to="/main">
@@ -116,7 +129,24 @@ const Toolbar = () => {
             </NavDropdown>
             
         </div>
+        <Modal show={show} onHide={()=>setshow(false)}>
+        <Modal.Header closeButton>
+        <Modal.Title>Finish Beta Test</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            Delete every case data and Go back to main page
+        <div className='tw-flex tw-justify-end'>
+        <Button variant="disable" className='tw-mr-1 tw-bg-navy hover:tw-bg-dark-navy hover:tw-text-white tw-border-0 tw-text-white' onClick={endTest}>
+            Yes
+        </Button>
+        <Button variant="disable" className='tw-mr-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach' onClick={()=>setshow(false)}>
+            No
+        </Button>
+        </div>
 
+
+        </Modal.Body>
+        </Modal>
         </Container>
     </Navbar>
     );

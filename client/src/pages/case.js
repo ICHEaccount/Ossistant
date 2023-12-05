@@ -202,7 +202,7 @@ const Case = () => {
         </Row>
         </Container>}
         {isLoaded?<RunToast newResult={newResult} isnewRun={isnewResult}/>:null}
-        <BetaToast/>
+        {/* <BetaToast/> */}
         
     </div>
     )
