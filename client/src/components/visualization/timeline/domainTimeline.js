@@ -177,28 +177,38 @@ const DomainTimeline = (props) => {
                 },
             },
              legend: {
-            onClick: (e, legendItem, legend) => {
-                const chart = legend.chart;
+        labels: {
+            generateLabels: function(chart) {
+                // 현재 존재하는 모든 도메인을 추출
+                const domains = chart.data.datasets.map(dataset => {
+                    return dataset.label.split(' - ')[0];
+                }).filter((value, index, self) => self.indexOf(value) === index); // 중복 제거
 
-                // 클릭된 레이블의 'Event' 부분 추출
-                const clickedEventPrefix = legendItem.text.split(' - ')[0];
-
-                // 클릭된 데이터셋의 현재 상태 확인
-                const clickedDatasetIndex = legendItem.datasetIndex;
-                const clickedDatasetMeta = chart.getDatasetMeta(clickedDatasetIndex);
-                const isClickedDatasetHidden = !clickedDatasetMeta.hidden;
-
-                // 동일한 'Event'를 가진 모든 데이터셋의 시각화 상태 토글
-                chart.data.datasets.forEach((dataset, index) => {
-                    const meta = chart.getDatasetMeta(index);
-
-                    if (dataset.label.startsWith(clickedEventPrefix)) {
-                        // 클릭된 데이터셋과 동일한 'Event'를 가진 데이터셋을 토글
-                        meta.hidden = isClickedDatasetHidden;
-                    }
+                // 각 도메인에 대한 레전드 라벨 생성
+                return domains.map(domain => {
+                    const dataset = chart.data.datasets.find(ds => ds.label.startsWith(domain));
+                    return {
+                        text: domain,
+                        fillStyle: dataset.backgroundColor,
+                        // 다른 필요한 스타일 옵션...
+                        hidden: chart.getDatasetMeta(chart.data.datasets.indexOf(dataset)).hidden
+                    };
                 });
-                chart.update();
             }
+        },
+        onClick: (e, legendItem, legend) => {
+            const chart = legend.chart;
+            const clickedDomain = legendItem.text;
+
+            // 클릭된 도메인에 해당하는 모든 데이터셋의 시각화 상태 토글
+            chart.data.datasets.forEach((dataset, index) => {
+                const meta = chart.getDatasetMeta(index);
+                if (dataset.label.startsWith(clickedDomain)) {
+                    meta.hidden = !meta.hidden;
+                }
+            });
+            chart.update();
+        }
         },
         },
     };
