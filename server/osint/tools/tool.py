@@ -236,7 +236,7 @@ def create_result_node():
                 break
             
         else:
-            if resnode_property is 'others':
+            if resnode_property is 'others' and resnode_label == existed_node.__name__:
                 others_flag, other_msg = NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
                 if others_flag is False:
                     error_flag = True
