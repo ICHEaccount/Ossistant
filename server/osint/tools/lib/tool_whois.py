@@ -110,25 +110,34 @@ def report_whois(case_id, run):
             return "Domain update error"
 
     # Node works - email & username
+    email_domain = [
+        'gmail', 'outlook', 'hotmail', 'yahoo', 'naver', 'daum', 'proton', 'protonmail',
+        'aol', 'aim', 'icloud', 'zoho', 'yandex', 'mail', 'gmx'
+    ]
+    node_created = []
+
     for email in filtered_email_list:
         match = re.match(pattern, email)
         if match:  # SHOULD match.
             username = match.group(1)
-            user = SurfaceUser.get_node({'username': username, 'case_id': case_id})
-            if not user:
-                user = SurfaceUser.create_node({'username': username, 'case_id': case_id})
+            domain = match.group(2)
+            if domain in email_domain:
+                node_created.append(email)
+                user = SurfaceUser.get_node({'username': username, 'case_id': case_id})
+                if not user:
+                    user = SurfaceUser.create_node({'username': username, 'case_id': case_id})
 
-            email_obj = Email.get_node({'email': email, 'case_id': case_id})
-            if not email_obj:
-                email_obj = Email.create_node({'email': email, 'case_id': case_id})
+                email_obj = Email.get_node({'email': email, 'case_id': case_id})
+                if not email_obj:
+                    email_obj = Email.create_node({'email': email, 'case_id': case_id})
 
-            # Relationship works
-            _, register_status = Relationship.check_relationship(from_uid=user.uid, to_uid=domain_obj.uid)
-            _, has_status = Relationship.check_relationship(from_uid=user.uid, to_uid=email_obj.uid)
-            if register_status is False:
-                user.rel_to.connect(domain_obj, {'label': 'REGISTER'})
-            if has_status is False:
-                user.rel_to.connect(email_obj, {'label': 'HAS'})
+                # Relationship works
+                _, register_status = Relationship.check_relationship(from_uid=user.uid, to_uid=domain_obj.uid)
+                _, has_status = Relationship.check_relationship(from_uid=user.uid, to_uid=email_obj.uid)
+                if register_status is False:
+                    user.rel_to.connect(domain_obj, {'label': 'REGISTER'})
+                if has_status is False:
+                    user.rel_to.connect(email_obj, {'label': 'HAS'})
 
         else:
             return f'Debug: No email match exist. {email}'
@@ -181,7 +190,10 @@ def report_whois(case_id, run):
                 inside['label'] = 'Domain'
                 inside['property'] = 'others'
 
-        result_obj = ResultModel(result=inside, created=False)
+        if inside['value'] in node_created:  # for email
+            result_obj = ResultModel(result=inside, created=True)
+        else:
+            result_obj = ResultModel(result=inside, created=False)
         result_obj.save()
         run.results.append(result_obj)
 
