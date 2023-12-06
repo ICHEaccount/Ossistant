@@ -228,7 +228,7 @@ def create_result_node():
                     existed_node.registered.append(resnode_obj.result.get('value'))
                     existed_node.save()
                 else:
-                    resnode_value = {'sample':[resnode_value]}
+                    # resnode_value = {'sample':[resnode_value]}
                     if resnode_property == "others":
                         if not existed_node.others:
                             update_flag, node =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
@@ -261,7 +261,7 @@ def create_result_node():
                 break 
             
             if resnode_property == "others":
-                resnode_value = {'sample' : [resnode_value]} 
+                # resnode_value = {'sample' : [resnode_value]} 
                 # Add others 
                 if not existed_node.others:
                     create_update_flag, create_msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
