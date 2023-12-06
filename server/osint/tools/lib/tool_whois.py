@@ -71,7 +71,8 @@ def report_whois(case_id, run):
     if isinstance(regdate_response, datetime):
         regdate = regdate_response.strftime('%Y-%m-%d %H:%M')
     elif isinstance(regdate_response, str):
-        regdate = regdate_response
+        datetime_regdate_response = datetime.strptime(regdate_response, "%Y-%m-%d %H:%M:%S")
+        regdate = datetime_regdate_response.strftime("%Y-%m-%d %H:%M")
 
     # List of emails
     email_list = []
