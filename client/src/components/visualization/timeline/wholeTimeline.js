@@ -16,6 +16,37 @@ const WholeTimeline = (props) => {
     const behavior = useSelector(state => state.node.behavior)
     const chartRef = props.chartRef; // 캔버스 참조 생성
 
+    // 각 Event에 고유한 색상을 할당하는 함수
+    const getColorForEvent = (() => {
+        const colorMap = {};
+        let lastAssignedColor = 0;
+        const colors = [
+            'rgba(255, 197, 191, 0.4)',
+            'rgba(153, 204, 255, 0.4)',
+            'rgba(51, 255, 204, 0.4)',
+            'rgba(255, 149, 0, 0.4)',
+            'rgba(153, 51, 255, 0.4)',
+            'rgba(51, 102, 102, 0.4)',
+            'rgba(255, 255, 51, 0.4)',
+            'rgba(255, 102, 153, 0.4)',
+            'rgba(0, 255, 255, 0.4)',
+            'rgba(51, 153, 51, 0.4)',
+            'rgba(255, 181, 38, 0.4)',
+            'rgba(204, 153, 255, 0.4)',
+            'rgba(204, 204, 153, 0.4)',
+            'rgba(204, 204, 0, 0.4)',
+            // ... 여기에 더 많은 색상 추가 가능 ...
+        ];
+
+        return (event) => {
+            if (!colorMap[event]) {
+                colorMap[event] = colors[lastAssignedColor % colors.length];
+                lastAssignedColor++;
+            }
+            return colorMap[event];
+        };
+    })();
+
     useEffect(() => {
         axios.get(`/timeline/whole/${case_id}`).then((response) => {
             const serverData = response.data;
@@ -26,6 +57,8 @@ const WholeTimeline = (props) => {
                 const userAppearanceCount = {};
 
                 const datasets = data.map((item) => {
+
+                    const color = getColorForEvent(item.Event);
                     // 해당 username의 출현 횟수를 업데이트하거나 초기화
                     if (userAppearanceCount[item.Event]) {
                         userAppearanceCount[item.Event] += 1;
@@ -81,8 +114,8 @@ const WholeTimeline = (props) => {
                             y: item.Hour,
                             tag: tags
                         }],
-                        backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`,
-                        borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`,
+                        backgroundColor: color,
+                        borderColor: color.replace('0.4', '1'), // 테두리는 더 진한 색
                         borderWidth: 2,
                         pointRadius: 7,
                         fill: false,
@@ -145,7 +178,54 @@ const WholeTimeline = (props) => {
                     },
                 },
             },
+
+            legend: {
+                labels: {
+            // 레전드 라벨을 커스터마이즈하기 위한 함수
+            generateLabels: function(chart) {
+                // 현재 존재하는 모든 이벤트 유형을 추출
+                const eventTypes = chart.data.datasets.map(dataset => {
+                    return dataset.label.split(' - ')[0];
+                }).filter((value, index, self) => self.indexOf(value) === index); // 중복 제거
+
+                // 각 이벤트 유형에 대한 레전드 라벨 생성
+                return eventTypes.map(eventType => {
+                    const dataset = chart.data.datasets.find(ds => ds.label.startsWith(eventType));
+                    const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(dataset));
+
+                    return {
+                        text: eventType,
+                        fillStyle: dataset.backgroundColor,
+                        // 숨겨진 데이터셋에 대해 스타일 적용
+                        hidden: meta.hidden,
+                        // 다른 필요한 스타일 옵션...
+                        lineCap: meta.hidden ? 'line-through' : 'none' // 숨겨진 데이터셋일 경우 선을 그어줌
+                    };
+                });
+            }
         },
+        onClick: (e, legendItem, legend) => {
+            const chart = legend.chart;
+            const clickedEventType = legendItem.text;
+
+            // 클릭된 이벤트 유형에 해당하는 모든 데이터셋의 시각화 상태 토글
+            chart.data.datasets.forEach((dataset, index) => {
+                const meta = chart.getDatasetMeta(index);
+                if (dataset.label.startsWith(clickedEventType)) {
+                    meta.hidden = !meta.hidden;
+                }
+            });
+            chart.update();
+            legend.chart.options.plugins.legend.labels.generateLabels(legend.chart);
+        }
+        },
+      },
+//            // 애니메이션 옵션 추가
+//            animation: {
+//                duration: 1000, // 애니메이션 지속 시간 (밀리초 단위)
+//                easing: 'easeInOutQuart', // 애니메이션 효과 (서서히 시작하여 서서히 끝나는 효과)
+//                // 필요한 경우 추가적인 애니메이션 설정 가능
+//            },
     };
 
     const handleDownload = () => {

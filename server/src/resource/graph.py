@@ -3,6 +3,8 @@ from flask import request, jsonify,Blueprint
 from db_conn.neo4j.init import db
 from db_conn.neo4j.models import *
 
+import json 
+
 bp = Blueprint('relation_graph', __name__, url_prefix='/graph')
 
 @bp.route("/nodes/<string:case_id>", methods=["GET"])
@@ -30,6 +32,13 @@ def get_neo4j_data(case_id):
         label = n_labels[0] if n_labels else None
         n_dict['label'] = label
         n_dict['id'] = row[6] if row[6] else None
+
+        if n_dict and 'others' in n_dict:
+            if n_dict['others']:
+                n_dict['others'] = json.loads(n_dict['others'])
+        if m_dict and 'others' in m_dict:
+            if m_dict['others']:
+                m_dict['others'] = json.loads(m_dict['others'])
         if r_type:
             nodes_and_relationships.append({'n': n_dict, 'r': {'id':r_id,'type': r_type, 'properties': r_properties}, 'm': m_dict})
         else:
@@ -61,6 +70,8 @@ def test(uid):
 
             if result:
                 data = {'node_id': uid, 'property': result}
+                if 'others' in result:
+                    result['others'] = json.loads(result['others'])
                 return jsonify(data), 200
         else:
             return jsonify({'Error':'Node did not exist'}), 500

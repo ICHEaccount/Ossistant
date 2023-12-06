@@ -7,6 +7,8 @@ import Button from 'react-bootstrap/esm/Button';
 import lbs from '../../labels'
 import Axios  from 'axios';
 import { useParams } from 'react-router-dom';
+import { changeBehavior, viewChange} from '../../reducers/node';
+import { useDispatch } from 'react-redux';
 
 const CreateData = (props) => {
     const {case_id} = useParams()
@@ -15,6 +17,7 @@ const CreateData = (props) => {
     const [listProperty, setlistProperty] = useState([""])
     // const [label, setlabel] = useState("")
     const properties = lbs[label].properties
+    const dispatch = useDispatch()
     const initialFormData = {};
     properties.forEach(property => {
         initialFormData[property] = "";
@@ -40,7 +43,9 @@ const CreateData = (props) => {
         await Axios.post('/data/createData',formData)
         .then((res)=>{
             console.log(res);
-            window.location.reload()
+            // window.location.reload()
+            dispatch(changeBehavior("create data"))
+            dispatch(viewChange('list'))
         })
         .catch((error)=>{
             console.log(error);
@@ -51,6 +56,7 @@ const CreateData = (props) => {
 
 
     const formList = properties.map((p)=>{
+        if(p.property==="others") return null
         if(lbs[label].list.includes(p.property)){
             return(
                 <Form.Group className="mb-1" controlId={`${p.property}`}>
@@ -124,62 +130,6 @@ const CreateData = (props) => {
             </InputGroup>)
         }
 
-        // if(property.includes("date")||property.includes("Date")){
-        //     return(<InputGroup className='mb-1'>
-        //     <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-        //     <Form.Control 
-        //     value={formData[label][property]||""}
-        //     onChange={(e)=>{const value = e.target.value.replace("T"," "); updateFormValue(property,value)}}
-        //     required={title===property}
-        //     type='datetime-local'
-        //     />
-        //     </InputGroup>)
-        // }
-        // if(lbs[label].list.includes(property)){
-        //     return(
-                // <Form.Group className="mb-1" controlId={`${property}`}>
-                //     <Form.Label>{property+" "}
-                //     <Button
-                //         size='sm'   
-                //         variant="outline-success"
-                //         onClick={(e) => {
-                //         setlistProperty([...listProperty, '']);
-                //         }}
-                //         >
-                //         +
-                //     </Button>
-                //     </Form.Label>
-                    
-                //     {listProperty.map((item, idx) => (
-                //     <div key={idx} className="d-flex mb-1">
-                //         <Form.Control
-                //         value={item}
-                //         onChange={(e) => {
-                //         const newProperty = [...listProperty];
-                //         newProperty[idx] = e.target.value;
-                //         setlistProperty(newProperty);
-                //         updateFormValue(property, newProperty);
-                //         }}
-                //         />
-                        
-                //     </div>
-                //     ))}
-                    
-                // </Form.Group>
-
-                
-        //     )
-        // }
-        // return(
-        // <InputGroup className='mb-1'>
-        //         <InputGroup.Text id={`${property}`}>{property}</InputGroup.Text>
-        //         <Form.Control as={property==="note"||property==="content"?"textarea":"input"}
-        //         value={formData[label][property]||""}
-        //         onChange={(e)=>{updateFormValue(property,e.target.value)}}
-        //         required={title===property}
-        //         />
-        // </InputGroup>
-        // )
     })
 
 

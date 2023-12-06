@@ -39,6 +39,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -76,6 +79,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -108,6 +114,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":["registered"]
 
@@ -165,6 +174,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":["registered"]
     },
@@ -191,6 +203,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -229,6 +244,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -268,6 +286,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -282,11 +303,21 @@ const labels = {
                 "as":"input"
             },
             {
+                "property":"imposter",
+                "name": "Imposter",
+                "inputType":"select",
+                "as":"select",
+                "option":["None","Yes","No"]
+            },
+            {
                 "property":"note",
                 "name": "Note",
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     },
@@ -318,6 +349,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -344,6 +378,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
         ],
         "list":[]
     },
@@ -370,6 +407,9 @@ const labels = {
                 "inputType":"textarea",
                 "as":"textarea"
             },
+            {
+                "property":"others"
+            }
             ],
         "list":[]
     }

@@ -132,7 +132,9 @@ const DataCard = (props) => {
                             </Col>
                             <Col xs="1">
                             {onEdit?
-                            <Check onClick={editData} type='submit' className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20}/>
+                            <button type='submit' className='tw-bg-transparent'>
+                            <Check  className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20}/>
+                            </button>
                             :<PencilSquare className='tw-mr-2 hover:tw-cursor-pointer tw-inline hover:tw-border hover:tw-border-bright-peach tw-rounded-md' size={20} onClick={(e)=>{e.preventDefault(); setonEdit(true)}}/>
                             }
                             </Col>
@@ -144,6 +146,40 @@ const DataCard = (props) => {
                         </Card.Header>
                         
                             {lbs[label].properties.map((p) => {
+                                if(p.property==="others"&&formData.others){
+                                    return(
+                                        Object.keys(formData.others).map((type,idx)=>{
+                                            if(formData.others[type].length>1){
+                                                return(
+                                                    <Form.Group className="mb-1 px-1" controlId={`${type}`}>
+                                                    <Form.Label className='ml-1'>{type+" "} </Form.Label>
+                                                    <div className="tw-max-h-32 tw-overflow-y-auto">
+                                                    {formData.others[type]?.map((value, idx) => (
+                                                    <div key={idx} className="d-flex mb-1">
+                                                        <Form.Control
+                                                        className='tw-rounded-r-none'
+                                                        value={value}
+                                                        disabled={false}
+                                                        />
+                                                    </div>
+                                                    ))}
+                                                    </div>
+                                                </Form.Group>
+                                                )
+                                            }else{
+                                                return(
+                                                <InputGroup className='mb-1 px-1'>
+                                                <InputGroup.Text id={`${type}`}>{type}</InputGroup.Text>
+                                                <Form.Control 
+                                                value={formData.others[type][0]}
+                                                disabled={true}
+                                                />
+                                                </InputGroup>
+                                                )
+                                            }
+                                        }
+                                    ))
+                                }
                                 if(lbs[label].list.includes(p.property)){
                                     return(
                                         <Form.Group className="mb-1 px-1" controlId={`${p.property}`}>

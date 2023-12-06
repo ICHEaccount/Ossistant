@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Card, Container, Form, Overlay, Tooltip } from 'react-bootstrap';
+import { Button, Card, CardText, Container, Form, Overlay, Tooltip } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
@@ -94,6 +94,7 @@ const ToolCard = (props) => {
     });
 
     const selectedNode = tools?.map((tool, idx) => {
+        console.log(tool);
         return selectedEventKey === `selected-${idx}` ? (
                 <Card className="mt-1 tw-w-full">
                     <Card.Header className='mb-1 tw-bg-bright-peach'>
@@ -101,6 +102,9 @@ const ToolCard = (props) => {
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
+                        <CardText className='text-muted'>
+                            {tool.desc}
+                        </CardText>
                         {labelData?.length ? (
                             <Form onSubmit={runTool}>
                                 {tool.apply.map((p, idx) => (
