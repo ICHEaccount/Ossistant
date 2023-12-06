@@ -2,7 +2,7 @@ import json
 import os
 import subprocess
 
-from db_conn.mongo.models import RunModel
+from db_conn.mongo.models import RunModel, ResultModel
 
 
 def run_harvester(run):
@@ -38,14 +38,19 @@ def report_harvester(case_id, run):
         run.save()
         return None
 
-    # If no emails, no hosts.
+    # If nothing found.
     if "emails" not in report:
         if not report['hosts']:
             inside = {
-                'message': 'No results found.'
+                'label': 'Domain',
+                'property': 'others',
+                'type': 'no_data',
+                'value': 'Data not found'
             }
-            RunModel.create_result(data=inside, run_id=run.run_id)
-            run.save()
+            # RunModel.create_result(data=inside, run_id=run.run_id)
+            result_obj = ResultModel(result=inside, created=True)
+            result_obj.save()
+            run.results.append(result_obj)
             return None
 
     # Found.
@@ -59,6 +64,9 @@ def report_harvester(case_id, run):
             }
             RunModel.create_result(data=inside, run_id=run.run_id)
 
+    run.save()
+
+    # In OSSISTANT, Tool theHarvester is for subdomain only. No email collect. (for now)
     # if "emails" in report:
     #     for email in report['emails']:
     #         inside = {
@@ -83,7 +91,7 @@ def check_harvester(case_id, run_id):
         if os.path.exists(f'./reports/hrv_{run.input_value}_{run.run_id}.json'):
             run.status = 'completed'
             run.save()
-            message = report_harvester(case_id, run)
+            message = report_harvester(case_id, run)  # Returning 'None' is normal.
         else:
             message = None
     elif run.status == 'completed':
