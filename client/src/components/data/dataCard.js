@@ -161,8 +161,8 @@ const DataCard = (props) => {
                                                         <Form.Control
                                                         className='tw-rounded-r-none tw-overflow-x-auto'
                                                         value={value}
-                                                        // readOnly={true}
-                                                        disabled={true}
+                                                        readOnly={true}
+                                                        // disabled={true}
                                                         />
                                                     </div>
                                                     ))}
@@ -176,8 +176,8 @@ const DataCard = (props) => {
                                                 <Form.Control 
                                                 value={formData.others[type][0]}
                                                 className='tw-overflow-x-auto'
-                                                // readOnly={true}
-                                                disabled={true}
+                                                readOnly={true}
+                                                // disabled={true}
                                                 />
                                                 </InputGroup>
                                                 )
