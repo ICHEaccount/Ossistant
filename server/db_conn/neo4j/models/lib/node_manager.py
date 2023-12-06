@@ -19,24 +19,29 @@ class NodeManager:
     def __init__(self, cls) -> None:
         self.cls = cls
 
-    def check_node(self, data):
+    def check_node(self, data, key_filter=True ):
         label = self.cls.__name__
         key_property = KEY_PROEPRTY[label]
         inp = dict()
         inp['case_id'] = data['case_id']
-        if key_property in data:
-            inp[key_property] = data[key_property]
-            node = self.cls.nodes.first_or_none(**inp)
-        else:
-            data.pop('case_id')
-            for key, value in data.items():
-                if value is not None:
-                    node = self.cls.nodes.first_or_none(**{key:value})
-                    if node:
-                        break 
+        if key_filter is True:
+            if key_property in data:
+                inp[key_property] = data[key_property]
+                node = self.cls.nodes.first_or_none(**inp)
+            else:
+                data.pop('case_id')
+                for key, value in data.items():
+                    if value is not None:
+                        node = self.cls.nodes.first_or_none(**{key:value})
+                        if node:
+                            break 
         
-        if node is not None:
-            return True, node
+            if node is not None:
+                return True, node
+        else:
+            node = self.cls.nodes.first_or_none(**data)
+            if node:
+                return True, node
         return False, None
 
     def get_node(self, data):
