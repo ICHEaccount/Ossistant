@@ -70,6 +70,8 @@ def test(uid):
 
             if result:
                 data = {'node_id': uid, 'property': result}
+                if 'others' in result:
+                    result['others'] = json.loads(result['others'])
                 return jsonify(data), 200
         else:
             return jsonify({'Error':'Node did not exist'}), 500

@@ -179,6 +179,7 @@ def tool_state(case_id):
 @bp.route('/createResultNode', methods=["POST"])
 def create_result_node():
     req = request.get_json()
+    print(req, flush=True)
     output_node_list = list() 
     
     error_flag = False 
@@ -210,11 +211,10 @@ def create_result_node():
         resnode_property = resnode_obj.result.get('property')
         resnode_value = resnode_obj.result.get('value')
         resnode_type = resnode_obj.result.get('type')
-
+        print(f'{result_id} : {resnode_label}, {resnode_property},{resnode_type}, {resnode_value}', flush=True)
         # if resnode_obj.created is True:
         #     continue
 
-        # Check node 
         if update_type is UPDATE_PROPERTY:
             
             # check node exist 
@@ -223,35 +223,70 @@ def create_result_node():
                 error_flag = True
                 error_msg = 'Input node did not exist'
                 break 
-
             else:
-                if req['tool_id'] == '02':
-                    existed_node.registered.append(resnode_obj.result.get(resnode_type))
+                if req['tool_id'] == '03':
+                    existed_node.registered.append(resnode_obj.result.get('value'))
+                    existed_node.save()
                 else:
-                    update_flag, msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                    # resnode_value = {'sample':[resnode_value]}
+                    if resnode_property == "others":
+                        if not existed_node.others:
+                            update_flag, node =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                            if update_flag is False:
+                                error_flag = True 
+                                error_msg = node 
+                                break 
+                        else:
+                            other_dict = existed_node.others
+                            for key, value in resnode_value.items():
+                                if isinstance(other_dict[key],list):
+                                    if isinstance(value,list):
+                                        other_dict[key].append(value[0])
+                                    else:
+                                        other_dict[key].append(value)
+                                else:
+                                    other_dict[key] = value
 
-            if update_flag is False:
-                error_flag = True 
-                error_msg = msg 
-                break
+                            existed_node.others = other_dict
+                            existed_node.save()
+        elif update_type is CREATE_NODE:
+            input_label =  TOOL_RESULT_MATCH[req['tool_id']]['input_label']
             
-        else:
-            if resnode_property is 'others':
-                others_flag, other_msg = NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
-                if others_flag is False:
-                    error_flag = True
-                    error_msg = other_msg
-                    break
-            else: 
-                input_label =  TOOL_RESULT_MATCH[req['tool_id']]['input_label']
-                check_flag, existed_node = input_label.check_node({'case_id' : case_id, 'uid':input_node})
-                if check_flag is False:
-                    error_flag = True
-                    error_msg = 'Input node did not exist'
-                    break 
+            # check existed input node 
+            existed_node = input_label.get_node({'case_id':case_id,'uid':input_node})
 
+            if existed_node is None:
+                error_flag = True
+                error_msg = 'Input node did not exist'
+                break 
+            
+            if resnode_property == "others":
+                # resnode_value = {'sample' : [resnode_value]} 
+                # Add others 
+                if not existed_node.others:
+                    create_update_flag, create_msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                    if create_update_flag is False:
+                        error_flag = True
+                        error_msg = create_msg
+                        break
+                else:
+                    other_dict = existed_node.others
+                    for key, value in resnode_value.items():
+                        if isinstance(other_dict[key],list):
+                            if isinstance(value,list):
+                                other_dict[key].append(value[0])
+                            else:
+                                other_dict[key].append(value)
+                        else:
+                            other_dict[key] = value
+
+                    existed_node.others = other_dict
+                    existed_node.save()
+
+            else: 
+                # Create Node 
                 check_flag, node = NODE_LIST[resnode_label].check_node({'case_id' : case_id, resnode_property:resnode_value})
-                if check_flag is False:
+                if check_flag is False and node is None:
                     node = NODE_LIST[resnode_label].create_node({'case_id' : case_id, resnode_property:resnode_value})
 
                 # Make relationship 
@@ -263,13 +298,14 @@ def create_result_node():
 
                 output_node_list.append(node.uid)
 
-        # set mongoDB
+        # set created True
         resnode_obj.created = True 
         resnode_obj.save()
 
             
     if error_flag is True:
         return jsonify({'Error':error_msg}), 500 
+    
     if update_type == UPDATE_PROPERTY:
         return jsonify({'node_id':[input_node]}), 200
     return jsonify({'node_id':output_node_list}), 200 
