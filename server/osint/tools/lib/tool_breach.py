@@ -24,7 +24,7 @@ def run_breach(run):
         data = response.json()
         print(data)
                
-        for key, value in data.get('data').items(): #데이터를 몽고DB에 저장
+        for key, value in data.items(): #데이터를 몽고DB에 저장
             inside = {key: value}
             RunModel.create_result(data=inside, run_id=run.run_id) 
 
@@ -33,4 +33,4 @@ def run_breach(run):
         print(f"Error: {error}")
     
     run.save()
-    return run.run_id , data
+    return run.run_id
