@@ -1,3 +1,4 @@
+import pandas as pd
 from docx import Document
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 from docx.shared import Pt, Cm
@@ -9,6 +10,16 @@ from docx.enum.style import WD_STYLE
 
 from datetime import datetime
 from io import BytesIO
+
+from db_conn.neo4j.models import *
+
+
+def add_title(doc, name):
+    para_relation = doc.add_paragraph()
+    para_run = para_relation.add_run(name)
+    para_run.bold = True
+    para_run.underline = True
+    para_run.font.size = Pt(20)
 
 
 def report(case):
@@ -89,23 +100,41 @@ def report(case):
     '''
     Start of main contents
     '''
-    # 1. Relation
-    para_relation = doc.add_paragraph()
-    para_run = para_relation.add_run('Relation')
-    para_run.bold = True
-    para_run.underline = True
-    para_run.font.size = Pt(20)
-    # doc.add_picture('relation.png')
+    # 1-1. Relation
+    add_title(doc, 'Relation')
+    # doc.add_picture('./docs/report/relation.png')
 
-    # 2. Timeline
-    para_relation = doc.add_paragraph()
-    para_run = para_relation.add_run('Timeline')
-    para_run.bold = True
-    para_run.underline = True
-    para_run.font.size = Pt(20)
-    # doc.add_picture('whole.png')
-    # doc.add_picture('suspect.png')
-    # doc.add_picture('domain.png')
+    # 1-2. Timeline
+    add_title(doc, 'Timeline')
+    # doc.add_picture('./docs/report/whole.png')
+    # doc.add_picture('./docs/report/suspect.png')
+    # doc.add_picture('./docs/report/domain.png')
 
+    for key, node_obj in NODE_LIST.items():
+        get_node_flag, node_data = node_obj.get_all_nodes_list(case_id=case.case_id, is_export=True)
+        if get_node_flag is True:
+            node_df = pd.DataFrame(node_data)
+
+            # Table
+            if not node_df.empty:
+                for i in range(2):
+                    doc.add_paragraph()
+                add_title(doc, name=key)
+                node_table = doc.add_table(rows=node_df.shape[0]+1, cols=node_df.shape[1])
+                node_table.style = doc.styles['Table Grid']
+
+                for col_num, col_name in enumerate(node_df.columns):  # Add header
+                    cell = node_table.cell(0, col_num)
+                    cell.text = col_name
+                    cell.paragraphs[0].runs[0].font.bold = True
+                    cell.paragraphs[0].runs[0].font.size = Pt(9)
+
+                for row_num, (_, row) in enumerate(node_df.iterrows(), start=1):
+                    for col_num, value in enumerate(row):
+                        cell = node_table.cell(row_num, col_num)
+                        cell.text = str(value)
+                        cell.paragraphs[0].runs[0].font.size = Pt(8)
+
+    # Final
     doc.save(io_stream)
     return io_stream
