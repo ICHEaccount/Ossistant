@@ -98,8 +98,8 @@ const RunCard = (props) => {
                     <InputGroup className='mb-1 px-1'>
                     <InputGroup.Text >{key}</InputGroup.Text>
                     <Form.Control
-                    placeholder={selectedRun[key]}
-                    disabled
+                    value={selectedRun[key]}
+                    readOnly
                     />
                     </InputGroup>
                 )                         
@@ -115,20 +115,19 @@ const RunCard = (props) => {
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
 					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
-					<OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result.value}</Tooltip>}>
 					<Form.Control
-					placeholder={result.result.value}
-					as={status==="error"?"textarea":"input"}
-					disabled
-					className='tw-inline'
+					value={result.result.value}
+					readOnly={true}
+					className='tw-overflow-x-auto'
 					/>
-					</OverlayTrigger>
+					{/* <OverlayTrigger placement="right" overlay={<Tooltip id={idx}>{result.result.value}</Tooltip>}> */}
+					{/* </OverlayTrigger> */}
 
 					</InputGroup>)
 				})
 			}
 			
-			{selectedRun.results.length!==0&&status!=="error"&&selectedRun.result[0].type!=="no_data"?
+			{selectedRun.results.length!==0&&status!=="error"&&selectedRun.results[0].type!=="no_data"?
 				<div ref={addButton} className='tw-flex tw-justify-end'>
 					<Button  type="submit" variant="disable" className='mb-2 mt-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach'>{"Add"}</Button>
 					{selectedResults.length === 0?(<Overlay target={addButton.current} show={show} placement="right">

@@ -159,9 +159,9 @@ const DataCard = (props) => {
                                                     {formData.others[type]?.map((value, idx) => (
                                                     <div key={idx} className="d-flex mb-1">
                                                         <Form.Control
-                                                        className='tw-rounded-r-none'
+                                                        className='tw-rounded-r-none tw-overflow-x-auto'
                                                         value={value}
-                                                        readOnly={true}
+                                                        // readOnly={true}
                                                         disabled={true}
                                                         />
                                                     </div>
@@ -175,7 +175,8 @@ const DataCard = (props) => {
                                                 <InputGroup.Text id={`${type}`}>{type}</InputGroup.Text>
                                                 <Form.Control 
                                                 value={formData.others[type][0]}
-                                                readOnly={true}
+                                                className='tw-overflow-x-auto'
+                                                // readOnly={true}
                                                 disabled={true}
                                                 />
                                                 </InputGroup>
@@ -204,7 +205,7 @@ const DataCard = (props) => {
                                             {listProperty?.map((item, idx) => (
                                             <div key={idx} className="d-flex mb-1">
                                                 <Form.Control
-                                                className='tw-rounded-r-none'
+                                                className='tw-rounded-r-none tw-overflow-x-auto'
                                                 value={item}
                                                 disabled={!onEdit}
                                                 onChange={(e) => {
@@ -276,6 +277,7 @@ const DataCard = (props) => {
                                     }}
                                     required={title===p.property}
                                     disabled={!onEdit}
+                                    className='tw-overflow-x-auto'
                                     />
                                     </InputGroup>)
                                 }
