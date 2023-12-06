@@ -51,6 +51,7 @@ def report_harvester(case_id, run):
             result_obj = ResultModel(result=inside, created=True)
             result_obj.save()
             run.results.append(result_obj)
+            run.save()
             return None
 
     # Found.
