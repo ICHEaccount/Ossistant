@@ -28,5 +28,13 @@
       "apply": ["wallet"],
       "desc": "Get transaction information of given Bitcoin wallet address"
     }
+  ],
+  "Breach": [
+    {
+      "name": "breach",
+      "tool_id": "05",
+      "apply": ["breach"],
+      "desc": "Get transaction information of given Bitcoin wallet address"
+    }
   ]
 }
