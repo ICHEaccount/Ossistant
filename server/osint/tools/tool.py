@@ -111,6 +111,14 @@ def run_tool():
             return jsonify({'Message': 'Invalid username', 'Code': e}), 400
         run_id = run_btc(run)
 
+    elif tool_id == '05':  # breachdirectory
+        try:
+            run.input_value = runtools_requested_json["properties"][0]["property"][0]["breach"]
+            # Email Username Domain IP Address 이 4중 아무거나 넣어도 되고 breach 라는 라벨로 넣기로 함
+        except Exception as e:
+            return jsonify({'Message': 'Invalid username', 'Code': e}), 400
+        run_id = run_breach(run)
+
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
