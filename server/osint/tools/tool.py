@@ -228,24 +228,22 @@ def create_result_node():
                     existed_node.registered.append(resnode_obj.result.get('value'))
                     existed_node.save()
                 else:
-                    # resnode_value = {'sample':[resnode_value]}
+                    input_dict = dict()
+                    input_dict[resnode_type] = [resnode_value]
+
                     if resnode_property == "others":
                         if not existed_node.others:
-                            update_flag, node =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                            update_flag, node =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:input_dict})
                             if update_flag is False:
                                 error_flag = True 
                                 error_msg = node 
                                 break 
                         else:
                             other_dict = existed_node.others
-                            for key, value in resnode_value.items():
-                                if isinstance(other_dict[key],list):
-                                    if isinstance(value,list):
-                                        other_dict[key].append(value[0])
-                                    else:
-                                        other_dict[key].append(value)
-                                else:
-                                    other_dict[key] = value
+                            if isinstance(other_dict[resnode_type],list):
+                                other_dict[resnode_type].append(resnode_value)
+                            else:
+                                other_dict[resnode_type] = resnode_value
 
                             existed_node.others = other_dict
                             existed_node.save()
@@ -261,24 +259,21 @@ def create_result_node():
                 break 
             
             if resnode_property == "others":
-                # resnode_value = {'sample' : [resnode_value]} 
+                input_dict = dict()
+                input_dict[resnode_type] = [resnode_value]
                 # Add others 
                 if not existed_node.others:
-                    create_update_flag, create_msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:resnode_value})
+                    create_update_flag, create_msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:input_dict})
                     if create_update_flag is False:
                         error_flag = True
                         error_msg = create_msg
                         break
                 else:
                     other_dict = existed_node.others
-                    for key, value in resnode_value.items():
-                        if isinstance(other_dict[key],list):
-                            if isinstance(value,list):
-                                other_dict[key].append(value[0])
-                            else:
-                                other_dict[key].append(value)
-                        else:
-                            other_dict[key] = value
+                    if isinstance(other_dict[resnode_type],list):
+                        other_dict[resnode_type].append(resnode_value)
+                    else:
+                        other_dict[resnode_type] = resnode_value
 
                     existed_node.others = other_dict
                     existed_node.save()
