@@ -240,10 +240,12 @@ def create_result_node():
                                 break 
                         else:
                             other_dict = existed_node.others
-                            if isinstance(other_dict[resnode_type],list):
-                                other_dict[resnode_type].append(resnode_value)
-                            else:
-                                other_dict[resnode_type] = resnode_value
+                            if resnode_type in other_dict:
+                                if isinstance(other_dict[resnode_type],list):
+                                    if resnode_value not in other_dict[resnode_type]:
+                                        other_dict[resnode_type].append(resnode_value)
+                                else:
+                                    other_dict[resnode_type] = [resnode_value]
 
                             existed_node.others = other_dict
                             existed_node.save()
@@ -262,7 +264,7 @@ def create_result_node():
                 input_dict = dict()
                 input_dict[resnode_type] = [resnode_value]
                 # Add others 
-                if not existed_node.others:
+                if not existed_node.others :
                     create_update_flag, create_msg =NODE_LIST[resnode_label].update_node_properties(node_id=existed_node.uid, **{resnode_property:input_dict})
                     if create_update_flag is False:
                         error_flag = True
@@ -270,10 +272,12 @@ def create_result_node():
                         break
                 else:
                     other_dict = existed_node.others
-                    if isinstance(other_dict[resnode_type],list):
-                        other_dict[resnode_type].append(resnode_value)
+                    if resnode_type in other_dict:
+                        if isinstance(other_dict[resnode_type],list):
+                            if resnode_value not in other_dict[resnode_type]:
+                                other_dict[resnode_type].append(resnode_value)
                     else:
-                        other_dict[resnode_type] = resnode_value
+                        other_dict[resnode_type] = [resnode_value]
 
                     existed_node.others = other_dict
                     existed_node.save()
