@@ -52,7 +52,7 @@ const DataPanel = (props) => {
                 </Nav>
             </Col>
             <Col sm={9}>
-                <Tab.Content className='tw-ml-[-18px] tw-mr-[-5px] tw-h-[620px] tw-overflow-y-auto tw-overflow-x-hidden'>
+                <Tab.Content className='tw-ml-[-18px] tw-mr-[-5px] tw-h-[84vh] tw-overflow-y-auto tw-overflow-x-hidden'>
                 <Tab.Pane eventKey="data-list"><DataList case_id={case_id} caseData={caseData} newData={newData}/></Tab.Pane>
                 <Tab.Pane eventKey="tool-list"><ToolList case_id={case_id} caseData={caseData} newRun={newRun} toolList={toolList}/></Tab.Pane>
                 <Tab.Pane eventKey="run-list"><RunList case_id={case_id} toolResult={toolResult} /></Tab.Pane>

@@ -128,9 +128,8 @@ const RunCard = (props) => {
 				})
 			}
 			
-			{selectedRun.results.length!==0&&status!=="error"?
-			<Col md={{ span: 2, offset: 9 }}>
-				<div ref={addButton}>
+			{selectedRun.results.length!==0&&status!=="error"&&selectedRun.result[0].type!=="no_data"?
+				<div ref={addButton} className='tw-flex tw-justify-end'>
 					<Button  type="submit" variant="disable" className='mb-2 mt-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach'>{"Add"}</Button>
 					{selectedResults.length === 0?(<Overlay target={addButton.current} show={show} placement="right">
 					{(props) => (
@@ -139,9 +138,9 @@ const RunCard = (props) => {
 					</Tooltip>
 					)}
 					</Overlay>):null}
-						</div>
+				</div>
 				
-			</Col>:null}
+			:null}
         </Form>
 	</Card>
 	)}

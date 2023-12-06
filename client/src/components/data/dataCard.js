@@ -146,7 +146,9 @@ const DataCard = (props) => {
                         </Card.Header>
                         
                             {lbs[label].properties.map((p) => {
-                                if(p.property==="others"&&formData.others){
+                                if(p.property==="others"){
+                                    if(!formData.others) return null
+                                    // console.log(formData.others);
                                     return(
                                         Object.keys(formData.others).map((type,idx)=>{
                                             if(formData.others[type].length>1){
@@ -159,7 +161,8 @@ const DataCard = (props) => {
                                                         <Form.Control
                                                         className='tw-rounded-r-none'
                                                         value={value}
-                                                        disabled={false}
+                                                        readOnly={true}
+                                                        disabled={true}
                                                         />
                                                     </div>
                                                     ))}
@@ -172,6 +175,7 @@ const DataCard = (props) => {
                                                 <InputGroup.Text id={`${type}`}>{type}</InputGroup.Text>
                                                 <Form.Control 
                                                 value={formData.others[type][0]}
+                                                readOnly={true}
                                                 disabled={true}
                                                 />
                                                 </InputGroup>
@@ -180,7 +184,7 @@ const DataCard = (props) => {
                                         }
                                     ))
                                 }
-                                if(lbs[label].list.includes(p.property)){
+                                else if(lbs[label].list.includes(p.property)){
                                     return(
                                         <Form.Group className="mb-1 px-1" controlId={`${p.property}`}>
                                             <Form.Label className='ml-1'>{p.name+" "}
