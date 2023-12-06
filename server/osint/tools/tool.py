@@ -8,6 +8,7 @@ from .lib.tool_whois import *
 from .lib.tool_maigret import *
 from .lib.tool_harvester import *
 from .lib.tool_btc import *
+from .lib.tool_breach import *
 
 from .config.tool_result_config import *
 
@@ -144,6 +145,8 @@ def tool_state(case_id):
             check_maigret(case_id, run['run_id'])
         elif run['tool_id'] == '04':
             continue  # check_btc(case_id, run['run_id'])
+        elif run['tool_id'] == '05':
+            continue
     if message:
         return jsonify({'Debug': message}), 400
 
@@ -163,6 +166,8 @@ def tool_state(case_id):
             run['tool_name'] = 'maigret'
         elif run['tool_id'] == '04':
             run['tool_name'] = 'btc'
+        elif run['tool_id'] == '04':
+            run['tool_name'] = 'breach'
             
         # sorting by status
         if run['status'] == 'ready':

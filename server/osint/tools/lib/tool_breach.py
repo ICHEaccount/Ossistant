@@ -31,3 +31,6 @@ def run_breach(run):
         run.status = 'completed'
     except requests.exceptions.RequestException as error:
         print(f"Error: {error}")
+    
+    run.save()
+    return run.run_id , data
