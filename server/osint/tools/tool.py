@@ -114,8 +114,14 @@ def run_tool():
 
     elif tool_id == '05':  # breachdirectory
         try:
-            run.input_value = runtools_requested_json["properties"][0]["property"][0]["breach"]
+            #run.input_value = runtools_requested_json["properties"][0]["property"][0]["breach"]
             # Email Username Domain IP Address 이 4중 아무거나 넣어도 되고 breach 라는 라벨로 넣기로 함
+            if 'properties' in runtools_requested_json and isinstance(runtools_requested_json['properties'], list):
+                for prop in runtools_requested_json['properties']:
+                    if 'property' in prop and isinstance(prop['property'], list) and prop['property']:
+                        first_item = prop['property'][0]
+            if first_item:
+                run.input_value = next(iter(first_item.values()), None)
         except Exception as e:
             return jsonify({'Message': 'Invalid username', 'Code': e}), 400
         run_id = run_breach(run)
