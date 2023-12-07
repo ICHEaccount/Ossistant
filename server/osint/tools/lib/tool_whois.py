@@ -147,8 +147,9 @@ def report_whois(case_id, run):
     if report.get("emails"):
         for email in report.get("emails"):
             match = re.match(pattern, email)
-            if 'abuse' not in match.group(1) and 'whois' not in match.group(1):
-                results_email = email
+            if match:
+                if 'abuse' not in match.group(1) and 'whois' not in match.group(1):
+                    results_email = email
 
     # Output works
     results = {
