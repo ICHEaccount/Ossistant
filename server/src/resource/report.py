@@ -38,6 +38,12 @@ def report(case):
     # Add first section
     section = doc.sections[0] if doc.sections else doc.add_section()
 
+    # Set margin
+    section.left_margin = Cm(2.54)
+    section.right_margin = Cm(1.91)
+    section.top_margin = Cm(1.91)
+    section.bottom_margin = Cm(2.54)
+
     # Set header
     header = section.header
     header_paragraph = header.paragraphs[0]
