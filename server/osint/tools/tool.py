@@ -166,7 +166,7 @@ def tool_state(case_id):
             run['tool_name'] = 'maigret'
         elif run['tool_id'] == '04':
             run['tool_name'] = 'btc'
-        elif run['tool_id'] == '04':
+        elif run['tool_id'] == '05':
             run['tool_name'] = 'breach'
             
         # sorting by status
