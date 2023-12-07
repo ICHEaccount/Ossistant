@@ -1,5 +1,5 @@
-//const testUrl = "http://13.209.168.47"
-const testUrl = "http://127.0.0.1"
+const testUrl = "http://13.209.168.47"
+//const testUrl = "http://127.0.0.1"
 
 let globalCaseId = null; //case_id
 
