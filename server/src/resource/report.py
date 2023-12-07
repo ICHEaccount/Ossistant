@@ -22,6 +22,15 @@ def add_title(doc, name):
     para_run.font.size = Pt(20)
 
 
+def add_img(case, doc, target):
+    image_path = f'./docs/report/{case.case_id}/{target}.png'
+
+    paragraph = doc.add_paragraph()
+    run = paragraph.add_run()
+    run.add_picture(image_path, width=Cm(16))
+    paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+
 def report(case):
     io_stream = BytesIO()
     doc = Document()
@@ -102,13 +111,13 @@ def report(case):
     '''
     # 1-1. Relation
     add_title(doc, 'Relation')
-    # doc.add_picture('./docs/report/relation.png')
+    add_img(case, doc, 'relation')
 
     # 1-2. Timeline
     add_title(doc, 'Timeline')
-    # doc.add_picture('./docs/report/whole.png')
-    # doc.add_picture('./docs/report/suspect.png')
-    # doc.add_picture('./docs/report/domain.png')
+    add_img(case, doc, 'whole')
+    add_img(case, doc, 'suspect')
+    add_img(case, doc, 'domain')
 
     for key, node_obj in NODE_LIST.items():
         get_node_flag, node_data = node_obj.get_all_nodes_list(case_id=case.case_id, is_export=True)
