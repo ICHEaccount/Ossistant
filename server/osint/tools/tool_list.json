@@ -31,10 +31,10 @@
   ],
   "Breach": [
     {
-      "name": "breach",
+      "name": "Breached Directory",
       "tool_id": "05",
-      "apply": ["breach"],
-      "desc": "Get transaction information of given Bitcoin wallet address"
+      "apply": ["domain", "username", "email"],
+      "desc": "Get email, domain, or username to lookup in the Breached Directory"
     }
   ]
 }
