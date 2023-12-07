@@ -1,7 +1,7 @@
 import pandas as pd
 from docx import Document
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
-from docx.shared import Pt, Cm
+from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn, nsdecls
@@ -25,10 +25,18 @@ def add_title(doc, name):
 def add_img(case, doc, target):
     image_path = f'./docs/report/{case.case_id}/{target}.png'
 
-    paragraph = doc.add_paragraph()
-    run = paragraph.add_run()
-    run.add_picture(image_path, width=Cm(16))
-    paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    if not target == 'relation':
+        if not target == 'whole':
+            doc.add_paragraph()
+        sub_para = doc.add_paragraph()
+        sub_run = sub_para.add_run(target)
+        sub_run.bold = True
+        sub_run.size = Pt(15)
+
+    img_para = doc.add_paragraph()
+    img_run = img_para.add_run()
+    img_run.add_picture(image_path, width=Cm(16))
+    img_para.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
 
 def report(case):
@@ -101,7 +109,7 @@ def report(case):
             paragraph = cell.paragraphs[0]
             run = paragraph.add_run()
             if idx % 2 == 0:  # Left column
-                paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+                paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
             else:  # Right column
                 paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
 
@@ -140,9 +148,15 @@ def report(case):
 
                 for col_num, col_name in enumerate(node_df.columns):  # Add header
                     cell = node_table.cell(0, col_num)
+                    # if key == 'Post' and col_num == 0: # not working
+                    #     cell.width = Pt(13)
                     cell.text = col_name
                     cell.paragraphs[0].runs[0].font.bold = True
                     cell.paragraphs[0].runs[0].font.size = Pt(9)
+                    cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(255, 255, 255)
+
+                    shading_elm = parse_xml(r'<w:shd {} w:fill="0e0f37"/>'.format(nsdecls('w')))
+                    cell._tc.get_or_add_tcPr().append(shading_elm)
 
                 for row_num, (_, row) in enumerate(node_df.iterrows(), start=1):
                     for col_num, value in enumerate(row):
