@@ -30,24 +30,6 @@ chrome.runtime.onInstalled.addListener(() => {
         });
     }
 
-    // // Under 'take snapshot'
-    // const snapshotMenus = ["all", "layout"];
-    // for (let menu of snapshotMenus) {
-    //     chrome.contextMenus.create({
-    //         title: menu,
-    //         parentId: "take snapshot",
-    //         contexts: ["selection"],
-    //         id: menu
-    //     });
-    // }
-
-    // // Under 'using SNS parser'
-    // chrome.contextMenus.create({
-    //     title: "telegram",
-    //     parentId: "using SNS parser",
-    //     contexts: ["selection"],
-    //     id: "telegram"
-    // });
 
     // Under keyword
     const keywordSubMenus = {
