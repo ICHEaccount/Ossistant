@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(() => {
     keepAlive();
 
     // Create top level context menus
-    const topMenus = ["collect clue", "store memo", "take snapshot", "using SNS parser"];
+    const topMenus = ["Collect Evidence", "Parsing"];
     for (let menu of topMenus) {
         chrome.contextMenus.create({
             title: menu,
@@ -19,35 +19,35 @@ chrome.runtime.onInstalled.addListener(() => {
         });
     }
 
-    // Under 'collect clue'
+    // Under 'Collect Evidence'
     const keywordMenus = ["SurfaceUser", "DarkUser", "Company", "Person", "Domain", "Post", "Comment", "Email", "Phone", "Wallet"];
     for (let menu of keywordMenus) {
         chrome.contextMenus.create({
             title: menu,
-            parentId: "collect clue",
+            parentId: "Collect Evidence",
             contexts: ["selection"],
             id: menu
         });
     }
 
-    // Under 'take snapshot'
-    const snapshotMenus = ["all", "layout"];
-    for (let menu of snapshotMenus) {
-        chrome.contextMenus.create({
-            title: menu,
-            parentId: "take snapshot",
-            contexts: ["selection"],
-            id: menu
-        });
-    }
+    // // Under 'take snapshot'
+    // const snapshotMenus = ["all", "layout"];
+    // for (let menu of snapshotMenus) {
+    //     chrome.contextMenus.create({
+    //         title: menu,
+    //         parentId: "take snapshot",
+    //         contexts: ["selection"],
+    //         id: menu
+    //     });
+    // }
 
-    // Under 'using SNS parser'
-    chrome.contextMenus.create({
-        title: "telegram",
-        parentId: "using SNS parser",
-        contexts: ["selection"],
-        id: "telegram"
-    });
+    // // Under 'using SNS parser'
+    // chrome.contextMenus.create({
+    //     title: "telegram",
+    //     parentId: "using SNS parser",
+    //     contexts: ["selection"],
+    //     id: "telegram"
+    // });
 
     // Under keyword
     const keywordSubMenus = {
@@ -79,22 +79,22 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     }
 
-    // Under snapshot
-    const snapshotSubMenus = {
-        "all": ["To be developed"],
-        "layout": ["xss.is", "naver blog", "naver cafe"]
-    };
+    // // Under snapshot
+    // const snapshotSubMenus = {
+    //     "all": ["To be developed"],
+    //     "layout": ["xss.is", "naver blog", "naver cafe"]
+    // };
 
-    for (let parentMenu in snapshotSubMenus) {
-        for (let subMenu of snapshotSubMenus[parentMenu]) {
-            chrome.contextMenus.create({
-                title: subMenu,
-                parentId: parentMenu,
-                contexts: ["selection"],
-                id: subMenu
-            });
-        }
-    }
+    // for (let parentMenu in snapshotSubMenus) {
+    //     for (let subMenu of snapshotSubMenus[parentMenu]) {
+    //         chrome.contextMenus.create({
+    //             title: subMenu,
+    //             parentId: parentMenu,
+    //             contexts: ["selection"],
+    //             id: subMenu
+    //         });
+    //     }
+    // }
 
 
 
@@ -106,10 +106,11 @@ chrome.runtime.onInstalled.addListener(() => {
 
         chrome.tabs.sendMessage(tab.id, { command: "getPageUrl" }, function(response) {
             const currentURL = response.url;
-
+            console.error("url", currentURL);
             if(info.menuItemId.includes("note")){
+                console.error("note")
                 chrome.tabs.sendMessage(tab.id, { command: "createNoteInput" }, function(response) {
-                    noteValue = response.note;
+                    let noteValue = response.note;
 
                     let parts = info.menuItemId.split('-');
                     let parentMenu = parts[0];
@@ -161,7 +162,8 @@ chrome.runtime.onInstalled.addListener(() => {
                         console.error('Failed to send data:', error);
                     });
                 });
-            } else if(info.menuItemId === "naver blog"){
+            } else if(currentURL.startsWith("https://blog.naver.com/")){
+                console.error("blog", currentURL);
                 chrome.tabs.sendMessage(tab.id, { command: "getNaverBlogInfo" }, function(response) {
                     if (chrome.runtime.lastError) {
                         console.error("Error:", chrome.runtime.lastError.message);
@@ -225,7 +227,8 @@ chrome.runtime.onInstalled.addListener(() => {
                         console.error('Failed to send data:', error);
                     });
                 });
-            } else if(info.menuItemId === "naver cafe"){
+            } else if(currentURL.startsWith("https://cafe.naver.com/")){
+                console.error("cafe", currentURL);
                 chrome.tabs.sendMessage(tab.id, { command: "getNaverCafeInfo" }, function(response) {
                     if (chrome.runtime.lastError) {
                         console.error("Error:", chrome.runtime.lastError.message);
@@ -290,7 +293,8 @@ chrome.runtime.onInstalled.addListener(() => {
                         console.error('Failed to send data:', error);
                     });
                 });
-            } else if(info.menuItemId === "telegram"){
+            } else if(currentURL.startsWith("https://web.telegram.org/")){
+                console.error("telegram")
                 chrome.tabs.sendMessage(tab.id, { command: "getTelegram" }, function(response) {
                     if (chrome.runtime.lastError) {
                         console.error("Error:", chrome.runtime.lastError.message);
@@ -322,7 +326,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     });
                 });
             } else {
-                console.error("hihi", noteValue); 
+                console.error("hihi"); 
                 let selectedText = info.selectionText;        
                 let data = { 
                     case_id: globalCaseId,
