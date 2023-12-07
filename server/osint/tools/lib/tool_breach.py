@@ -24,9 +24,14 @@ def run_breach(run):
         data = response.json()
         print(data)
                
-        for key, value in data.items(): #데이터를 몽고DB에 저장
-            inside = {key: value}
-            RunModel.create_result(data=inside, run_id=run.run_id) 
+        json_format={"label":"SurfaceUser", 
+                     "property":"username",
+                     "type":"registant",
+                     "value":data}
+        
+        #for key, value in data.items(): #데이터를 몽고DB에 저장
+        #    inside = {key: value}
+        RunModel.create_result(data= json_format, run_id=run.run_id) 
 
         run.status = 'completed'
     except requests.exceptions.RequestException as error:
