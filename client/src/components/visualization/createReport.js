@@ -8,44 +8,47 @@ const RELATION = 1
 // Example : createReport(`${case_id}`,networkRef,1);
 
 async function createReport(case_id, graphRef, graphType){
-    if(graphType === RELATION){
+  try {
+    if (graphType === RELATION) {
         // graphRef should be 
-        if(graphRef.current){
-            graphRef.current.fit(); 
+        if (graphRef.current) {
+            graphRef.current.fit();
 
-            graphRef.current.once('afterDrawing', (ctx) => {
-                const dataURL = ctx.canvas.toDataURL();
-                const inpData = {'case_id' : case_id, 'type':1, 'img':dataURL};
-                console.log(dataURL);
-                axios.post('/export/upload/img', inpData).then((response) => {
-                  if(response.status === 200){
-                    console.log('Success',graphType);
-                    return true
-                  }
-                }).catch((error) => {
-                  console.log('Error : ' + error);
-                  return false
-                })
-              });
-        }
-    }else{
-        const chart = graphRef.current;
-        console.log(chart);
-        const canvas = chart.canvas;
-        console.log(canvas);
-        const dataURL = canvas.toDataURL('image/png');
-        const inpData = {'case_id' : case_id, 'type':graphType, 'img':dataURL};
-        console.log(dataURL);
-        axios.post('/export/upload/img', inpData).then((response) => {
-            if(response.status === 200){
-              console.log('Success',graphType);
-              return true
+            const dataURL = await new Promise((resolve) => {
+                graphRef.current.once('afterDrawing', (ctx) => {
+                    resolve(ctx.canvas.toDataURL());
+                });
+            });
+
+            const inpData = { 'case_id': case_id, 'type': 1, 'img': dataURL };
+            const response = await axios.post('/export/upload/img', inpData);
+
+            if (response.status === 200) {
+                // console.log('Success', graphType);
+                return true;
+            } else {
+                return false;
             }
-          }).catch((error) => {
-            console.log('Error : ' + error,graphType);
-            return false
-          })
+        }
+    } else {
+        const chart = graphRef.current;
+        const canvas = chart.canvas;
+        const dataURL = canvas.toDataURL('image/png');
+
+        const inpData = { 'case_id': case_id, 'type': graphType, 'img': dataURL };
+        const response = await axios.post('/export/upload/img', inpData);
+
+        if (response.status === 200) {
+            // console.log('Success', graphType);
+            return true;
+        } else {
+            return false;
+        }
     }
+  } catch (error) {
+      console.log('Error:', error);
+      return false;
+  }
 }
 
 export default createReport; 

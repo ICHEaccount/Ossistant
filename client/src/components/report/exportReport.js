@@ -11,37 +11,35 @@ const ExportReport = (props) => {
     const visRef = props.visRef
 
     const reqReport = async () =>{
-        const relation = createReport(case_id,visRef.relation,1)
-        const whole = createReport(case_id,visRef.whole,2) 
-        const suspect = createReport(case_id,visRef.suspect,3) 
-        const domain = createReport(case_id,visRef.domain,4) 
+        const relation = await createReport(case_id,visRef.relation,1)
+        console.log("relation",relation);
+        const whole = await createReport(case_id,visRef.whole,2) 
+        console.log("whole",whole);
+        const suspect = await createReport(case_id,visRef.suspect,3) 
+        console.log("suspect",suspect);
+        const domain = await createReport(case_id,visRef.domain,4) 
+        console.log("domain",domain);
         const res = relation &&whole&&suspect&&domain
+        console.log(res);
 
         if(res){
-            // const interval = setInterval(()=>{
-            //     Axios.get(`/export/getReportState/${case_id}`)
-            //     .then((res)=>{
-            //         if(res.data.state==="running"){
-            //             setstate("running") 
-            //         }else{ //completed
-            //             setstate("completed")
-            //             const href = URL.createObjectURL(res.data.file);
-            //             const link = document.createElement('a')
-            //             link.href=href;
-            //             link.setAttribute('download',`${filename===""?"export":filename}.docx`)
-            //             document.body.appendChild(link)
-            //             download.current=link
-            //             clearInterval(interval)
-            //             // document.body.removeChild(link)
-            //             // URL.revokeObjectURL(href)
-            //         }
-            //     })
-            //     .catch((err)=>{
-            //         setstate("error")
-            //         console.log(err);
-            //         clearInterval(interval)
-            //     })
-            // },3000)
+            Axios.get(`/export/report/${case_id}`)
+            .then((res)=>{
+                console.log(res.data);
+                const href = URL.createObjectURL(res.data)
+                const link = document.createElement('a')
+                link.href = href;
+                link.setAttribute('download',`${filename===""?"export":filename}.docx`)
+                document.body.appendChild()
+                download.current=link
+                // link.click()
+                // document.body.removeChild(link)
+                // URL.revokeObjectURL(href)
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+
             setstate("completed")
         }else{
             setstate("error")
@@ -49,8 +47,8 @@ const ExportReport = (props) => {
     }
 
     const downloadReport = () =>{
-        // download.current.click()
-        // document.body.removeChild(download.current)
+        download.current.click()
+        document.body.removeChild(download.current)
         console.log("clicked");
     } 
 
