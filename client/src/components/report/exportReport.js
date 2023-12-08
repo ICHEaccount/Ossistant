@@ -23,32 +23,37 @@ const ExportReport = (props) => {
         console.log(res);
 
         if(res){
-            Axios.get(`/export/report/${case_id}`)
+            const config = {
+                method:"GET",
+                url:`/export/report/${case_id}`,
+                responseType: "blob"
+            }
+            Axios(config)
             .then((res)=>{
                 console.log(res.data);
                 const href = URL.createObjectURL(res.data)
                 const link = document.createElement('a')
                 link.href = href;
                 link.setAttribute('download',`${filename===""?"export":filename}.docx`)
-                document.body.appendChild()
+                document.body.appendChild(link)
                 download.current=link
-                // link.click()
-                // document.body.removeChild(link)
-                // URL.revokeObjectURL(href)
+                link.click()
+                document.body.removeChild(link)
+                URL.revokeObjectURL(href)
             })
             .catch((err)=>{
                 console.log(err);
             })
 
-            setstate("completed")
+            setstate("ready")
         }else{
             setstate("error")
         }
     }
 
     const downloadReport = () =>{
-        download.current.click()
-        document.body.removeChild(download.current)
+        // download.current.click()
+        // document.body.removeChild(download.current)
         console.log("clicked");
     } 
 
