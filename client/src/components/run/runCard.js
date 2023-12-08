@@ -87,7 +87,7 @@ const RunCard = (props) => {
 		</Card.Header>
 		<Form onSubmit={addNode}>
             {Object.keys(selectedRun).map((key) => {
-				console.log(selectedRun);
+				// console.log(selectedRun);
 				if(key==="results"){
 					return null
 				}
