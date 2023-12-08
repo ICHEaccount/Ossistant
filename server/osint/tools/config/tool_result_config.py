@@ -25,7 +25,11 @@ TOOL_RESULT_MATCH = {
     },
     "04" : {
         'type':UPDATE_PROPERTY,
+    },
+    "05": {
+        'type': UPDATE_PROPERTY
     }
+
     
     # "04": { # BTC
     #     'type':UPDATE_PROPERTY,
