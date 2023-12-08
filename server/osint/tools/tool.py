@@ -8,6 +8,7 @@ from .lib.tool_whois import *
 from .lib.tool_maigret import *
 from .lib.tool_harvester import *
 from .lib.tool_btc import *
+from .lib.tool_breach import *
 
 from .config.tool_result_config import *
 
@@ -111,6 +112,20 @@ def run_tool():
             return jsonify({'Message': 'Invalid username', 'Code': e}), 400
         run_id = run_btc(run)
 
+    elif tool_id == '05':  # breachdirectory
+        try:
+            #run.input_value = runtools_requested_json["properties"][0]["property"][0]["breach"]
+            # Email Username Domain IP Address 이 4중 아무거나 넣어도 되고 breach 라는 라벨로 넣기로 함
+            if 'properties' in runtools_requested_json and isinstance(runtools_requested_json['properties'], list):
+                for prop in runtools_requested_json['properties']:
+                    if 'property' in prop and isinstance(prop['property'], list) and prop['property']:
+                        first_item = prop['property'][0]
+            if first_item:
+                run.input_value = next(iter(first_item.values()), None)
+        except Exception as e:
+            return jsonify({'Message': 'Invalid username', 'Code': e}), 400
+        run_id = run_breach(run)
+
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
 
@@ -136,6 +151,8 @@ def tool_state(case_id):
             check_maigret(case_id, run['run_id'])
         elif run['tool_id'] == '04':
             continue  # check_btc(case_id, run['run_id'])
+        elif run['tool_id'] == '05':
+            continue
     if message:
         return jsonify({'Debug': message}), 400
 
@@ -155,6 +172,8 @@ def tool_state(case_id):
             run['tool_name'] = 'maigret'
         elif run['tool_id'] == '04':
             run['tool_name'] = 'btc'
+        elif run['tool_id'] == '05':
+            run['tool_name'] = 'breach'
             
         # sorting by status
         if run['status'] == 'ready':

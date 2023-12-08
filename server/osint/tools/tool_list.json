@@ -28,5 +28,13 @@
       "apply": ["wallet"],
       "desc": "Get transaction information of given Bitcoin wallet address"
     }
+  ],
+  "Breach": [
+    {
+      "name": "Breached Directory",
+      "tool_id": "05",
+      "apply": ["domain", "username", "email"],
+      "desc": "Get email, domain, or username to lookup in the Breached Directory"
+    }
   ]
 }
