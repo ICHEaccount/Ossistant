@@ -59,8 +59,8 @@ const Test = () => {
                     <h4>Contact </h4> 
                     <Card.Link href={korean?"https://forms.gle/C9s8idGpAnvF92i78":"https://forms.gle/AiddDoHKpCqdkg2i6"} rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'> <ClipboardCheck size={12} className='tw-inline-block tw-mr-1'/>{korean?"테스트 평가 구글 폼":"Evaluation Google Form"}</Card.Link>
                     <Card.Link href="mailto:iche230905@gmail.com" className='tw-underline tw-text-blue-600'><Envelope size={12} className='tw-inline-block tw-mr-1'/>iche230905@gmail.com </Card.Link>
-                    <Card.Link href="https://t.me/+dMt5ycMlu9QzMDA1"rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'><Telegram size={12} className='tw-inline-block tw-mr-1'/>OSSISTNAT (Telegram) </Card.Link>
-                    <Card.Link href="https://open.kakao.com/o/sFzJLJWf"rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'><Chat size={12} className='tw-inline-block tw-mr-1'/>OSSISTNAT (Kakao Open Chat) </Card.Link>
+                    <Card.Link href="https://t.me/+dMt5ycMlu9QzMDA1"rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'><Telegram size={12} className='tw-inline-block tw-mr-1'/>OSSISTANT (Telegram) </Card.Link>
+                    <Card.Link href="https://open.kakao.com/o/sFzJLJWf"rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'><Chat size={12} className='tw-inline-block tw-mr-1'/>OSSISTANT (Kakao Open Chat) </Card.Link>
                     </Card.Text>
                     <a href='https://www.kitribob.kr/' rel='noreferre' target='_black'>
                     <img src={bob} alt="bob_logo" className="tw-object-fill tw-justify-self-end tw-h-14 tw-w-22"/>
