@@ -11,7 +11,7 @@ def run_breach(run):
     req_data = run.input_value
 
     headers = {
-        "X-RapidAPI-Key": "e0722ff2ffmshc757bb19c9a00d7p171c87jsn8ea60da9698c", #발급 받은 키
+        "X-RapidAPI-Key": "6cbe75edb1msh3b4816139900b59p140f0fjsn78d7d8a4ec05", #발급 받은 키
         "X-RapidAPI-Host": "breachdirectory.p.rapidapi.com",
     }
 
@@ -33,8 +33,11 @@ def run_breach(run):
         RunModel.create_result(data= json_format, run_id=run.run_id) 
 
         run.status = 'completed'
-    except requests.exceptions.RequestException as error: 
-        print(f"Error: {error}")
+        
+    except requests.exceptions.RequestException as error:
+        run.status = 'error'
+        print(f"Error: {error}", flush=True)
+
     
     run.save()
     return run.run_id
