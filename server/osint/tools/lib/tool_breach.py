@@ -11,7 +11,7 @@ def run_breach(run):
     req_data = run.input_value
 
     headers = {
-        "X-RapidAPI-Key": "e0722ff2ffmshc757bb19c9a00d7p171c87jsn8ea60da9698c", #발급 받은 키
+        "X-RapidAPI-Key": "17cb48e1c4msh93d19d95eb67adap1ea157jsn58480b884aac", #발급 받은 키
         "X-RapidAPI-Host": "breachdirectory.p.rapidapi.com",
     }
 
@@ -22,19 +22,22 @@ def run_breach(run):
         response.raise_for_status()  # Raise an exception for bad responses (4xx and 5xx)
     
         data = response.json()
-        print(data)
+        print(data, flush=True)
         json_format={"label":"Email", 
-                     "property":"email",
+                     "property":"others",
                      "type":"breached",
-                     "value":data}
+                     "value":data['found']}
         
         #for key, value in data.items(): #데이터를 몽고DB에 저장
         #    inside = {key: value}
         RunModel.create_result(data= json_format, run_id=run.run_id) 
 
         run.status = 'completed'
-    except requests.exceptions.RequestException as error: 
-        print(f"Error: {error}")
+        
+    except requests.exceptions.RequestException as error:
+        run.status = 'error'
+        print(f"Error: {error}", flush=True)
+
     
     run.save()
     return run.run_id

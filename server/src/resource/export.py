@@ -69,10 +69,11 @@ def export_docx(case_id):
     if not case:
         return jsonify({'Message': 'Case Not Found'}), 500
 
-    io_stream = report(case)
-    io_stream.seek(0)
-
-    return send_file(io_stream, as_attachment=True, download_name='example.docx')
+    # io_stream = report(case)
+    # io_stream.seek(0)
+    # return send_file(io_stream, as_attachment=True, download_name='OSSISTANT_Report.docx')
+    docx_path = report(case)
+    return send_file(docx_path, as_attachment=True)
 
 
 @bp.route('/excel/<string:case_id>', methods=['GET'])

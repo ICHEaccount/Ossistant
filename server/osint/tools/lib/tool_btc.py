@@ -21,6 +21,7 @@ def run_btc(run):
 
         # 에러 체크
         if data.get('err_no') == 0:          
+
             for key, value in data.get('data').items(): #데이터를 몽고DB에 저장. #에러 주의 #^^ by RINM
                 # inside = {key: value}
                 inside = {
