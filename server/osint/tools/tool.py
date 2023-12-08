@@ -263,11 +263,12 @@ def create_result_node():
                                 if isinstance(other_dict[resnode_type],list):
                                     if resnode_value not in other_dict[resnode_type]:
                                         other_dict[resnode_type].append(resnode_value)
-                                else:
-                                    other_dict[resnode_type] = [resnode_value]
+                            else:
+                                other_dict[resnode_type] = [resnode_value]
 
                             existed_node.others = other_dict
                             existed_node.save()
+                            
         elif update_type is CREATE_NODE:
             input_label =  TOOL_RESULT_MATCH[req['tool_id']]['input_label']
             
