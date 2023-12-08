@@ -24,7 +24,7 @@ def run_breach(run):
         data = response.json()
         print(data, flush=True)
         json_format={"label":"Email", 
-                     "property":"email",
+                     "property":"others",
                      "type":"breached",
                      "value":data['found']}
         
