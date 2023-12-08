@@ -20,17 +20,29 @@ def run_breach(run, input_label):
     try:
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()  # Raise an exception for bad responses (4xx and 5xx)
+
+
+        if(input_label=='username'):
+            input_label='SurfaceUser'
+        elif(input_label=='email'):
+            input_label='Email'
+        elif(input_label=='domain'):
+            input_label='Domain'
     
         data = response.json()
+
         print(data, flush=True)
-        json_format={"label":input_label, 
-                     "property":"others",
-                     "type":"breached",
-                     "value":data['found']}
         
-        #for key, value in data.items(): #데이터를 몽고DB에 저장
-        #    inside = {key: value}
-        RunModel.create_result(data= json_format, run_id=run.run_id) 
+        
+        for key, value in data.items(): #데이터를 몽고DB에 저장
+            inside = {key: value}
+
+            json_format={"label":input_label, 
+                        "property":"others",
+                        "type":key,
+                        "value":value} #"value":data['found']}
+
+            RunModel.create_result(data= json_format, run_id=run.run_id)
 
         run.status = 'completed'
         
