@@ -148,8 +148,8 @@ def report(case):
 
                 for col_num, col_name in enumerate(node_df.columns):  # Add header
                     cell = node_table.cell(0, col_num)
-                    # if key == 'Post' and col_num == 0: # not working
-                    #     cell.width = Pt(13)
+                    if key == 'Post' and col_num == 0:  # not working
+                        cell.width = Pt(50)
                     cell.text = col_name
                     cell.paragraphs[0].runs[0].font.bold = True
                     cell.paragraphs[0].runs[0].font.size = Pt(9)
@@ -163,7 +163,13 @@ def report(case):
                         cell = node_table.cell(row_num, col_num)
                         cell.text = str(value)
                         cell.paragraphs[0].runs[0].font.size = Pt(8)
+                        if key == 'Post' and col_num == 0:
+                            cell.width = Pt(50)
 
     # Final
-    doc.save(io_stream)
-    return io_stream
+    # doc.save(io_stream)
+    # return io_stream
+
+    docx_path = f'./docs/report/{case.case_id}/OSSISTANT_Report.docx'
+    doc.save(docx_path)
+    return docx_path
