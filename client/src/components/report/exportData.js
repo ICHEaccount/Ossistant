@@ -4,7 +4,7 @@ import Axios from 'axios'
 
 const ExportData = (props) => {
     const case_id=props.case_id
-    const [filename, setfilename] = useState("export")
+    const [filename, setfilename] = useState("")
     const reqExcel = () =>{
         // console.log(filename);
         const config = {
@@ -17,7 +17,7 @@ const ExportData = (props) => {
             const href = URL.createObjectURL(res.data);
             const link = document.createElement('a')
             link.href=href;
-            link.setAttribute('download',`${filename}.xlsx`)
+            link.setAttribute('download',`${filename===""?"export":filename}.xlsx`)
             document.body.appendChild(link)
             link.click()
 

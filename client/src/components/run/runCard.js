@@ -87,6 +87,7 @@ const RunCard = (props) => {
 		</Card.Header>
 		<Form onSubmit={addNode}>
             {Object.keys(selectedRun).map((key) => {
+				// console.log(selectedRun);
 				if(key==="results"){
 					return null
 				}
@@ -127,9 +128,9 @@ const RunCard = (props) => {
 				})
 			}
 			
-			{selectedRun.results.length!==0&&status!=="error"&&selectedRun.results[0].type!=="no_data"?
-				<div ref={addButton} className='tw-flex tw-justify-end'>
-					<Button  type="submit" variant="disable" className='mb-2 mt-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach'>{"Add"}</Button>
+			{selectedRun.results.length!==0&&status!=="error"&&selectedRun.results[0].result.type!=="no_data"?
+				<div ref={addButton} className='tw-flex tw-justify-end tw-mr-1'>
+					<Button  type="submit" variant="disable" className='mb-2 mt-1 mr-1 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach'>{"Add"}</Button>
 					{selectedResults.length === 0?(<Overlay target={addButton.current} show={show} placement="right">
 					{(props) => (
 						<Tooltip id="overlay-example" {...props}>

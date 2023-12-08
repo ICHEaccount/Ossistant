@@ -21,12 +21,16 @@ def run_btc(run):
 
         # 에러 체크
         if data.get('err_no') == 0:          
-            json_format={"label":"SurfaceUser", 
-                         "property":"username",
-                         "type":"registant",
-                         "value":data}
-        
-            RunModel.create_result(data= json_format, run_id=run.run_id) 
+
+            for key, value in data.get('data').items(): #데이터를 몽고DB에 저장. #에러 주의 #^^ by RINM
+                # inside = {key: value}
+                inside = {
+                    "label":"Wallet", 
+                    "property":"others",
+                    "type":key,
+                    "value":value
+                }
+                RunModel.create_result(data=inside, run_id=run.run_id) 
 
             run.status = 'completed'
             

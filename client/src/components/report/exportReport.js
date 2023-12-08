@@ -28,7 +28,7 @@ const ExportReport = (props) => {
             //             const href = URL.createObjectURL(res.data.file);
             //             const link = document.createElement('a')
             //             link.href=href;
-            //             link.setAttribute('download',`${filename}.docx`)
+            //             link.setAttribute('download',`${filename===""?"export":filename}.docx`)
             //             document.body.appendChild(link)
             //             download.current=link
             //             clearInterval(interval)
