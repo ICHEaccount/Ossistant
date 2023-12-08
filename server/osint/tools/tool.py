@@ -121,10 +121,11 @@ def run_tool():
                     if 'property' in prop and isinstance(prop['property'], list) and prop['property']:
                         first_item = prop['property'][0]
             if first_item:
+                input_label = next(iter(first_item.keys()), None)
                 run.input_value = next(iter(first_item.values()), None)
         except Exception as e:
             return jsonify({'Message': 'Invalid input', 'Code': e}), 400
-        run_id = run_breach(run)
+        run_id = run_breach(run, input_label)
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400

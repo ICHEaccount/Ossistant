@@ -6,7 +6,7 @@ import requests
 from db_conn.mongo.models import RunModel
 from db_conn.neo4j.models import *
 
-def run_breach(run):
+def run_breach(run, input_label):
     url = "https://breachdirectory.p.rapidapi.com/"
     req_data = run.input_value
 
@@ -23,7 +23,7 @@ def run_breach(run):
     
         data = response.json()
         print(data, flush=True)
-        json_format={"label":"Email", 
+        json_format={"label":input_label, 
                      "property":"others",
                      "type":"breached",
                      "value":data['found']}
