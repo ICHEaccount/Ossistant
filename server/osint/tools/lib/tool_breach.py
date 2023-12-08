@@ -32,9 +32,14 @@ def run_breach(run, input_label):
         data = response.json()
 
         print(data, flush=True)    
-        
+        run.status = 'ready'
         for key, value in data.items(): #데이터를 몽고DB에 저장
             #inside = {key: value}
+
+            if key == 'success':
+                continue
+            if key == 'result' and not value:
+                continue
 
             json_format={"label":input_label, 
                         "property":"others",
