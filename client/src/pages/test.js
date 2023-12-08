@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
-import { ClipboardCheck, Envelope, Telegram } from 'react-bootstrap-icons'
+import { Chat, ClipboardCheck, Envelope, Telegram } from 'react-bootstrap-icons'
 import bob from '../images/bob_logo.jpg'
 import logo from '../images/logo.png'
 
 
 const Test = () => {
-    const [korean, setkorean] = useState(false);
-
+    const [korean, setkorean] = useState(true);
 
     return (
-        <Container className='mt-2'>
+        <Container className='mt-1'>
             <Row className='justify-content-center'>
                 <Col lg={10}>
-                <Card className='tw-w-full tw-h-full mt-2'>
+                <Card className='tw-border-0 tw-w-full tw-h-full mt-2'>
                     <Card.Body>
                     <Card.Title className='tw-text-center'>
-                    <strong>OSSISTANT</strong> Beta Test
+                    <strong className='tw-bg-gradient-to-br tw-text-2xl tw-font-extrabold tw-from-navy tw-to-peach tw-inline-block tw-text-transparent tw-bg-clip-text'>OSSISTANT Beta Test</strong> 
                     </Card.Title>
                     <Card.Subtitle className="mb-2 text-muted tw-text-end">Team ICHE</Card.Subtitle>
                     <Form className='tw-flex tw-justify-end'>
@@ -24,12 +23,12 @@ const Test = () => {
                         <Form.Check className='tw-ml-2' type='switch' label="한국어" defaultChecked={korean} onChange={()=>{setkorean(!korean)}}/>
                     </Form>
                     {korean?(<Card.Text>
-                        <p>테스트 대상: 전/현직 사이버 수사관 </p>
-                        <p>테스트 기간: 2023-11-22 ~ 2023-11-27</p>
+                        <p><strong>테스트 대상</strong>: 전/현직 사이버 수사관 </p>
+                        <p><strong>테스트 기간</strong>: 2023-12-09 ~ 2023-12-15</p>
                     </Card.Text>)
                     :(<Card.Text>
-                        <p>Tester: Former and Current Cybercrime Investigators </p>
-                        <p>Period: 22-11-2023 ~ 27-11-2023</p>
+                        <p><strong>Tester</strong>: Former and Current Cybercrime Investigators </p>
+                        <p><strong>Period</strong>: 09-12-2023 ~ 15-12-2023</p>
                     </Card.Text>)}
                     </Card.Body>
                     <Card.Body>
@@ -58,15 +57,18 @@ const Test = () => {
                     <Card.Body  className='tw-flex tw-align-middle tw-justify-between'>
                     <Card.Text className='tw-justify-self-start'>
                     <h4>Contact </h4> 
-                    <Card.Link href={korean?"https://forms.gle/rCzU8ELsexwhABaXA":"https://forms.gle/kFkvwwQ1a8hY5wNTA"} rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'> <ClipboardCheck size={12} className='tw-inline-block tw-mr-1'/>{korean?"테스트 평가 구글 폼":"Evaluation Google Form"}</Card.Link>
+                    <Card.Link href={korean?"https://forms.gle/C9s8idGpAnvF92i78":"https://forms.gle/AiddDoHKpCqdkg2i6"} rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'> <ClipboardCheck size={12} className='tw-inline-block tw-mr-1'/>{korean?"테스트 평가 구글 폼":"Evaluation Google Form"}</Card.Link>
                     <Card.Link href="mailto:iche230905@gmail.com" className='tw-underline tw-text-blue-600'><Envelope size={12} className='tw-inline-block tw-mr-1'/>iche230905@gmail.com </Card.Link>
                     <Card.Link href="https://t.me/+dMt5ycMlu9QzMDA1"rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'><Telegram size={12} className='tw-inline-block tw-mr-1'/>OSSISTNAT (Telegram) </Card.Link>
+                    <Card.Link href="https://open.kakao.com/o/sFzJLJWf"rel='noreferrer' target='_blank' className='tw-underline tw-text-blue-600'><Chat size={12} className='tw-inline-block tw-mr-1'/>OSSISTNAT (Kakao Open Chat) </Card.Link>
                     </Card.Text>
+                    <a href='https://www.kitribob.kr/' rel='noreferre' target='_black'>
                     <img src={bob} alt="bob_logo" className="tw-object-fill tw-justify-self-end tw-h-14 tw-w-22"/>
+                    </a>
                     </Card.Body>
                     <Card.Body className='tw-flex tw-justify-center'>
-                    <Button variant="primary" href='/main'>{korean?"테스트 시작":"Start"}</Button>
-                    </Card.Body>
+                    <Button variant="disable" className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-bright-peach tw-border-0 tw-text-peach' href='/main'>{korean?"테스트 시작":"Start"}</Button>
+                    </Card.Body> 
                 </Card>
 
                 </Col>
