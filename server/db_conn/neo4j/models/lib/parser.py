@@ -66,8 +66,14 @@ def content_parser(case_id, input_node, content):
 
         for parsed_data in parsed_data_list:
             # Create node 
+
             inp_data = {'case_id':case_id, value['key']:parsed_data}
             exist_flag, node = node_label.check_node(inp_data)
+
+            # Skip 
+            if node_label == Domain and re.findall(r'\b(?:\d{3}-?\d{3,4}-?\d{4})\b', parsed_data):
+                continue 
+
             if exist_flag is False:
                 node = node_label.create_node(inp_data)
                 input_node.rel_to.connect(node,{'label':'CONTENT_PARSER'})
