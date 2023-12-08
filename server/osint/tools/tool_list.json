@@ -11,6 +11,12 @@
       "tool_id": "02",
       "apply": ["domain"],
       "desc": "Get subdomain of given domain name"
+    },
+    {
+      "name": "Breached Directory",
+      "tool_id": "05",
+      "apply": ["domain"],
+      "desc": "Get email, domain, or username to lookup in the Breached Directory"
     }
   ],
   "SurfaceUser": [
@@ -19,6 +25,12 @@
       "tool_id": "03",
       "apply": ["username"],
       "desc": "Get registered sites of given username"
+    },
+    {
+      "name": "Breached Directory",
+      "tool_id": "05",
+      "apply": ["username"],
+      "desc": "Get email, domain, or username to lookup in the Breached Directory"
     }
   ],
   "Wallet": [
@@ -29,11 +41,11 @@
       "desc": "Get transaction information of given Bitcoin wallet address"
     }
   ],
-  "Breach": [
+  "Email": [
     {
       "name": "Breached Directory",
       "tool_id": "05",
-      "apply": ["domain", "username", "email"],
+      "apply": ["email"],
       "desc": "Get email, domain, or username to lookup in the Breached Directory"
     }
   ]

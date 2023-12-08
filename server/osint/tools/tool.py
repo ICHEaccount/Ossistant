@@ -123,7 +123,7 @@ def run_tool():
             if first_item:
                 run.input_value = next(iter(first_item.values()), None)
         except Exception as e:
-            return jsonify({'Message': 'Invalid username', 'Code': e}), 400
+            return jsonify({'Message': 'Invalid input', 'Code': e}), 400
         run_id = run_breach(run)
 
     else:
@@ -173,7 +173,7 @@ def tool_state(case_id):
         elif run['tool_id'] == '04':
             run['tool_name'] = 'btc'
         elif run['tool_id'] == '05':
-            run['tool_name'] = 'breach'
+            run['tool_name'] = 'breached directory'
             
         # sorting by status
         if run['status'] == 'ready':

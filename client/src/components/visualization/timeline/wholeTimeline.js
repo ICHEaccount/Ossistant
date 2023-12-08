@@ -135,6 +135,7 @@ const WholeTimeline = (props) => {
 
     // 그래프 옵션
     const options = {
+        responsive:false,
         maintainAspectRatio: true,
         aspectRatio: 3,
         showLine: false,
@@ -265,7 +266,7 @@ const WholeTimeline = (props) => {
                     {/* 버튼 내 텍스트가 필요없으면 이 부분을 비워 둘 수 있음 */}
                 </button>
             </div>
-            <Line ref={chartRef} options={options} data={{ datasets }} height={null} width={null} />
+            <Line ref={chartRef} options={options} data={{ datasets }} height={244} width={732} />
         </>
     );
 }
