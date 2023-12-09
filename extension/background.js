@@ -20,7 +20,7 @@ chrome.runtime.onInstalled.addListener(() => {
     }
 
     // Under 'Collect Evidence'
-    const keywordMenus = ["SurfaceUser", "DarkUser", "Company", "Person", "Domain", "Post", "Comment", "Email", "Phone", "Wallet"];
+    const keywordMenus = ["SurfaceUser", "DarkUser", "Company", "Person", "Domain", "Post", "Comment", "Email", "Phone", "Message", "Wallet"];
     for (let menu of keywordMenus) {
         chrome.contextMenus.create({
             title: menu,
