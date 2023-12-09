@@ -26,7 +26,7 @@ def run_whois(run):
 
     try:
         whois_str = json.dumps(whois_search, default=str, ensure_ascii=False)
-        report = open(f'./reports/whois_{run.input_value}_{run.run_id}.json', 'w')
+        report = open(f'./reports/whois_{run.run_id}.json', 'w')
         report.write(whois_str)
         report.close()
     except Exception as e:
@@ -41,7 +41,7 @@ def run_whois(run):
 
 def report_whois(case_id, run):
     try:
-        with open(f'./reports/whois_{run.input_value}_{run.run_id}.json') as f:
+        with open(f'./reports/whois_{run.run_id}.json') as f:
             report = json.load(f)
     except FileNotFoundError as e:
         message = f'Report whois error-1. {e}'
@@ -55,7 +55,7 @@ def report_whois(case_id, run):
         else:
             domain_response = report.get("domain_name")[0]
     else:
-        domain_response = run.input_value
+        domain_response = report.get("domain_name")
 
     # Choosing one date if many
     if isinstance(report.get("creation_date"), list):
@@ -213,19 +213,19 @@ def check_whois(case_id, run_id):
         return None
 
     # Status 'completed' or 'running' can pass this line
-    if os.path.exists(f'./reports/whois_{run.input_value}_{run.run_id}.json') and run.status == 'running':
+    if os.path.exists(f'./reports/whois_{run.run_id}.json') and run.status == 'running':
         message = report_whois(case_id, run)
         if message:
             return message
         run.status = 'completed'
         run.save()
         message = None
-    elif os.path.exists(f'./reports/whois_{run.input_value}_{run.run_id}.json') and run.status == 'completed':
+    elif os.path.exists(f'./reports/whois_{run.run_id}.json') and run.status == 'completed':
         message = None
-    elif not os.path.exists(f'./reports/whois_{run.input_value}_{run.run_id}.json') and run.status == 'running':
-        message = f'The file \'whois_{run.input_value}_{run.run_id}.json\' not exists.(yet)'
-    elif not os.path.exists(f'./reports/whois_{run.input_value}_{run.run_id}.json') and run.status == 'completed':
-        message = f'Critical: The file \'whois_{run.input_value}_{run.run_id}.json\' somehow not exists.'
+    elif not os.path.exists(f'./reports/whois_{run.run_id}.json') and run.status == 'running':
+        message = f'The file \'whois_{run.run_id}.json\' not exists.(yet)'
+    elif not os.path.exists(f'./reports/whois_{run.run_id}.json') and run.status == 'completed':
+        message = f'Critical: The file \'whois_{run.run_id}.json\' somehow not exists.'
     else:
         message = 'Exception happens...'
 
