@@ -162,10 +162,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 emails.push(match[0]);
             }
         
-            // console.log("title", title);
-            // console.log("writer", writer);
-            // console.log("created_date", created_date);
-            // console.log("content", content);
+            console.log("title", title);
+            console.log("writer", writer);
+            console.log("created_date", created_date);
+            console.log("content", content);
         
             sendResponse({ writer, created_date, title, content, phones, emails });
         }
@@ -178,10 +178,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         const created_date = document.querySelector('.date') ? document.querySelector('.date').innerText.trim() : '';
         const content = document.querySelector('.article_viewer') ? document.querySelector('.article_viewer').innerText.trim() : '';
     
-        // console.log("title", title);
-        // console.log("writer", writer);
-        // console.log("created_date", created_date);
-        // console.log("content", content);
+        console.log("title", title);
+        console.log("writer", writer);
+        console.log("created_date", created_date);
+        console.log("content", content);
 
         if (title && writer && created_date && content) {
             let phones = []; // 전화번호를 저장할 배열
