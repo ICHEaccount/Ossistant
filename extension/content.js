@@ -201,11 +201,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 emails.push(match[0]);
             }
         
-            console.log("title", title);
-            console.log("writer", writer);
-            console.log("created_date", created_date);
-            console.log("content", content);
-        
             sendResponse({ writer, created_date, title, content, phones, emails });
         }
 
