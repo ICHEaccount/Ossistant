@@ -1,7 +1,7 @@
 const mainUrl = 'http://127.0.0.1:3000'
 //const mainUrl = 'http://ossistant.net'
 const testUrl = 'http://127.0.0.1'
-//const testUrl = 'http://13.209.168.47'
+//const testUrl = 'http://13.209.168.47'aa
 
 function validate (input) {
     // if($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
