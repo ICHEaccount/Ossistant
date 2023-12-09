@@ -90,7 +90,7 @@ def report_whois(case_id, run):
             email_list.append(emails_value)
 
     # Need to remove abuse, whois email
-    filtered_email_list = [email for email in email_list if 'abuse' not in email and 'whois' not in email]
+    # filtered_email_list = [email for email in email_list if 'abuse' not in email and 'whois' not in email]
 
     # email to username
     regex = r'^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.[a-zA-Z]{2,}$'
@@ -117,7 +117,7 @@ def report_whois(case_id, run):
     ]
     node_created = []
 
-    for email in filtered_email_list:
+    for email in email_list:  # Deleted 'filtered_email_list'
         match = re.match(pattern, email)
         if match:  # SHOULD match.
             username = match.group(1)
@@ -147,10 +147,11 @@ def report_whois(case_id, run):
     results_email = None
     if report.get("emails"):
         for email in report.get("emails"):
-            match = re.match(pattern, email)
-            if match:
-                if 'abuse' not in match.group(1) and 'whois' not in match.group(1):
-                    results_email = email
+            # match = re.match(pattern, email)
+            # if match:
+            #     if 'abuse' not in match.group(1) and 'whois' not in match.group(1):
+            #         results_email = email
+            results_email = email
 
     # Output works
     results = {
