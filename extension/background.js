@@ -103,7 +103,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
                     sendDataToServer(data)
                 });
-            }else if (currentURL.startsWith("https://xss.is/")){
+            }else if (currentURL.startsWith("https://xss.is/") && info.menuItemId === "Parsing"){
                 chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
                     if (chrome.runtime.lastError) {
                         console.error("Error:", chrome.runtime.lastError.message);
@@ -140,7 +140,7 @@ chrome.runtime.onInstalled.addListener(() => {
                         console.error('Failed to send data:', error);
                     });
                 });
-            } else if(currentURL.startsWith("https://blog.naver.com/")){
+            } else if(currentURL.startsWith("https://blog.naver.com/") && info.menuItemId === "Parsing"){
                 console.error("blog", currentURL);
                 chrome.tabs.sendMessage(tab.id, { command: "getNaverBlogInfo" }, function(response) {
                     if (chrome.runtime.lastError) {
@@ -205,7 +205,7 @@ chrome.runtime.onInstalled.addListener(() => {
                         console.error('Failed to send data:', error);
                     });
                 });
-            } else if(currentURL.startsWith("https://cafe.naver.com/")){
+            } else if(currentURL.startsWith("https://cafe.naver.com/") && info.menuItemId === "Parsing"){
                 console.error("cafe", currentURL);
                 chrome.tabs.sendMessage(tab.id, { command: "getNaverCafeInfo" }, function(response) {
                     if (chrome.runtime.lastError) {
@@ -271,7 +271,7 @@ chrome.runtime.onInstalled.addListener(() => {
                         console.error('Failed to send data:', error);
                     });
                 });
-            } else if(currentURL.startsWith("https://web.telegram.org/")){
+            } else if(currentURL.startsWith("https://web.telegram.org/") && info.menuItemId === "Parsing"){
                 console.error("telegram")
                 chrome.tabs.sendMessage(tab.id, { command: "getTelegram" }, function(response) {
                     if (chrome.runtime.lastError) {
