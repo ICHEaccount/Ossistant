@@ -82,7 +82,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 
 
-    // Context menu click listener
+    // Context menu listener
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
         let datalist = [];
 

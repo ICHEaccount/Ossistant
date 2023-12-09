@@ -138,6 +138,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         const dtComment = dtElements.find(dt => dt.textContent.includes('Реакции'));
         const comment_num = dtComment ? dtComment.nextElementSibling.innerText : '';
 
+        console.log("title", title);
+        console.log("writer", writer);
+        console.log("created_date", created_date);
+        console.log("content", content);
+
+        
         sendResponse({ writer, created_date, title, content, username, rank, regdate, post_num, comment_num, registered });
     }else if(request.command === "getNaverBlogInfo"){
         //if (window.self !== window.top && window.parent === window.top) {
