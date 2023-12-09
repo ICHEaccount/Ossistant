@@ -33,6 +33,10 @@ def run_breach(run, input_label):
 
         print(data, flush=True)    
         run.status = 'ready'
+
+
+    
+
         for key, value in data.items(): #데이터를 몽고DB에 저장
             #inside = {key: value}
 
@@ -40,13 +44,32 @@ def run_breach(run, input_label):
                 continue
             if key == 'result' and not value:
                 continue
-
+            
             json_format={"label":input_label, 
                         "property":"others",
                         "type":key,
                         "value":value
             } #"value":data['found']}
-            RunModel.create_result(data= json_format, run_id=run.run_id)
+            if key ==  "found":
+                RunModel.create_result(data= json_format, run_id=run.run_id)
+                if value > 0:
+                    node_obj = NODE_LIST[input_label].get_node({'uid':run.input_node})
+                    if node_obj:
+                        node_obj.leaked = 'Yes'
+                        node_obj.save()
+            else:
+                if value:
+                    for leaked_data in value:
+                        for leaked_key, leaked_value in leaked_data.items():
+                            if leaked_key is "source":
+                                break 
+                            leaked_json_format = {
+                                "label":input_label, 
+                                "property":"others",
+                                "type":leaked_key,
+                                "value":leaked_value
+                            }
+                            RunModel.create_result(data=leaked_json_format, run_id=run.run_id)
 
         run.status = 'completed'
 
