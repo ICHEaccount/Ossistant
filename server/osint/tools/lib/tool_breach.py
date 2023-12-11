@@ -77,6 +77,7 @@ def run_breach(run, input_label):
         
     except requests.exceptions.RequestException as error:
         run.status = 'error'
+        RunModel.create_result(data=data, run_id=run.run_id)
         print(f"Error: {error}", flush=True)
 
     
