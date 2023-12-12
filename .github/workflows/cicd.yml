@@ -26,8 +26,8 @@ jobs:
           cp ./server/osint/.env ./server/src/.env
 
         env:
-          BREACHED_DIRECTORY: $${{secrets.BREACHED_DIRECTORY}}
-          ETHERSCAN: $${{secrets.ETHERSCAN}}
+          BREACHED_DIRECTORY: ${{secrets.BREACHED_DIRECTORY}}
+          ETHERSCAN: ${{secrets.ETHERSCAN}}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
