@@ -109,15 +109,15 @@ const RunCard = (props) => {
 			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>{status==="error"?"Error":"Result"}</p>:null}
 			{
 				selectedRun.results?.map((result,idx)=>{
-					// console.log(result);
+					console.log(result);
 					const type = result.result.type
 					if(result.result.value===null | result.result.value==="") return null
 					return (
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
-					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
+					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{status==="error"?"message":type}</InputGroup.Text>
 					<Form.Control
-					value={result.result.value}
+					value={status==="error"?result.result.message:result.result.value}
 					readOnly={true}
 					className='tw-overflow-x-auto'
 					/>

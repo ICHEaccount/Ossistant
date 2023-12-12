@@ -9,6 +9,7 @@ from .lib.tool_maigret import *
 from .lib.tool_harvester import *
 from .lib.tool_btc import *
 from .lib.tool_breach import *
+from .lib.tool_etherscan import *
 
 from .config.tool_result_config import *
 
@@ -126,6 +127,16 @@ def run_tool():
         except Exception as e:
             return jsonify({'Message': 'Invalid input', 'Code': e}), 400
         run_id = run_breach(run, input_label)
+    
+    elif tool_id == '06':  # etherscan
+        try:
+            #run.input_value = runtools_requested_json["properties"][0]["property"][0]["breach"]
+            # Email Username Domain IP Address 이 4중 아무거나 넣어도 되고 breach 라는 라벨로 넣기로 함
+            run.input_value = runtools_requested_json['properties'][0]['property'][0]['wallet']
+
+        except Exception as e:
+            return jsonify({'Message': 'Invalid input', 'Code': e}), 400
+        run_id = run_etherscan(run)
 
     else:
         return jsonify({'Message': 'Invalid tool_id'}), 400
@@ -154,6 +165,8 @@ def tool_state(case_id):
             continue  # check_btc(case_id, run['run_id'])
         elif run['tool_id'] == '05':
             continue
+        elif run['tool_id'] == '06':
+            continue       
     if message:
         return jsonify({'Debug': message}), 400
 
@@ -175,6 +188,8 @@ def tool_state(case_id):
             run['tool_name'] = 'btc'
         elif run['tool_id'] == '05':
             run['tool_name'] = 'breached directory'
+        elif run['tool_id'] == '06':
+            run['tool_name'] = 'etherscan'
             
         # sorting by status
         if run['status'] == 'ready':

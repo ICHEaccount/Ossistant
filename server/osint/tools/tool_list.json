@@ -39,6 +39,12 @@
       "tool_id": "04",
       "apply": ["wallet"],
       "desc": "Get transaction information of given Bitcoin wallet address"
+    },
+    {
+      "name": "etherscan",
+      "tool_id": "06",
+      "apply": ["wallet"],
+      "desc": "Get balance of given etherscan wallet address"
     }
   ],
   "Email": [
