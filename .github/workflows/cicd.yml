@@ -2,7 +2,7 @@ name: cicd
 
 on:
   push:
-    branches: [feature/OSINT-353]
+    branches: [release/v0.3]
 
 jobs:
   build:
