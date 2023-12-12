@@ -34,12 +34,12 @@ def run_etherscan(run):
             
         else:
             run.status = 'error'
-            RunModel.create_result(data={'message':data.get('result')}, run_id=run.run_id,created=False)
+            RunModel.create_result(data={'message':data.get('result')}, run_id=run.run_id)
             print("error:",data, flush=True)
 
     except requests.exceptions.RequestException as e:
         run.status = 'error'
-        RunModel.create_result(data={'message':e}, run_id=run.run_id,created=False)
+        RunModel.create_result(data={'message':e}, run_id=run.run_id)
         print(f"\nError making API request: {e}", flush=True)
 
     run.save()

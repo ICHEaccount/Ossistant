@@ -74,6 +74,7 @@ def run_breach(run, input_label):
         
     except requests.exceptions.RequestException as error:
         run.status = 'error'
+        print(error,flush=True)
         err = { "message": "500 api server error" }
         RunModel.create_result(data=err, run_id=run.run_id)
     

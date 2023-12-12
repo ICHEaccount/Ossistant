@@ -11,12 +11,6 @@
       "tool_id": "02",
       "apply": ["domain"],
       "desc": "Get subdomain of given domain name"
-    },
-    {
-      "name": "Breached Directory",
-      "tool_id": "05",
-      "apply": ["domain"],
-      "desc": "Get email, domain, or username to lookup in the Breached Directory"
     }
   ],
   "SurfaceUser": [
