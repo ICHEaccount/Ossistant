@@ -13,8 +13,18 @@ jobs:
 
       - name: Setup .env
         run: |
-          echo "BREACHED_DIRECTORY=$BREACHED_DIRECTORY" >> ./server/osint.env
-          echo "ETHERSCAN=$ETHERSCAN" >> ./server/osint.env
+          echo "BREACHED_DIRECTORY=$BREACHED_DIRECTORY" >> ./server/osint/.env
+          echo "ETHERSCAN=$ETHERSCAN" >> ./server/osint/.env
+          echo "MONGODB_DB = 'ossistant'" >> ./server/osint/.env
+          echo "MONGODB_HOST = '172.25.0.2'" >> ./server/osint/.env
+          echo "MONGODB_PORT = '27017'" >> ./server/osint/.env
+          echo "MONGODB_USERNAME = 'root'" >> ./server/osint/.env
+          echo "MONGODB_PASSWORD ='1234'" >> ./server/osint/.env
+          echo "NEO4J_USERANEM = 'neo4j'" >> ./server/osint/.env
+          echo "NEO4J_PASSWORD = 'icheneo4j'" >> ./server/osint/.env
+          echo "NEO4J_IP = '172.25.0.4'" >> ./server/osint/.env
+          cp ./server/osint.env ./server/src/.env
+
         env:
           BREACHED_DIRECTORY: $${{secrets.BREACHED_DIRECTORY}}
           ETHERSCAN: $${{secrets.ETHERSCAN}}
