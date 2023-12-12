@@ -73,6 +73,8 @@ def report_whois(case_id, run):
     elif isinstance(regdate_response, str):
         datetime_regdate_response = datetime.strptime(regdate_response, "%Y-%m-%d %H:%M:%S")
         regdate = datetime_regdate_response.strftime("%Y-%m-%d %H:%M")
+    else:
+        regdate = regdate_response
 
     # List of emails
     email_list = []
@@ -118,7 +120,10 @@ def report_whois(case_id, run):
     node_created = []
 
     for email in email_list:  # Deleted 'filtered_email_list'
-        match = re.match(pattern, email)
+        try:
+            match = re.match(pattern, email)  # TODO: TypeError: expected string or byte-like object
+        except TypeError as e:
+            return f'Debug: email is {email}'  # email is none
         if match:  # SHOULD match.
             username = match.group(1)
             domain = match.group(2)  # It's "gmail", not "gmail.com".
