@@ -2,7 +2,7 @@ name: cicd
 
 on:
   push:
-    branches: [release/v0.3]
+    branches: [feature/OSINT-353]
 
 jobs:
   build:
@@ -10,6 +10,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Setup .env
+        run: |
+          echo "BREACHED_DIRECTORY=$BREACHED_DIRECTORY" >> ./server/osint.env
+          echo "ETHERSCAN=$ETHERSCAN" >> ./server/osint.env
+        env:
+          BREACHED_DIRECTORY: ${{secrets.BREACHED_DIRECTORY}}
+          ETHERSCAN: $${{secrets.ETHERSCAN}}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1

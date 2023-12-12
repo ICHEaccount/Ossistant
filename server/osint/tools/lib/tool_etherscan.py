@@ -8,7 +8,7 @@ from db_conn.neo4j.models import *
 
 def run_etherscan(run): 
     etherium_address=run.input_value
-    api_key = "AYHXPQD5AFTGNCBK5Z82V4RXGHKPRAHYER"
+    api_key = os.environ.get("ETHERSCAN")
     api_url = f"https://api.etherscan.io/api?module=account&action=balance&address={etherium_address}&tag=latest&apikey={api_key}"
     
     try:

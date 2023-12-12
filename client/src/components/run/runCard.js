@@ -109,7 +109,7 @@ const RunCard = (props) => {
 			{selectedRun.results.length!==0?<p className='tw-text-center tw-text-lg'>{status==="error"?"Error":"Result"}</p>:null}
 			{
 				selectedRun.results?.map((result,idx)=>{
-					console.log(result);
+					// console.log(result);
 					const type = result.result.type
 					if(result.result.value===null | result.result.value==="") return null
 					return (
