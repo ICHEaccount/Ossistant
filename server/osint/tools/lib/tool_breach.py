@@ -6,6 +6,15 @@ import requests
 from db_conn.mongo.models import RunModel
 from db_conn.neo4j.models import *
 
+def input_json(input_label, key, value):
+    json_format={"label":input_label, 
+                        "property":"others",
+                        "type":key,
+                        "value":value
+            }
+    return json_format
+
+
 def run_breach(run, input_label):
     url = "https://breachdirectory.p.rapidapi.com/"
     req_data = run.input_value
@@ -26,59 +35,46 @@ def run_breach(run, input_label):
             input_label='SurfaceUser'
         elif(input_label=='email'):
             input_label='Email'
-        elif(input_label=='domain'):
-            input_label='Domain'
+        else:
+            err = { "message": "Not Defined label" }
+            RunModel.create_result(data=err, run_id=run.run_id)
+            run.status = 'error'
+            return
     
         data = response.json()
 
         print(data, flush=True)    
-        run.status = 'ready'
-
-
-    
+        run.status = 'ready'   
 
         for key, value in data.items(): #데이터를 몽고DB에 저장
-            #inside = {key: value}
 
             if key == 'success':
                 continue
-            if key == 'result' and not value:
+            elif key == 'result' and not value:
                 continue
-            
-            json_format={"label":input_label, 
-                        "property":"others",
-                        "type":key,
-                        "value":value
-            } #"value":data['found']}
-            if key ==  "found":
-                RunModel.create_result(data= json_format, run_id=run.run_id)
-                if value > 0:
-                    node_obj = NODE_LIST[input_label].get_node({'uid':run.input_node})
-                    if node_obj:
-                        node_obj.leaked = 'Yes'
-                        node_obj.save()
+            elif key == 'result' and value:
+                result_array = data.get('result', [])
+                for result_item in result_array:
+                    password = result_item.get('password', '')
+                    RunModel.create_result(data=input_json(input_label, 'password', password), run_id=run.run_id)
+
+                    sources = result_item.get('sources', [])
+                    for source in sources:
+                        RunModel.create_result(data=input_json(input_label, 'source', source), run_id=run.run_id)
+
+            elif key ==  "found":
+                RunModel.create_result(data=input_json(input_label, 'found', value), run_id=run.run_id)
             else:
-                if value:
-                    for leaked_data in value:
-                        for leaked_key, leaked_value in leaked_data.items():
-                            if leaked_key is "source":
-                                break 
-                            leaked_json_format = {
-                                "label":input_label, 
-                                "property":"others",
-                                "type":leaked_key,
-                                "value":leaked_value
-                            }
-                            RunModel.create_result(data=leaked_json_format, run_id=run.run_id)
-
+                err = { "message": "API return value error" }
+                RunModel.create_result(data=err, run_id=run.run_id)
+                run.status = 'error'
+            
         run.status = 'completed'
-
-        print(json_format, flush=True)
         
     except requests.exceptions.RequestException as error:
         run.status = 'error'
-        print(f"Error: {error}", flush=True)
-
+        err = { "message": "500 api server error" }
+        RunModel.create_result(data=err, run_id=run.run_id)
     
     run.save()
     return run.run_id
