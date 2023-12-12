@@ -23,7 +23,7 @@ jobs:
           echo "NEO4J_USERANEM = 'neo4j'" >> ./server/osint/.env
           echo "NEO4J_PASSWORD = 'icheneo4j'" >> ./server/osint/.env
           echo "NEO4J_IP = '172.25.0.4'" >> ./server/osint/.env
-          cp ./server/osint.env ./server/src/.env
+          cp ./server/osint/.env ./server/src/.env
 
         env:
           BREACHED_DIRECTORY: $${{secrets.BREACHED_DIRECTORY}}
