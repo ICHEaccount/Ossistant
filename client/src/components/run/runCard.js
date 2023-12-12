@@ -115,9 +115,9 @@ const RunCard = (props) => {
 					return (
 					<InputGroup className='mb-1 px-1'>
 					{status==="error"?null:<InputGroup.Checkbox disabled={result.created} checked={result.created?true:selectedResults.indexOf(result.result_id)!==-1} onChange={(e)=>handleValue(result.result_id)}/>}
-					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{type}</InputGroup.Text>
+					<InputGroup.Text className={cls('',{'tw-text-red-500':status==="error"})} >{status==="error"?"message":type}</InputGroup.Text>
 					<Form.Control
-					value={result.result.value}
+					value={status==="error"?result.result.message:result.result.value}
 					readOnly={true}
 					className='tw-overflow-x-auto'
 					/>

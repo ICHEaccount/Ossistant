@@ -17,10 +17,11 @@ def input_json(input_label, key, value):
 
 def run_breach(run, input_label):
     url = "https://breachdirectory.p.rapidapi.com/"
+    api_key = os.environ.get("BREACHED_DIRECTORY")
     req_data = run.input_value
 
     headers = {
-        "X-RapidAPI-Key": "af4f1e1e70mshb4888512dc72b85p182a1cjsn6e722049b8d6", #발급 받은 키
+        "X-RapidAPI-Key": api_key, #발급 받은 키
         "X-RapidAPI-Host": "breachdirectory.p.rapidapi.com",
     }
 
