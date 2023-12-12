@@ -24,7 +24,7 @@
       "name": "Breached Directory",
       "tool_id": "05",
       "apply": ["username"],
-      "desc": "Get email, domain, or username to lookup in the Breached Directory"
+      "desc": "Get email or username to lookup in the Breached Directory"
     }
   ],
   "Wallet": [
@@ -46,7 +46,7 @@
       "name": "Breached Directory",
       "tool_id": "05",
       "apply": ["email"],
-      "desc": "Get email, domain, or username to lookup in the Breached Directory"
+      "desc": "Get email or username to lookup in the Breached Directory"
     }
   ]
 }
