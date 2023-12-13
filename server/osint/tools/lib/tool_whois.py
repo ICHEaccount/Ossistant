@@ -47,6 +47,15 @@ def report_whois(case_id, run):
         message = f'Report whois error-1. {e}'
         return message
 
+    if report.get("domain_name") is None:
+        inside = {
+            'message': 'This is not a vaild domain to search.'
+        }
+        RunModel.create_result(data=inside, run_id=run.run_id)
+        run.status = 'error'
+        run.save()
+        return None
+
     # Choosing lower case of domain_name
     if isinstance(report.get("domain_name"), list):
         is_upper = any(char.isupper() for char in report.get("domain_name")[0])
@@ -77,19 +86,15 @@ def report_whois(case_id, run):
         regdate = regdate_response
 
     # List of emails
+    email_key = ['admin_email', 'registrant_email', 'tech_email', 'emails']
     email_list = []
-    if "admin_email" in report:
-        admin_email_value = report["admin_email"]
-        if isinstance(admin_email_value, list):
-            email_list.extend(admin_email_value)
-        else:
-            email_list.append(admin_email_value)
-    if "emails" in report:
-        emails_value = report["emails"]
-        if isinstance(emails_value, list):
-            email_list.extend(emails_value)
-        else:
-            email_list.append(emails_value)
+    for key in email_key:
+        if key in report:
+            emails_value = report[key]
+            if isinstance(emails_value, list):
+                email_list.extend(emails_value)
+            else:
+                email_list.append(emails_value)
 
     # Need to remove abuse, whois email
     # filtered_email_list = [email for email in email_list if 'abuse' not in email and 'whois' not in email]
@@ -120,11 +125,13 @@ def report_whois(case_id, run):
     node_created = []
 
     for email in email_list:  # Deleted 'filtered_email_list'
+        match = None
         try:
-            match = re.match(pattern, email)  # TODO: TypeError: expected string or byte-like object
-        except TypeError as e:
-            return f'Debug: email is {email}'  # email is none
-        if match:  # SHOULD match.
+            match = re.match(pattern, email)
+        except TypeError as e:  # TypeError: expected string or byte-like object
+            break
+            # return f'Debug: email is {email}'  # email is none
+        if match:
             username = match.group(1)
             domain = match.group(2)  # It's "gmail", not "gmail.com".
             if domain in email_domain:
@@ -144,25 +151,13 @@ def report_whois(case_id, run):
                     user.rel_to.connect(domain_obj, {'label': 'REGISTER'})
                 if has_status is False:
                     user.rel_to.connect(email_obj, {'label': 'HAS'})
-
-        else:
-            return f'Debug: No email match exist. {email}'
-
-    # The code only for "emails"
-    results_email = None
-    if report.get("emails"):
-        for email in report.get("emails"):
-            # match = re.match(pattern, email)
-            # if match:
-            #     if 'abuse' not in match.group(1) and 'whois' not in match.group(1):
-            #         results_email = email
-            results_email = email
+        # else:
+        #     return f'Debug: No email match exist. {email}'
 
     # Output works
     results = {
         # "domain": domain_response,
         # "regdate": regdate,
-        "email": results_email,
         "admin": report.get("admin_name"),
         "admin_email": report.get("admin_email"),
         "admin_phone": report.get("admin_phone"),
@@ -185,7 +180,7 @@ def report_whois(case_id, run):
             # elif key == 'regdate':
             #     inside['label'] = 'Domain'
             #     inside['property'] = 'regdate'
-            if key in ['email', 'admin_email']:
+            if key == 'admin_email':
                 inside['label'] = 'Email'
                 inside['property'] = 'email'
             elif key == 'admin_phone':
@@ -203,6 +198,36 @@ def report_whois(case_id, run):
         else:
             result_obj = ResultModel(result=inside, created=False)
         result_obj.save()
+        run.results.append(result_obj)
+
+    if isinstance(report.get('emails'), list):
+        for value in report['emails']:
+            inside = {
+                "label": 'Email',
+                "property": 'email',
+                "type": 'emails',
+                "value": value
+            }
+            if inside['value'] in node_created:
+                result_obj = ResultModel(result=inside, created=True)
+                result_obj.save()
+            else:
+                result_obj = ResultModel(result=inside, created=False)
+                result_obj.save()
+            run.results.append(result_obj)
+    else:
+        inside = {
+            "label": 'Email',
+            "property": 'email',
+            "type": 'emails',
+            "value": report.get('emails')
+        }
+        if inside['value'] in node_created:
+            result_obj = ResultModel(result=inside, created=True)
+            result_obj.save()
+        else:
+            result_obj = ResultModel(result=inside, created=False)
+            result_obj.save()
         run.results.append(result_obj)
 
     run.save()
