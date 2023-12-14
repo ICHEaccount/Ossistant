@@ -13,6 +13,8 @@ def delete_nodes_by_case(case_id):
     except Exception as e:
         print(f"An error occurred: {e}")
         return False, str(e)
+    
+
 def delete_node(node_id):
     try:
         query = """

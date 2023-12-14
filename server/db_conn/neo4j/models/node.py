@@ -1,4 +1,5 @@
-from neomodel import StructuredNode, UniqueIdProperty,StringProperty,IntegerProperty, ArrayProperty
+from neomodel import StructuredNode, UniqueIdProperty,StringProperty,IntegerProperty, ArrayProperty, JSONProperty
+import json 
 from ..init import db
 
 from .lib.node_manager import NodeManager
@@ -12,7 +13,9 @@ class Domain(BaseNode):
     regdate = StringProperty()
     status = StringProperty(default="None")
     case_id = StringProperty()
+    leaked = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -20,10 +23,11 @@ class Domain(BaseNode):
             "domain": self.domain,
             "regdate": self.regdate,
             "status": self.status,
-            "note": self.note
+            "leaked":self.leaked,
+            "note": self.note,
+            "others": self.others
         }
     
-
 @NodeManager
 class Post(BaseNode):
     uid = UniqueIdProperty()
@@ -35,6 +39,7 @@ class Post(BaseNode):
     post_type = StringProperty() # Blog, Cafe ... 
     case_id = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -45,7 +50,8 @@ class Post(BaseNode):
             "content": self.content,
             "created_date": self.created_date,
             "post_type":self.post_type,
-            "note":self.note
+            "note":self.note,
+            "others":  self.others
         }
 
 
@@ -58,6 +64,7 @@ class Comment(BaseNode):
     created_date = StringProperty()
     case_id = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -66,7 +73,8 @@ class Comment(BaseNode):
             "name": self.name,
             "content": self.content,
             "created_date": self.created_date,
-            "note": self.note
+            "note": self.note,
+            "others":  self.others
         }
     
 
@@ -74,19 +82,21 @@ class Comment(BaseNode):
 class Email(BaseNode):
     uid = UniqueIdProperty()
     email = StringProperty(unique_index=True)
-    fake = StringProperty(default='None')
+    leaked = StringProperty(default='None')
     email_domain = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
-
+    others = JSONProperty()
+    
     def to_json(self):
         return {
             "uid": self.uid,
             "email": self.email,
-            "fake": self.fake,
+            "leaked": self.leaked,
             "email_domain": self.email_domain,
-            "note": self.note
+            "note": self.note,
+            "others":  self.others
         }
 
 @NodeManager
@@ -94,14 +104,18 @@ class Phone(BaseNode):
     uid = UniqueIdProperty()
     url = StringProperty()
     number = StringProperty()
+    imposter = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
             "uid": self.uid,
             "number": self.number,
-            "note": self.note
+            "imposter":self.imposter,
+            "note": self.note,
+            "others":  self.others
         }
 
 @NodeManager
@@ -113,6 +127,7 @@ class Message(BaseNode):
     note = StringProperty()
     date = StringProperty()
     case_id = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -120,7 +135,8 @@ class Message(BaseNode):
             "sender": self.sender,
             "date": self.date,
             "content": self.content,
-            "note": self.note
+            "note": self.note,
+            "others":  self.others
         }
 
 @NodeManager
@@ -131,6 +147,7 @@ class Wallet(BaseNode):
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
+    others = JSONProperty()
     
     def to_json(self):
         return {
@@ -138,6 +155,7 @@ class Wallet(BaseNode):
             "wallet": self.wallet,
             "wallet_type": self.wallet_type,
             "note": self.note,
+            "others":  self.others
         }
 
 
@@ -146,18 +164,20 @@ class SurfaceUser(BaseNode):
     uid= UniqueIdProperty()
     username = StringProperty()
     url = StringProperty()
-    fake = StringProperty(default="None")
+    imposter = StringProperty(default="None")
     case_id = StringProperty()
     registered = ArrayProperty(required=False, default=[])
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
             "uid": self.uid,
             "username": self.username,
-            "fake": self.fake,
+            "imposter": self.imposter,
             "registered": self.registered,
-            "note": self.note
+            "note": self.note,
+            "others":  self.others
         }
 
 @NodeManager    
@@ -171,7 +191,9 @@ class DarkUser(BaseNode):
     comment_num = IntegerProperty()
     case_id = StringProperty()
     registered = ArrayProperty(required=False, default=[])
+    imposter = StringProperty()
     note = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
@@ -182,24 +204,28 @@ class DarkUser(BaseNode):
             "post_num": self.post_num,
             "comment_num": self.comment_num,
             "registered": self.registered,
-            "note": self.note
+            "imposter":self.imposter,
+            "note": self.note,
+            "others": self.others
         }
 
 @NodeManager
 class Person(BaseNode):
     uid= UniqueIdProperty()
     name = StringProperty()
-    fake = StringProperty()
+    imposter = StringProperty()
     note = StringProperty()
     case_id = StringProperty()
     url = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return  {
             "uid": self.uid,
             "name": self.name,
-            "fake": self.fake,
-            "note": self.note
+            "imposter": self.imposter,
+            "note": self.note,
+            "others":  self.others
         }
 
 
@@ -207,19 +233,23 @@ class Person(BaseNode):
 class Company(BaseNode):
     uid= UniqueIdProperty()
     name = StringProperty()
-    fake = StringProperty()
+    imposter = StringProperty()
     business_num = StringProperty()
     case_id = StringProperty()
     note = StringProperty()
     url = StringProperty()
+    location = StringProperty()
+    others = JSONProperty()
 
     def to_json(self):
         return {
             "uid": self.uid,
             "name": self.name,
-            "fake": self.fake,
+            "imposter": self.imposter,
             "business_num": self.business_num,
-            "note": self.note
+            "location":self.location,
+            "note": self.note,
+            "others":  self.others
         }
 
 

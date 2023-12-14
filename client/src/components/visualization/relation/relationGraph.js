@@ -4,7 +4,8 @@ import 'vis-network/styles/vis-network.css';
 import axios from 'axios';
 import options from './options'; 
 import { useSelector, useDispatch } from 'react-redux'
-import node, {select,changeBehavior} from '../../../reducers/node'
+import { Download } from 'react-bootstrap-icons'
+import  {select,changeBehavior,clear} from '../../../reducers/node'
 import { useParams } from 'react-router-dom';
 import lbs from '../../../labels';
 
@@ -22,8 +23,32 @@ function RelationGraph(props) {
   const isDone = props.isDone
   const dispatch = useDispatch()
   const behavior = useSelector(state => state.node.behavior)
-  const visJSRef = useRef(null)
+  const selected = useSelector(state => state.node.selected)
+  const visJSRef = useRef(null);
+  const networkRef = props.networkRef;
   const [selectedNode, setSelectedNode] = useState(null); 
+  const canvasImgRef = useRef(null);
+
+  const handleClick = () => {
+    // createReport(`${case_id}`,networkRef,1);
+    if (canvasImgRef.current && networkRef.current) {
+      networkRef.current.fit(); 
+
+      networkRef.current.once('afterDrawing', (ctx) => {
+        const dataURL = ctx.canvas.toDataURL();
+        canvasImgRef.current.href = dataURL;
+        canvasImgRef.current.download = 'network_image.png';
+        canvasImgRef.current.click();
+      });
+    }
+  };
+
+  useEffect(() => {
+    const network = networkRef.current
+    if(selected) network.focus(selected.node_id,focusOptions)
+    // dispatch(clear())
+  }, [selected])
+  
 
   useEffect(() => {
     const data = {
@@ -42,7 +67,7 @@ function RelationGraph(props) {
         const nodeId = item.n.id;
     
         if (!addedNodes.has(nodeId)) {
-          if(label && label.length > 20 && group ==="Post"){
+          if(label && label.length > 20 ){
             label = label.substring(0,15) + "...";
           }
           console.log("Node label : "+label);
@@ -70,9 +95,10 @@ function RelationGraph(props) {
         }
       });
     });
+
     const network = visJSRef.current && new Network(visJSRef.current, data, options);
-    
-    
+    networkRef.current = network;
+
     // Connect Relationship 
     network.on('selectNode', (params) => {
       const { nodes } = params;
@@ -84,13 +110,14 @@ function RelationGraph(props) {
           const label = resData.property.label;
           delete resData.property.label;
 
-          network.focus(nodes[0], focusOptions);
+          // network.focus(nodes[0], focusOptions);
           dispatch(select({node:resData,label:label}))
-          setSelectedNode(nodes[0]);
+          // setSelectedNode(nodes[0]);
           network.addEdgeMode();
         });
       } else {
-        setSelectedNode(null);
+        // setSelectedNode(null);
+        dispatch(clear());
       }
       network.disableEditMode();
     });
@@ -124,6 +151,7 @@ function RelationGraph(props) {
         }
       }
       network.disableEditMode();
+      
     });
 
     dispatch(changeBehavior('view'))
@@ -131,7 +159,14 @@ function RelationGraph(props) {
 
 
   return (
-      <><div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div>
+      <>
+
+      {/* <div ref={visJSRef} style={{ height: "370px", width: "1102px", position: 'relative'}}></div> */}
+      <div ref={visJSRef} className="tw-h-[45vh] tw-grow tw-relative" >
+      <a href='/' ref={canvasImgRef}id="canvasImg" download="filename" hidden>download</a>
+      </div>
+      <Download onClick={handleClick} className='hover:tw-cursor-pointer tw-justify-self-end tw-m-1 hover:tw-border hover:tw-border-transparent tw-absolute tw-right-7' size="20px"/>
+
       </>
   );
 }

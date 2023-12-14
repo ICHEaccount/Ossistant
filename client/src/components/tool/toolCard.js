@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Card, Container, Form, Overlay, Tooltip } from 'react-bootstrap';
+import { Button, Card, CardText, Container, Form, Overlay, Tooltip } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { ChevronLeft, ChevronRight, Play } from 'react-bootstrap-icons';
@@ -94,6 +94,7 @@ const ToolCard = (props) => {
     });
 
     const selectedNode = tools?.map((tool, idx) => {
+        console.log(tool);
         return selectedEventKey === `selected-${idx}` ? (
                 <Card className="mt-1 tw-w-full">
                     <Card.Header className='mb-1 tw-bg-bright-peach'>
@@ -101,6 +102,9 @@ const ToolCard = (props) => {
                         {tool.name}
                     </Card.Header>
                     <Card.Body>
+                        <CardText className='text-muted'>
+                            {tool.desc}
+                        </CardText>
                         {labelData?.length ? (
                             <Form onSubmit={runTool}>
                                 {tool.apply.map((p, idx) => (
@@ -123,7 +127,7 @@ const ToolCard = (props) => {
                                     </Form.Group>
                                 ))}
                                 <div className='tw-flex tw-justify-end'>
-                                <div onClick={runTool} ref={runButton} className='hover:tw-cursor-pointer tw-p-1 tw-pl-2 hover:tw-border tw-rounded-md hover:tw-border-navy tw-text-navy'>
+                                <div onClick={runTool} ref={runButton} className='tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 hover:tw-cursor-pointer tw-fill-peach tw-text-peach tw-p-1 tw-pl-2 hover:tw-border tw-rounded-md hover:tw-border-peach'>
                                     Run <Play className=' tw-inline tw-fill-navy' size={25}/>
                                     {Object.keys(selectedItems).length === 0?(<Overlay target={runButton.current} show={show} placement="right">
                                     {(props) => (

@@ -16,6 +16,7 @@ import {changeBehavior} from '../../../reducers/node'
 
 
 const options = {
+  autoResize:false,
   layout:{
     hierarchical: {
       enabled:true,
@@ -198,7 +199,8 @@ const options = {
   },
   animation: {
     offset: { x: 0, y: 0 },
-  }
+  },
+  autoResize: false
 };
 
 export default options;

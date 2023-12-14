@@ -19,24 +19,29 @@ class NodeManager:
     def __init__(self, cls) -> None:
         self.cls = cls
 
-    def check_node(self, data):
+    def check_node(self, data, key_filter=True ):
         label = self.cls.__name__
         key_property = KEY_PROEPRTY[label]
         inp = dict()
         inp['case_id'] = data['case_id']
-        if key_property in data:
-            inp[key_property] = data[key_property]
-            node = self.cls.nodes.first_or_none(**inp)
-        else:
-            data.pop('case_id')
-            for key, value in data.items():
-                if value is not None:
-                    node = self.cls.nodes.first_or_none(**{key:value})
-                    if node:
-                        break 
+        if key_filter is True:
+            if key_property in data:
+                inp[key_property] = data[key_property]
+                node = self.cls.nodes.first_or_none(**inp)
+            else:
+                data.pop('case_id')
+                for key, value in data.items():
+                    if value is not None:
+                        node = self.cls.nodes.first_or_none(**{key:value})
+                        if node:
+                            break 
         
-        if node is not None:
-            return True, node
+            if node is not None:
+                return True, node
+        else:
+            node = self.cls.nodes.first_or_none(**data)
+            if node:
+                return True, node
         return False, None
 
     def get_node(self, data):
@@ -88,27 +93,33 @@ class NodeManager:
             return True
         return False
     
-    def get_all_nodes_list(self, case_id, is_uid = True):
+    def get_all_nodes_list(self, case_id, is_uid = True, is_export=False):
         try:
             nodes = self.cls.nodes.filter(case_id=case_id)
             if not nodes:
                 return True, []
-            
-            if is_uid is True:
-                return True, [node.to_json() for node in nodes]
+            if is_export is False:
+                if is_uid is True:
+                    return True, [node.to_json() for node in nodes]
+                else:
+                    output = []
+                    for node in nodes:
+                        node_info = dict()
+                        node_info['property'] = dict()
+                        for key,value in node.to_json().items():
+                            if key == 'uid':
+                                node_info['node_id'] = value
+                            else:
+                                node_info['property'][key]= value
+                        output.append(node_info)
+                    return True, output
             else:
-                output = []
+                output = list()
                 for node in nodes:
-                    node_info = dict()
-                    node_info['property'] = dict()
-                    for key,value in node.to_json().items():
-                        if key == 'uid':
-                            node_info['node_id'] = value
-                        else:
-                            node_info['property'][key]= value
-                    output.append(node_info)
+                    data = node.to_json()
+                    del data['uid']
+                    output.append(data)
                 return True, output
-
         except Exception as e:
             return False, str(e)
 
@@ -122,6 +133,7 @@ class NodeManager:
     def get_node_name(self):
         return self.cls.__name__
     
+        
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         setattr(self.cls, 'create_node', self.create_node)
         setattr(self.cls, 'get_uid', self.get_uid)

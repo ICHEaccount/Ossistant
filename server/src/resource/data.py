@@ -6,7 +6,8 @@ from flask import request, jsonify,Blueprint
 from db_conn.mongo.init import db 
 from db_conn.mongo.models import CaseModel
 from db_conn.neo4j.models import *
-from db_conn.neo4j.models.lib.func import delete_node,format_date_time
+from db_conn.neo4j.models.lib.func import delete_node
+from db_conn.neo4j.models.lib.parser import content_parser
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -28,15 +29,21 @@ def create_data():
 
         if node_data['case_id'] is None:
             return jsonify({'error': 'case id is empty'}), 404
-    
+
         check_status, existed_node = NODE_LIST[node_label].check_node(node_data)
         if check_status is True:
             node1 = existed_node 
         elif check_status is False: 
             node1 = NODE_LIST[node_label].create_node(node_data)
 
+        # Content parser
+        if 'content' in node_data and 'content' is not None:
+            content_parsing_result = content_parser(case_id=data['case_id'], input_node=node1,content = node_data['content'])
+            if content_parsing_result is not True:
+                return jsonify({'Error':content_parsing_result}), 500
+            
         if node_label in AUTO_RELATIONS:
-            rel_status,msg = Relationship.create_auto_relationship(node=node1,node_label=node_label)
+            rel_status,msg = Relationship.create_auto_relationship(case_id=data['case_id'], node=node1,node_label=node_label)
             if rel_status is False:
                 return jsonify({'Error':msg}),400
         return jsonify({"state": "success"}), 200

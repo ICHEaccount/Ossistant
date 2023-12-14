@@ -3,14 +3,50 @@
     {
       "name": "whois",
       "tool_id": "01",
-      "apply": ["domain"]
+      "apply": ["domain"],
+      "desc": "Get registration imformation of given domain name"
+    },
+    {
+      "name": "theharvester",
+      "tool_id": "02",
+      "apply": ["domain"],
+      "desc": "Get subdomain of given domain name"
     }
   ],
   "SurfaceUser": [
     {
       "name": "maigret",
       "tool_id": "03",
-      "apply": ["username"]
+      "apply": ["username"],
+      "desc": "Get registered sites of given username"
+    },
+    {
+      "name": "Breached Directory",
+      "tool_id": "05",
+      "apply": ["username"],
+      "desc": "Get email or username to lookup in the Breached Directory"
+    }
+  ],
+  "Wallet": [
+    {
+      "name": "btc",
+      "tool_id": "04",
+      "apply": ["wallet"],
+      "desc": "Get transaction information of given Bitcoin wallet address"
+    },
+    {
+      "name": "etherscan",
+      "tool_id": "06",
+      "apply": ["wallet"],
+      "desc": "Get balance of given etherscan wallet address"
+    }
+  ],
+  "Email": [
+    {
+      "name": "Breached Directory",
+      "tool_id": "05",
+      "apply": ["email"],
+      "desc": "Get email or username to lookup in the Breached Directory"
     }
   ]
 }

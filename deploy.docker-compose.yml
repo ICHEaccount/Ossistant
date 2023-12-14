@@ -9,6 +9,7 @@ services:
       - "7474:7474"
       - "7687:7687"
     environment:
+      - TZ=Asia/Seoul
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
       - NEO4J_AUTH=neo4j/icheneo4j
     volumes:
@@ -26,6 +27,7 @@ services:
     ports:
       - 27017:27017
     environment:
+      - TZ=Asia/Seoul
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=1234 
       - MONGO_INITDB_DATABASE=ossistant
@@ -47,6 +49,7 @@ services:
       - ./client:/app
       - /app/node_modules
     environment: 
+      - TZ=Asia/Seoul
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
     tty: true
@@ -63,6 +66,8 @@ services:
       - ./server/osint:/app
       - ./server/db_conn/mongo:/db_conn/mongo
       - ./server/db_conn/neo4j:/db_conn/neo4j
+    environment: 
+      - TZ=Asia/Seoul
     networks:
       icheTest:
         ipv4_address: 172.25.0.3
@@ -78,6 +83,10 @@ services:
       - ./server/src:/app
       - ./server/db_conn/mongo:/db_conn/mongo
       - ./server/db_conn/neo4j:/db_conn/neo4j
+      - ./server/src/docs/report:/app/docs/report
+      - ./server/src/docs/excel:/app/docs/excel
+    environment: 
+      - TZ=Asia/Seoul
     networks:
       icheTest:
         ipv4_address: 172.25.0.6

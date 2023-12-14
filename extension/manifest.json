@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Ossistant",
     "description": "ossistant Tool",
-    "version": "1.0",
+    "version": "0.3",
     "icons": {
         "16": "image_test/ossistant.png"
     },
@@ -11,7 +11,7 @@
         "16": "image_test/ossistant.png" 
         },
         "default_title": "OSSISTANT",   
-        "default_popup": "popup_create.html"
+        "default_popup": "popup_main.html"
     },
     "background": {
         "service_worker": "background.js"

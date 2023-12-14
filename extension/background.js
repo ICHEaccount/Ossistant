@@ -1,8 +1,7 @@
 //const testUrl = "http://13.209.168.47"
 const testUrl = "http://127.0.0.1"
 
-
-let globalCaseId = null;
+let globalCaseId = null; //case_id
 
 chrome.runtime.onInstalled.addListener(() => {
     // Keep-alive function for the extension
@@ -11,7 +10,7 @@ chrome.runtime.onInstalled.addListener(() => {
     keepAlive();
 
     // Create top level context menus
-    const topMenus = ["collect clue", "store memo", "take snapshot", "using SNS parser"];
+    const topMenus = ["Collect Evidence", "Parsing"];
     for (let menu of topMenus) {
         chrome.contextMenus.create({
             title: menu,
@@ -20,49 +19,31 @@ chrome.runtime.onInstalled.addListener(() => {
         });
     }
 
-    // Under 'collect clue'
-    const keywordMenus = ["SurfaceUser", "DarkUser", "Company", "Person", "Domain", "Post", "Comment", "Email", "Phone", "Wallet"];
+    // Under 'Collect Evidence'
+    const keywordMenus = ["SurfaceUser", "DarkUser", "Company", "Person", "Domain", "Post", "Comment", "Email", "Phone", "Message", "Wallet"];
     for (let menu of keywordMenus) {
         chrome.contextMenus.create({
             title: menu,
-            parentId: "collect clue",
+            parentId: "Collect Evidence",
             contexts: ["selection"],
             id: menu
         });
     }
 
-    // Under 'take snapshot'
-    const snapshotMenus = ["all", "layout"];
-    for (let menu of snapshotMenus) {
-        chrome.contextMenus.create({
-            title: menu,
-            parentId: "take snapshot",
-            contexts: ["selection"],
-            id: menu
-        });
-    }
-
-    // Under 'using SNS parser'
-    chrome.contextMenus.create({
-        title: "telegram",
-        parentId: "using SNS parser",
-        contexts: ["selection"],
-        id: "telegram"
-    });
 
     // Under keyword
     const keywordSubMenus = {
-        "SurfaceUser": ["username", "fake"],
-        "DarkUser": ["username", "rank", "regdate"],
-        "Company": ["name", "fake", "business_num", "phone_num"],
-        "Person": ["name", "fake"],
-        "Domain": ["domain", "regdate", "status"],
-        "Post": ["title", "writer", "content", "created_date", "post_type"],
-        "Comment": ["name", "content", "created_date"],
-        "Email": ["email", "fake"],
-        "Phone": ["number"],
-        "Message": ["sender", "content", "date"],
-        "Wallet": ["wallet", "wallet_type"]
+        "SurfaceUser": ["username", "fake", "note"],
+        "DarkUser": ["username", "rank", "regdate", "note"],
+        "Company": ["name", "fake", "business_num", "phone_num", "note"],
+        "Person": ["name", "fake", "note"],
+        "Domain": ["domain", "regdate", "status", "note"],
+        "Post": ["title", "writer", "content", "created_date", "post_type", "note"],
+        "Comment": ["name", "content", "created_date", "note"],
+        "Email": ["email", "fake", "note"],
+        "Phone": ["number", "note"],
+        "Message": ["sender", "content", "date", "note"],
+        "Wallet": ["wallet", "wallet_type", "note"]
     };
 
     const validIds = keywordMenus.concat(
@@ -80,267 +61,284 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     }
 
-    // Under snapshot
-    const snapshotSubMenus = {
-        "all": ["To be developed"],
-        "layout": ["xss.is", "naver blog", "naver cafe"]
-    };
+    // // Under snapshot
+    // const snapshotSubMenus = {
+    //     "all": ["To be developed"],
+    //     "layout": ["xss.is", "naver blog", "naver cafe"]
+    // };
 
-    for (let parentMenu in snapshotSubMenus) {
-        for (let subMenu of snapshotSubMenus[parentMenu]) {
-            chrome.contextMenus.create({
-                title: subMenu,
-                parentId: parentMenu,
-                contexts: ["selection"],
-                id: subMenu
-            });
-        }
-    }
+    // for (let parentMenu in snapshotSubMenus) {
+    //     for (let subMenu of snapshotSubMenus[parentMenu]) {
+    //         chrome.contextMenus.create({
+    //             title: subMenu,
+    //             parentId: parentMenu,
+    //             contexts: ["selection"],
+    //             id: subMenu
+    //         });
+    //     }
+    // }
 
-
-    // Context menu click listener
+    // Context menu listener
     chrome.contextMenus.onClicked.addListener((info, tab) => {     
         let datalist = [];
 
-
         chrome.tabs.sendMessage(tab.id, { command: "getPageUrl" }, function(response) {
             const currentURL = response.url;
+            console.error("url", currentURL);
+            if(info.menuItemId.includes("note")){
+                console.error("note")
+                chrome.tabs.sendMessage(tab.id, { command: "createNoteInput" }, function(response) {
+                    let noteValue = response.note;
 
-            //console.error("url", currentURL);
+                    let parts = info.menuItemId.split('-');
+                    let parentMenu = parts[0];
 
-        if (info.menuItemId === "xss.is"){
-            chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
-                if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
-                    return;
-                }
-        
-                let postData = {
-                    label: "Post",
-                    keyword: {
-                        "writer": response.writer,
-                        "created_date": convertDateFormat(response.created_date, 1),
-                        "title": response.title,
-                        "content": response.content,
-                        "registered": response.registered
-                    }
-                };
-                datalist.push(postData);
-        
-                let darkUserData = {
-                    label: "DarkUser",
-                    keyword: {
-                        "username": response.username,
-                        "rank": response.rank,
-                        "regdate": convertDateFormat(response.regdate, 2),
-                        "post_num": response.post_num,
-                        "comment_num": response.comment_num
-                    }
-                };
-                datalist.push(darkUserData);
+                    let data = { 
+                        case_id: globalCaseId,
+                        url: currentURL,
+                        label: parentMenu,
+                        keyword: {"note": noteValue} };
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
-                    console.log('Data has been sent and datalist is now cleared.');
-                }).catch(error => {
-                    console.error('Failed to send data:', error);
+                    //console.error("data", JSON.stringify(data));
+
+                    sendDataToServer(data)
                 });
-            });
-        } else if(info.menuItemId === "naver blog"){
-            chrome.tabs.sendMessage(tab.id, { command: "getNaverBlogInfo" }, function(response) {
-                if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
-                    return;
-                }
-
-                let formattedDate = convertDateFormat(response.created_date, 3);
-
-                let postData = {
-                    label: "Post",
-                    keyword: {
-                        "writer": response.writer,
-                        "title": response.title,
-                        "content": response.content
+            }else if (currentURL.startsWith("https://xss.is/") && info.menuItemId === "Parsing"){
+                chrome.tabs.sendMessage(tab.id, { command: "getForumInfo" }, function(response) {
+                    if (chrome.runtime.lastError) {
+                        console.error("Error:", chrome.runtime.lastError.message);
+                        return;
                     }
-                };
-                
-                // convertDateFormat 함수가 null을 반환하지 않았다면, created_date를 추가합니다.
-                if (formattedDate !== null) {
-                    postData.keyword.created_date = formattedDate;
-                }
-                
-                datalist.push(postData);
+            
+                    let postData = {
+                        label: "Post",
+                        keyword: {
+                            "writer": response.writer,
+                            "created_date": convertDateFormat(response.created_date, 1),
+                            "title": response.title,
+                            "content": response.content,
+                            "registered": response.registered
+                        }
+                    };
+                    datalist.push(postData);
+            
+                    let darkUserData = {
+                        label: "DarkUser",
+                        keyword: {
+                            "username": response.username,
+                            "rank": response.rank,
+                            "regdate": convertDateFormat(response.regdate, 2),
+                            "post_num": response.post_num,
+                            "comment_num": response.comment_num
+                        }
+                    };
+                    datalist.push(darkUserData);
 
-                let SurfaceUserData = {
-                    label: "SurfaceUser",
-                    keyword: {
-                        "username": response.writer
-                    }
-                };
-
-                datalist.push(SurfaceUserData);
-
-                if (response.emails && Array.isArray(response.emails)) {
-                    response.emails.forEach(emailAddress => {
-                        let PhoneData = {
-                            label: "Email",
-                            keyword: {
-                                "email": emailAddress
-                            }
-                        };
-                        datalist.push(PhoneData);
+                    sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
+                        console.log('Data has been sent and datalist is now cleared.');
+                    }).catch(error => {
+                        console.error('Failed to send data:', error);
                     });
-                }
-
-                if (response.phones && Array.isArray(response.phones)) {
-                    response.phones.forEach(phoneNumber => {
-                        let PhoneData = {
-                            label: "Phone",
-                            keyword: {
-                                "number": phoneNumber
-                            }
-                        };
-                        datalist.push(PhoneData);
-                    });
-                }
-                
-                
-
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
-                    console.log('Data has been sent and datalist is now cleared.');
-                }).catch(error => {
-                    console.error('Failed to send data:', error);
                 });
-            });
-        } else if(info.menuItemId === "naver cafe"){
-            chrome.tabs.sendMessage(tab.id, { command: "getNaverCafeInfo" }, function(response) {
-                if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
-                    return;
-                }
-
-                let formattedDate = convertDateFormat(response.created_date, 4);
-
-                let postData = {
-                    label: "Post",
-                    keyword: {
-                        "writer": response.writer,
-                        "title": response.title,
-                        "content": response.content
+            } else if(currentURL.startsWith("https://blog.naver.com/") && info.menuItemId === "Parsing"){
+                console.error("blog", currentURL);
+                chrome.tabs.sendMessage(tab.id, { command: "getNaverBlogInfo" }, function(response) {
+                    if (chrome.runtime.lastError) {
+                        console.error("Error:", chrome.runtime.lastError.message);
+                        return;
                     }
-                };
 
-                // convertDateFormat 함수가 null을 반환하지 않았다면, created_date를 추가합니다.
-                if (formattedDate !== null) {
-                    postData.keyword.created_date = formattedDate;
-                }
+                    let formattedDate = convertDateFormat(response.created_date, 3);
 
-                datalist.push(postData);
-                //console.error("date", JSON.stringify(postData))
-
-                let SurfaceUserData = {
-                    label: "SurfaceUser",
-                    keyword: {
-                        "username": response.writer
+                    let postData = {
+                        label: "Post",
+                        keyword: {
+                            "writer": response.writer,
+                            "title": response.title,
+                            "content": response.content
+                        }
+                    };
+                    
+                    // convertDateFormat 함수가 null을 반환하지 않았다면, created_date를 추가합니다.
+                    if (formattedDate !== null) {
+                        postData.keyword.created_date = formattedDate;
                     }
-                };
+                    
+                    datalist.push(postData);
 
-                datalist.push(SurfaceUserData);
+                    let SurfaceUserData = {
+                        label: "SurfaceUser",
+                        keyword: {
+                            "username": response.writer
+                        }
+                    };
 
-                if (response.emails && Array.isArray(response.emails)) {
-                    response.emails.forEach(emailAddress => {
-                        let PhoneData = {
-                            label: "Email",
-                            keyword: {
-                                "email": emailAddress
-                            }
-                        };
-                        datalist.push(PhoneData);
+                    datalist.push(SurfaceUserData);
+
+                    if (response.emails && Array.isArray(response.emails)) {
+                        response.emails.forEach(emailAddress => {
+                            let PhoneData = {
+                                label: "Email",
+                                keyword: {
+                                    "email": emailAddress
+                                }
+                            };
+                            datalist.push(PhoneData);
+                        });
+                    }
+
+                    if (response.phones && Array.isArray(response.phones)) {
+                        response.phones.forEach(phoneNumber => {
+                            let PhoneData = {
+                                label: "Phone",
+                                keyword: {
+                                    "number": phoneNumber
+                                }
+                            };
+                            datalist.push(PhoneData);
+                        });
+                    }
+
+                    sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
+                        console.log('Data has been sent and datalist is now cleared.');
+                    }).catch(error => {
+                        console.error('Failed to send data:', error);
                     });
-                }
-
-                if (response.phones && Array.isArray(response.phones)) {
-                    response.phones.forEach(phoneNumber => {
-                        let PhoneData = {
-                            label: "Phone",
-                            keyword: {
-                                "number": phoneNumber
-                            }
-                        };
-                        datalist.push(PhoneData);
-                    });
-                }
-
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
-                    console.log('Data has been sent and datalist is now cleared.');
-                }).catch(error => {
-                    console.error('Failed to send data:', error);
                 });
-            });
-        } else if(info.menuItemId === "telegram"){
-            chrome.tabs.sendMessage(tab.id, { command: "getTelegram" }, function(response) {
-                if (chrome.runtime.lastError) {
-                    console.error("Error:", chrome.runtime.lastError.message);
-                    return;
-                }
-
-                //telegram username(@)
-                const atSymbolIndex = tab.url.indexOf('@');
-                const hashSymbolIndex = tab.url.indexOf('/#');
-                let extracted = '';
-                if (atSymbolIndex > hashSymbolIndex) {
-                    extracted = tab.url.substring(atSymbolIndex);
-                  }
-
-                let postData = {
-                    label: "SurfaceUser",
-                    keyword: {
-                        "username": extracted,
-                        "note": response.note
+            } else if(currentURL.startsWith("https://cafe.naver.com/") && info.menuItemId === "Parsing"){
+                console.error("cafe", currentURL);
+                chrome.tabs.sendMessage(tab.id, { command: "getNaverCafeInfo" }, function(response) {
+                    if (chrome.runtime.lastError) {
+                        console.error("Error:", chrome.runtime.lastError.message);
+                        return;
                     }
-                };
 
-                datalist.push(postData);
+                    let formattedDate = convertDateFormat(response.created_date, 4);
 
-                sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
-                    console.log('Data has been sent and datalist is now cleared.');
-                }).catch(error => {
-                    console.error('Failed to send data:', error);
+                    let postData = {
+                        label: "Post",
+                        keyword: {
+                            "writer": response.writer,
+                            "title": response.title,
+                            "content": response.content
+                        }
+                    };
+
+                    // convertDateFormat 함수가 null을 반환하지 않았다면, created_date를 추가합니다.
+                    if (formattedDate !== null) {
+                        postData.keyword.created_date = formattedDate;
+                    }
+
+                    datalist.push(postData);
+                    //console.error("date", JSON.stringify(postData))
+
+                    let SurfaceUserData = {
+                        label: "SurfaceUser",
+                        keyword: {
+                            "username": response.writer
+                        }
+                    };
+
+                    datalist.push(SurfaceUserData);
+
+                    if (response.emails && Array.isArray(response.emails)) {
+                        response.emails.forEach(emailAddress => {
+                            let PhoneData = {
+                                label: "Email",
+                                keyword: {
+                                    "email": emailAddress
+                                }
+                            };
+                            datalist.push(PhoneData);
+                        });
+                    }
+
+                    if (response.phones && Array.isArray(response.phones)) {
+                        response.phones.forEach(phoneNumber => {
+                            let PhoneData = {
+                                label: "Phone",
+                                keyword: {
+                                    "number": phoneNumber
+                                }
+                            };
+                            datalist.push(PhoneData);
+                        });
+                    }
+
+                    sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
+                        console.log('Data has been sent and datalist is now cleared.');
+                    }).catch(error => {
+                        console.error('Failed to send data:', error);
+                    });
                 });
-            });
-        } else {
-            let selectedText = info.selectionText;        
-            let data = { 
-                case_id: globalCaseId,
-                url: currentURL };
+            } else if(currentURL.startsWith("https://web.telegram.org/") && info.menuItemId === "Parsing"){
+                console.error("telegram")
+                chrome.tabs.sendMessage(tab.id, { command: "getTelegram" }, function(response) {
+                    if (chrome.runtime.lastError) {
+                        console.error("Error:", chrome.runtime.lastError.message);
+                        return;
+                    }
 
-            let parts = info.menuItemId.split('-');
-            let parentMenu = parts[0];
-            let subMenu = parts.slice(1).join('-');
+                    //telegram username(@)
+                    const atSymbolIndex = tab.url.indexOf('@');
+                    const hashSymbolIndex = tab.url.indexOf('/#');
+                    let extracted = '';
+                    if (atSymbolIndex > hashSymbolIndex) {
+                        extracted = tab.url.substring(atSymbolIndex);
+                    }
 
+                    let postData = {
+                        label: "SurfaceUser",
+                        keyword: {
+                            "username": extracted,
+                            "note": response.note
+                        }
+                    };
 
-            if (keywordMenus.includes(parentMenu)) {
-                // If the parentMenu is one of the top level keywordMenus
-                data.label = parentMenu;
-                data.keyword = { [subMenu]: selectedText };
+                    datalist.push(postData);
+
+                    sendDataToServer2({ type: "1", case_id: globalCaseId, url: currentURL, data: datalist }).then(() => {
+                        console.log('Data has been sent and datalist is now cleared.');
+                    }).catch(error => {
+                        console.error('Failed to send data:', error);
+                    });
+                });
             } else {
-                // Find the correct parentMenu for subMenus
-                parentMenu = Object.keys(keywordSubMenus).find(key => keywordSubMenus[key].includes(subMenu));
-                if (parentMenu) {
+                console.error("hihi"); 
+                let selectedText = info.selectionText;        
+                let data = { 
+                    case_id: globalCaseId,
+                    url: currentURL };
+
+                let parts = info.menuItemId.split('-');
+                let parentMenu = parts[0];
+                let subMenu = parts.slice(1).join('-');
+
+
+                if (keywordMenus.includes(parentMenu)) {
+                    // If the parentMenu is one of the top level keywordMenus
                     data.label = parentMenu;
                     data.keyword = { [subMenu]: selectedText };
+                } else {
+                    // Find the correct parentMenu for subMenus
+                    parentMenu = Object.keys(keywordSubMenus).find(key => keywordSubMenus[key].includes(subMenu));
+                    if (parentMenu) {
+                        data.label = parentMenu;
+                        data.keyword = { [subMenu]: selectedText };
+                    }
                 }
-            }
 
-            if (data.label) {
-                sendDataToServer(data);
-            }
+                if (data.label) {
+                    sendDataToServer(data);
+                }
 
-        }
+            }
 
         });
         
 
     });
+
 });
 
 

@@ -1,8 +1,9 @@
 {
     "domain":{
-        "maigret": {
-            "name": "maigret",
-            "github": "https://github.com/soxoj/maigret"
+        "theharvester": {
+            "name": "theharvester",
+            "github": "https://github.com/laramies/theHarvester",
+            "version": "4.4.4"
         }
     }
 }

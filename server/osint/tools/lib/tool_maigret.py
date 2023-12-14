@@ -46,9 +46,15 @@ def report_maigret(case_id, run):  # status is COMPLETED
     # Making "results" format and save
     length = len(result_site)
     for i in range(length):
+        # inside = {
+        #     "site": result_site[i],
+        #     "url_user": result_url[i]
+        # }
         inside = {
-            "site": result_site[i],
-            "url_user": result_url[i]
+            "label": "SurfaceUser",
+            "property": "registered",
+            "type": "site",
+            "value": result_site[i]
         }
         if len(run.results) == 0:
             RunModel.create_result(data=inside, run_id=run.run_id)

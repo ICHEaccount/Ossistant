@@ -6,3 +6,8 @@ python-dotenv==1.0.0
 Werkzeug==2.2.2
 neo4j==5.12.0
 neomodel==5.1.2
+pandas
+numpy
+xlsxwriter 
+pillow
+python-docx
