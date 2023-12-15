@@ -26,6 +26,9 @@ const RunToast = (props) => {
     // console.log(newResult);
     const toastList = newResult?.completed?.map((result,idx)=> {
         // setisnewRun(false)
+        console.log(result.results);
+        let array = result.results.filter((item,idx)=>{return item.result.value!=null&&item.result.value!==""})
+        
         return(
         <Toast key={result.run_id} onClose={(e)=>onHide(result)} show={showList[result.run_id]===undefined} delay={3000} autohide>
             <Toast.Header className="tw-bg-bright-peach">
@@ -34,7 +37,7 @@ const RunToast = (props) => {
                 <small>{result.runtime}</small>
             </Toast.Header>
             <Toast.Body>
-                {result.results.length?`Success! ${result.results.length} new data acquired :)`:"Success! But no new data acquired :("}
+                {result.results.length?`Success! ${array.length} new data acquired :)`:"Success! But no new data acquired :("}
             </Toast.Body>
             <Button variant="disable" className='m-2 tw-bg-bright-peach hover:tw-bg-peach hover:tw-text-black tw-border-0 tw-text-peach' onClick={()=>toResult(result,"completed")}>Check Result</Button>
         </Toast>
